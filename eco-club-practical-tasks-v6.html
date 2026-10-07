@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<meta name="theme-color" content="#0b3527">
+<title>Eco Club | Школа-лицей имени Мухтара Ауэзова</title>
+<style>
+:root{--d:#071f17;--g:#0b3527;--g2:#176044;--g3:#247453;--p:#e8f3ec;--bg:#f5faf7;--lime:#b9dc63;--text:#15231d;--muted:#68776f;--border:#dce8e1;--shadow:0 20px 55px rgba(9,53,38,.10)}
+*{box-sizing:border-box;margin:0;padding:0}html{scroll-behavior:smooth;scroll-padding-top:86px}body{font-family:Inter,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;overflow-x:hidden}img{max-width:100%;display:block}a{text-decoration:none;color:inherit}.container{width:min(1180px,calc(100% - 40px));margin:auto}.section{padding:96px 0}.eyebrow{font-size:12px;letter-spacing:2px;text-transform:uppercase;font-weight:900;color:var(--g3);margin-bottom:10px}.title{font-size:clamp(34px,5vw,56px);line-height:1.05;color:var(--g);letter-spacing:-1.5px;max-width:900px}.lead{max-width:850px;color:var(--muted);font-size:17px;margin-top:18px}
+header{position:sticky;top:0;z-index:1000;background:rgba(255,255,255,.94);backdrop-filter:blur(16px);border-bottom:1px solid rgba(18,74,54,.1)}.nav{height:78px;display:flex;align-items:center;justify-content:space-between;gap:20px}.brand{display:flex;align-items:center;gap:10px;font-weight:950;color:var(--g);white-space:nowrap}.brand img{width:58px;height:58px;object-fit:contain}.links{display:flex;gap:22px;align-items:center}.links a{font-size:14px;font-weight:750}.links a:hover{color:var(--g3)}.langs{display:flex;background:var(--p);border-radius:30px;padding:4px}.langs button{border:0;background:none;padding:8px 11px;border-radius:22px;font-weight:850;color:var(--g);cursor:pointer}.langs button.active{background:var(--g2);color:#fff}.menu{display:none;border:0;background:var(--p);border-radius:12px;width:44px;height:44px;font-size:21px;color:var(--g)}
+.hero{min-height:calc(100vh - 78px);display:flex;align-items:center;color:#fff;overflow:hidden;position:relative;background:radial-gradient(circle at 78% 45%,rgba(185,220,99,.22),transparent 31%),linear-gradient(135deg,var(--d),var(--g) 42%,var(--g2))}.hero-grid{display:grid;grid-template-columns:1.08fr .92fr;gap:65px;align-items:center;padding:70px 0}.badge{display:inline-block;border:1px solid rgba(255,255,255,.2);background:rgba(255,255,255,.07);border-radius:30px;padding:8px 15px;font-size:13px;font-weight:750}.hero h1{font-size:clamp(72px,8.5vw,124px);line-height:.82;letter-spacing:-7px;margin-top:24px}.hero h1 span{display:block;color:var(--lime)}.hero h2{font-size:clamp(28px,3vw,43px);line-height:1.08;margin-top:35px}.school{border-left:3px solid var(--lime);padding-left:16px;color:#d7e6de;margin-top:24px;max-width:600px}.hero-desc{color:#aac4b6;max-width:600px;margin-top:20px}.buttons{display:flex;gap:12px;flex-wrap:wrap;margin-top:30px}.btn{display:inline-flex;align-items:center;justify-content:center;min-height:49px;padding:0 23px;border-radius:10px;font-weight:850;font-size:14px;transition:.25s}.btn:hover{transform:translateY(-3px)}.primary{background:var(--lime);color:var(--g)}.secondary{border:1px solid rgba(255,255,255,.28);background:rgba(255,255,255,.05);color:#fff}.hero-visual{min-height:560px;display:flex;align-items:center;justify-content:center;position:relative}.logo-ring{width:min(500px,39vw);aspect-ratio:1;border:1px solid rgba(255,255,255,.12);border-radius:50%;display:flex;align-items:center;justify-content:center;background:rgba(255,255,255,.035);box-shadow:0 40px 90px rgba(0,0,0,.22);animation:float 6s ease-in-out infinite}.logo-ring img{width:94%;height:94%;object-fit:contain;filter:drop-shadow(0 20px 28px rgba(0,0,0,.22))}@keyframes float{50%{transform:translateY(-13px)}}
+.about{background:#fff;padding:0}.about-photo{min-height:720px;position:relative;display:flex;align-items:flex-end;background-image:linear-gradient(90deg,rgba(5,31,22,.91) 0%,rgba(5,31,22,.76) 35%,rgba(5,31,22,.28) 66%,rgba(5,31,22,.08) 100%),linear-gradient(0deg,rgba(5,31,22,.48),transparent 48%),url("merki-2.jpg.jpeg");background-size:cover;background-position:center 42%;color:#fff}.about-photo:after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.04),rgba(0,0,0,.18));pointer-events:none}.about-photo-content{position:relative;z-index:2;padding:110px 0 58px}.about-photo .eyebrow{color:var(--lime)}.about-photo .title{color:#fff;max-width:720px;font-size:clamp(42px,6vw,72px)}.about-photo .lead{color:#e1eee7;max-width:690px;font-size:18px;text-shadow:0 1px 18px rgba(0,0,0,.25)}.about-signature{display:inline-flex;align-items:center;gap:10px;margin-top:30px;padding:11px 16px;border:1px solid rgba(255,255,255,.23);border-radius:99px;background:rgba(5,31,22,.38);backdrop-filter:blur(10px);font-size:12px;font-weight:850;letter-spacing:.8px}.about-body{padding:88px 0 100px;background:#fff}.about-mission{display:grid;grid-template-columns:.78fr 1.22fr;gap:60px;align-items:start}.about-mission-copy{font-size:clamp(25px,3.2vw,40px);line-height:1.25;font-weight:750;color:var(--g)}.about-values{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-top:55px}.about-value{padding:24px 20px;border:1px solid var(--border);border-radius:20px;background:var(--bg);transition:.28s}.about-value:hover{transform:translateY(-5px);box-shadow:var(--shadow)}.about-value b{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;background:var(--p);font-size:23px;margin-bottom:18px}.about-value h3{font-size:17px;color:var(--g);line-height:1.2}.about-value p{font-size:13px;color:var(--muted);margin-top:7px}.eco-path{margin-top:75px;padding:38px 32px 34px;border-radius:28px;background:linear-gradient(145deg,var(--d),var(--g2));color:#fff;overflow:hidden}.eco-path .eyebrow{color:var(--lime)}.eco-path h3{font-size:clamp(28px,4vw,42px);line-height:1.1}.path-track{display:grid;grid-template-columns:repeat(5,1fr);gap:0;position:relative;margin-top:42px}.path-track:before,.path-progress{content:"";position:absolute;left:10%;right:10%;top:27px;height:3px;border-radius:10px}.path-track:before{background:rgba(255,255,255,.18)}.path-progress{right:auto;width:0;background:var(--lime);box-shadow:0 0 18px rgba(185,220,99,.55);transition:width 1.8s cubic-bezier(.2,.8,.2,1)}.eco-path.visible .path-progress{width:80%}.path-step{position:relative;z-index:2;text-align:center;padding:0 8px}.path-dot{width:56px;height:56px;margin:0 auto 15px;border-radius:50%;display:grid;place-items:center;background:#154d39;border:2px solid rgba(255,255,255,.28);font-weight:950;color:#fff;transition:.45s;transition-delay:calc(var(--i)*.22s)}.eco-path.visible .path-dot{background:var(--lime);color:var(--g);border-color:var(--lime);transform:scale(1.08)}.path-step strong{display:block;font-size:14px}.path-step small{display:block;color:#bcd2c6;font-size:11px;margin-top:5px}
+.mission{background:linear-gradient(135deg,var(--d),#124a36);color:#fff}.mission .eyebrow{color:var(--lime)}.mission .title{color:#fff}.mission-text{font-size:clamp(24px,3.6vw,42px);line-height:1.3;font-weight:650;max-width:1000px;margin-top:28px}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:45px}.card{background:#fff;border:1px solid var(--border);border-radius:22px;padding:28px;transition:.28s}.card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}.icon{width:55px;height:55px;border-radius:16px;background:var(--p);display:grid;place-items:center;font-size:27px;margin:18px 0}.card h3{color:var(--g);font-size:20px;margin-bottom:8px}.card p{color:var(--muted);font-size:14px}.num{font-size:11px;font-weight:900;color:var(--g3);letter-spacing:1px}
+.results{background:linear-gradient(180deg,#fff 0%,#f3f8f4 100%);position:relative;overflow:hidden}.results:before{content:"";position:absolute;width:430px;height:430px;border-radius:50%;background:radial-gradient(circle,rgba(176,224,80,.16),transparent 68%);right:-120px;top:-120px;pointer-events:none}.results-head{display:grid;grid-template-columns:1.2fr .8fr;gap:40px;align-items:end}.results-kicker{max-width:760px}.results-note{padding:22px 24px;border:1px solid var(--border);border-radius:20px;background:rgba(255,255,255,.72);backdrop-filter:blur(10px);color:var(--muted);font-size:14px}.results-note b{display:block;color:var(--g);font-size:16px;margin-bottom:5px}.goal{margin-top:38px;padding:32px;border-radius:28px;background:linear-gradient(135deg,#063b2c,#0c6849);color:#fff;box-shadow:0 22px 55px rgba(7,61,45,.16);position:relative;overflow:hidden}.goal:after{content:"";position:absolute;width:230px;height:230px;border:1px solid rgba(255,255,255,.12);border-radius:50%;right:-70px;top:-90px}.goal-top{display:flex;justify-content:space-between;gap:20px;align-items:end;position:relative;z-index:1}.goal h3{font-size:25px}.goal strong{font-size:42px;color:var(--lime)}.goal p{color:#c8ddd2}.bar{height:12px;background:rgba(255,255,255,.13);border-radius:20px;margin-top:22px;overflow:hidden;position:relative;z-index:1}.bar>div{height:100%;width:0;background:linear-gradient(90deg,var(--lime),#d9f58e);border-radius:20px;transition:width 1.3s cubic-bezier(.2,.8,.2,1)}.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:18px;margin-top:22px}.stat{background:#fff;border:1px solid var(--border);border-radius:22px;padding:24px;min-height:170px;position:relative;overflow:hidden;transition:.3s ease}.stat:after{content:"";position:absolute;width:90px;height:90px;border-radius:50%;background:rgba(176,224,80,.12);right:-28px;bottom:-30px}.stat:hover{transform:translateY(-5px);box-shadow:0 16px 40px rgba(8,61,45,.10);border-color:#c7dccd}.stat .sicon{font-size:28px}.stat strong{display:block;font-size:36px;color:var(--g);margin-top:16px;line-height:1;font-variant-numeric:tabular-nums}.stat span{display:block;color:var(--muted);font-size:13px;margin-top:10px;max-width:150px}.impact-strip{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:22px}.impact{border-radius:22px;padding:22px 24px;background:#eaf3ed;border:1px solid var(--border)}.impact b{display:block;color:var(--g);font-size:15px;margin-bottom:6px}.impact span{color:var(--muted);font-size:13px}
+.projects{background:#eaf3ed}.project-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:22px;margin-top:45px}.project{min-height:320px;background:#fff;border:1px solid var(--border);border-radius:24px;padding:31px;display:flex;flex-direction:column;transition:.28s}.project:hover{transform:translateY(-7px);box-shadow:var(--shadow)}.project-top{display:flex;justify-content:space-between}.project h3{margin-top:auto;color:var(--g);font-size:24px;line-height:1.2}.project p{color:var(--muted);font-size:14px;margin-top:10px}.tag{align-self:flex-start;margin-top:17px;background:var(--p);color:var(--g2);border-radius:30px;padding:6px 11px;font-size:11px;font-weight:850}
+.schedule{background:#fff}.timeline{margin-top:48px;position:relative}.timeline:before{content:"";position:absolute;left:118px;top:0;bottom:0;width:2px;background:var(--border)}.event{display:grid;grid-template-columns:95px 1fr;gap:45px;position:relative;padding-bottom:28px}.event:after{content:"";position:absolute;left:112px;top:16px;width:14px;height:14px;border-radius:50%;background:var(--lime);border:4px solid #fff;box-shadow:0 0 0 2px var(--g2)}.month{font-weight:900;color:var(--g2);text-transform:uppercase;font-size:13px;padding-top:12px;text-align:right}.event-card{border:1px solid var(--border);border-radius:20px;padding:22px 24px;background:var(--bg)}.event-card h3{color:var(--g);font-size:19px}.event-card p{color:var(--muted);font-size:14px;margin-top:5px}.etype{display:inline-block;margin-top:11px;background:var(--p);color:var(--g2);padding:5px 10px;border-radius:20px;font-size:11px;font-weight:850}
+.team{background:var(--bg)}.team-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:24px;margin-top:45px}.person{overflow:hidden;background:#fff;border:1px solid var(--border);border-radius:24px}.photo{height:300px;display:grid;place-items:center;font-size:85px;background:radial-gradient(circle,#eff8f1,#cce1d2)}.person-body{padding:27px}.role{font-size:11px;font-weight:900;color:var(--g3);letter-spacing:1px;text-transform:uppercase}.person h3{font-size:24px;color:var(--g);margin:7px 0}.person p{color:var(--muted)}
+
+/* MEMBERS */
+.members{background:#eef6f1}.members-head{display:grid;grid-template-columns:1fr .72fr;gap:35px;align-items:end}.members-goal{padding:26px;border:1px solid var(--border);border-radius:22px;background:#fff;box-shadow:var(--shadow)}.members-goal-top{display:flex;justify-content:space-between;align-items:end;gap:15px}.members-goal strong{font-size:36px;line-height:1;color:var(--g)}.members-goal small{color:var(--muted)}.members-progress{height:12px;margin-top:16px;border-radius:99px;background:#dce9e1;overflow:hidden}.members-progress-bar{height:100%;width:0;border-radius:99px;background:linear-gradient(90deg,var(--g3),var(--lime));transition:width .8s ease}.member-tools{display:grid;grid-template-columns:1.2fr .8fr;gap:14px;margin:38px 0 24px}.member-tools input,.member-tools select{width:100%;border:1px solid var(--border);border-radius:13px;padding:13px 15px;background:#fff;color:var(--text);font:inherit;outline:none}.member-tools input:focus,.member-tools select:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(36,116,83,.1)}.members-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.member-card{display:flex;align-items:center;gap:15px;padding:20px;border:1px solid var(--border);border-radius:20px;background:#fff;box-shadow:0 10px 30px rgba(9,53,38,.06)}.member-avatar{width:52px;height:52px;border-radius:16px;display:grid;place-items:center;flex:0 0 auto;background:linear-gradient(145deg,var(--g2),var(--g));color:#fff;font-size:19px;font-weight:900}.member-name{font-weight:900;color:var(--g);line-height:1.2}.member-meta{margin-top:5px;color:var(--muted);font-size:13px}.member-direction{display:inline-block;margin-top:8px;padding:4px 9px;border-radius:30px;background:var(--p);color:var(--g2);font-size:11px;font-weight:800}.members-state{grid-column:1/-1;padding:32px;text-align:center;border:1px dashed #b9cfc2;border-radius:20px;background:rgba(255,255,255,.55);color:var(--muted)}
+
+.join{background:#fff}.joinbox{padding:65px 35px;text-align:center;border-radius:30px;color:#fff;background:radial-gradient(circle at 85% 20%,rgba(185,220,99,.22),transparent 30%),linear-gradient(135deg,var(--g),var(--g2));box-shadow:var(--shadow)}.joinbox h2{font-size:clamp(36px,5vw,57px);line-height:1.05}.joinbox p{max-width:700px;margin:20px auto 28px;color:#d5e5dc}
+.application{background:#fff}.application-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:40px;align-items:start;margin-top:42px}.application-info{padding:32px;border-radius:24px;background:linear-gradient(145deg,var(--g),var(--g2));color:#fff;position:sticky;top:105px}.application-info h3{font-size:28px;line-height:1.15}.application-info p{color:#d5e5dc;margin-top:14px}.application-points{display:grid;gap:14px;margin-top:25px}.application-point{display:flex;gap:12px;align-items:flex-start}.application-point span{width:38px;height:38px;border-radius:12px;background:rgba(255,255,255,.1);display:grid;place-items:center;flex:0 0 auto}.application-point strong{display:block}.application-point small{color:#bcd2c6}.eco-form{border:1px solid var(--border);border-radius:24px;padding:30px;background:var(--bg);box-shadow:var(--shadow)}.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}.field{display:flex;flex-direction:column;gap:7px}.field.full{grid-column:1/-1}.field label{font-size:13px;font-weight:850;color:var(--g)}.field input,.field select,.field textarea{width:100%;border:1px solid #cfddd5;background:#fff;border-radius:12px;padding:13px 14px;font:inherit;color:var(--text);outline:none;transition:.2s}.field textarea{min-height:120px;resize:vertical}.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--g3);box-shadow:0 0 0 3px rgba(36,116,83,.1)}.field-note{font-size:11px;color:var(--muted)}.consent{display:flex;gap:10px;align-items:flex-start;margin-top:18px;color:var(--muted);font-size:13px}.consent input{margin-top:4px}.submit-row{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:22px}.submit-btn{border:0;cursor:pointer}.submit-btn:disabled{opacity:.65;cursor:wait;transform:none}.form-status{font-size:13px;font-weight:750}.form-status.success{color:#176044}.form-status.error{color:#a52a2a}.privacy-note{font-size:11px;color:var(--muted);margin-top:13px}
+footer{background:var(--d);color:#fff;padding:55px 0 30px}.foot{display:flex;justify-content:space-between;gap:35px;flex-wrap:wrap}.fbrand{display:flex;align-items:center;gap:12px;font-size:26px;font-weight:900}.fbrand img{width:64px}.fschool{color:#9db6a9;max-width:550px;margin-top:12px}.copy{border-top:1px solid rgba(255,255,255,.08);margin-top:35px;padding-top:20px;color:#698779;font-size:12px}.reveal{opacity:1;transform:none;transition:.35s}.reveal.visible{opacity:1;transform:none}
+
+/* NEWS & GALLERY */
+.news{background:#fff}.news-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:45px}.news-card{border:1px solid var(--border);border-radius:24px;overflow:hidden;background:var(--bg);transition:.28s}.news-card:hover{transform:translateY(-6px);box-shadow:var(--shadow)}.news-card img{width:100%;height:260px;object-fit:cover}.news-body{padding:24px}.news-body h3{font-size:22px;color:var(--g);line-height:1.2}.news-body p{margin-top:10px;color:var(--muted);font-size:14px}.gallery{background:#eaf3ed}.gallery-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:40px}.gallery-item{border:0;padding:0;background:none;cursor:pointer;border-radius:20px;overflow:hidden;box-shadow:0 10px 30px rgba(9,53,38,.08)}.gallery-item img{width:100%;height:280px;object-fit:cover;transition:.3s}.gallery-item:hover img{transform:scale(1.035)}.gallery-item.wide{grid-column:span 2}.lightbox{position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:3000;display:none;align-items:center;justify-content:center;padding:25px}.lightbox.open{display:flex}.lightbox img{max-width:min(1200px,95vw);max-height:90vh;object-fit:contain;border-radius:14px}.lightbox-close{position:absolute;right:24px;top:18px;border:0;background:rgba(255,255,255,.14);color:#fff;width:46px;height:46px;border-radius:50%;font-size:28px;cursor:pointer}
+@media(max-width:900px){.results-head{grid-template-columns:1fr}.impact-strip{grid-template-columns:1fr}.news-grid{grid-template-columns:1fr}.gallery-grid{grid-template-columns:repeat(2,1fr)}.members-head{grid-template-columns:1fr}.members-grid{grid-template-columns:repeat(2,1fr)}.application-grid{grid-template-columns:1fr}.application-info{position:static}.links{position:absolute;display:none;top:78px;left:15px;right:15px;background:#fff;border:1px solid var(--border);border-radius:18px;padding:18px;flex-direction:column;align-items:stretch;box-shadow:var(--shadow)}.links.open{display:flex}.menu{display:block}.hero-grid{grid-template-columns:1fr;text-align:center}.hero-visual{order:-1;min-height:410px}.logo-ring{width:380px}.hero-content{display:flex;flex-direction:column;align-items:center}.school{border-left:0;padding-left:0}.cards{grid-template-columns:repeat(2,1fr)}.stats{grid-template-columns:repeat(2,1fr)}.about-grid,.project-grid,.team-grid{grid-template-columns:1fr}.timeline:before{left:12px}.event{grid-template-columns:1fr;gap:8px;padding-left:40px}.event:after{left:6px}.month{text-align:left;padding-top:0}.brand span{display:none}}
+@media(max-width:560px){.gallery-grid{grid-template-columns:1fr}.gallery-item.wide{grid-column:auto}.gallery-item img{height:250px}.member-tools{grid-template-columns:1fr}.members-grid{grid-template-columns:1fr}.members-goal-top{align-items:flex-start;flex-direction:column}.form-grid{grid-template-columns:1fr}.eco-form{padding:21px}.application-info{padding:25px}.container{width:min(100% - 28px,1180px)}.section{padding:72px 0}.hero-grid{padding:40px 0 65px}.hero-visual{min-height:300px}.logo-ring{width:275px}.hero h1{font-size:64px;letter-spacing:-4px}.cards,.stats{grid-template-columns:1fr}.goal-top{align-items:start;flex-direction:column}.photo{height:260px}.langs button{padding:7px 8px;font-size:12px}.brand img{width:52px;height:52px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important}.logo-ring{animation:none}.reveal{opacity:1;transform:none}}
+
+/* HERO V2 — enhanced main screen */
+.hero-content{position:relative;z-index:2}
+.hero .badge{display:inline-flex;align-items:center;gap:9px}
+.hero .badge:before{content:"";width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 6px rgba(185,220,99,.12)}
+.hero h2{max-width:720px}
+.hero-desc{max-width:650px}
+.hero-actions{display:flex;gap:12px;flex-wrap:wrap;margin-top:28px}
+.hero-actions .btn{min-width:170px;text-align:center}
+.hero-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:34px;max-width:650px}
+.hero-stat{padding:16px 17px;border:1px solid rgba(255,255,255,.16);background:rgba(255,255,255,.07);backdrop-filter:blur(10px);border-radius:18px}
+.hero-stat strong{display:block;font-size:25px;line-height:1;color:var(--lime);margin-bottom:7px}
+.hero-stat span{display:block;font-size:12px;line-height:1.35;color:rgba(255,255,255,.78)}
+.hero-directions{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px;max-width:650px}
+.hero-direction{display:flex;align-items:center;gap:9px;padding:11px 13px;border-radius:14px;background:rgba(5,31,23,.38);font-size:12px;font-weight:750;color:rgba(255,255,255,.9)}
+.hero-direction b{font-size:17px}
+.hero-visual:after{content:"ECO • ACTION • COMMUNITY";position:absolute;bottom:5%;left:50%;transform:translateX(-50%);white-space:nowrap;font-size:10px;letter-spacing:3px;font-weight:900;color:rgba(255,255,255,.35)}
+@media(max-width:900px){
+ .hero-stats,.hero-directions{grid-template-columns:1fr 1fr 1fr}
+ .hero-visual:after{display:none}
+}
+@media(max-width:620px){
+ .hero-stats{grid-template-columns:1fr 1fr}
+ .hero-directions{grid-template-columns:1fr}
+ .hero-stat:last-child{grid-column:1/-1}
+ .hero-actions .btn{flex:1 1 150px}
+}
+
+
+@media(max-width:900px){.about-photo{min-height:680px;background-position:center center}.about-photo-content{padding:230px 0 45px}.about-photo .lead{max-width:620px}.about-mission{grid-template-columns:1fr;gap:25px}.about-values{grid-template-columns:repeat(2,1fr)}.path-track{grid-template-columns:1fr;gap:24px;margin-top:32px;padding-left:4px}.path-track:before,.path-progress{left:27px;right:auto;top:28px;bottom:28px;width:3px;height:auto}.path-progress{height:0}.eco-path.visible .path-progress{width:3px;height:calc(100% - 56px)}.path-step{text-align:left;display:grid;grid-template-columns:56px 1fr;column-gap:18px;align-items:center;padding:0}.path-dot{grid-row:1/3;margin:0}.path-step small{margin-top:0}.path-step strong{align-self:end}.path-step small{align-self:start}}
+@media(max-width:560px){.about-photo{min-height:620px;background-image:linear-gradient(0deg,rgba(5,31,22,.92) 0%,rgba(5,31,22,.64) 48%,rgba(5,31,22,.12) 78%),url("merki-2.jpg.jpeg");background-position:center center}.about-photo-content{padding:255px 0 36px}.about-photo .title{font-size:40px}.about-photo .lead{font-size:15px}.about-signature{font-size:10px}.about-body{padding:65px 0}.about-values{grid-template-columns:1fr}.eco-path{padding:30px 20px}}
+
+/* PROJECTS V2 */
+.projects-v2{background:linear-gradient(180deg,#eaf3ed 0%,#f8fbf9 100%);overflow:hidden}.projects-intro{display:grid;grid-template-columns:1.05fr .75fr;gap:70px;align-items:end}.projects-intro .title{max-width:760px}.projects-lead{color:var(--muted);font-size:16px;line-height:1.8;padding-bottom:8px}.project-showcase{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:18px;margin-top:48px}.project-v2{position:relative;min-height:285px;background:rgba(255,255,255,.9);border:1px solid var(--border);border-radius:28px;padding:30px 30px 26px;display:grid;grid-template-columns:68px 1fr;column-gap:20px;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease}.project-v2:before{content:"";position:absolute;width:190px;height:190px;border-radius:50%;right:-90px;top:-100px;background:radial-gradient(circle,rgba(185,220,99,.24),rgba(185,220,99,0) 70%);transition:.35s}.project-v2:hover{transform:translateY(-7px);box-shadow:0 24px 60px rgba(7,53,39,.12);border-color:#bad8c5}.project-v2:hover:before{transform:scale(1.35)}.project-no{position:absolute;right:22px;top:16px;font-size:52px;font-weight:950;line-height:1;color:rgba(7,53,39,.055);letter-spacing:-3px}.project-icon{width:64px;height:64px;border-radius:20px;background:linear-gradient(145deg,#dff0e5,#f4faef);border:1px solid #d2e7d9;display:grid;place-items:center;font-size:29px;box-shadow:inset 0 1px #fff}.project-copy{position:relative;z-index:1}.project-kicker{display:inline-block;color:var(--g);font-size:10px;font-weight:900;text-transform:uppercase;letter-spacing:1.7px;margin:3px 0 9px}.project-v2 h3{font-size:23px;line-height:1.18;color:var(--d);max-width:430px}.project-v2 p{margin-top:12px;color:var(--muted);font-size:14px;line-height:1.72;max-width:510px}.project-status{grid-column:2;display:flex;align-items:center;gap:8px;margin-top:21px;font-size:11px;font-weight:800;color:#587064}.project-status i{width:8px;height:8px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 5px rgba(185,220,99,.17)}.projects-cycle{margin-top:22px;padding:28px 30px;border-radius:26px;background:var(--d);color:#fff;display:grid;grid-template-columns:.6fr 1.4fr;gap:35px;align-items:center;box-shadow:0 20px 50px rgba(5,31,23,.13)}.cycle-label span{display:block;color:var(--lime);font-size:10px;font-weight:900;letter-spacing:1.7px;text-transform:uppercase;margin-bottom:8px}.cycle-label strong{font-size:20px;line-height:1.3}.cycle-steps{display:flex;align-items:center;justify-content:space-between;gap:10px}.cycle-steps div{display:flex;flex-direction:column;gap:4px}.cycle-steps b{color:var(--lime);font-size:12px}.cycle-steps span{font-size:12px;font-weight:750;color:rgba(255,255,255,.84)}.cycle-steps em{font-style:normal;color:rgba(185,220,99,.5);font-size:20px}@media(max-width:900px){.projects-intro{grid-template-columns:1fr;gap:18px}.project-showcase{grid-template-columns:1fr}.projects-cycle{grid-template-columns:1fr}.cycle-steps{flex-wrap:wrap;justify-content:flex-start}.cycle-steps em{display:none}}@media(max-width:560px){.project-v2{grid-template-columns:52px 1fr;padding:24px 20px}.project-icon{width:50px;height:50px;border-radius:16px;font-size:23px}.project-v2 h3{font-size:20px}.project-no{font-size:42px}.projects-cycle{padding:24px 20px}.cycle-steps{display:grid;grid-template-columns:1fr 1fr;gap:18px}.project-status{grid-column:1/-1;margin-left:70px}}
+
+/* PROJECTS ILLUSTRATED V4 */
+.projects-v2{background:radial-gradient(circle at 8% 10%,rgba(185,220,99,.16),transparent 25%),linear-gradient(180deg,#f8fcf8 0%,#edf7ef 100%);overflow:hidden}
+.projects-intro{display:grid;grid-template-columns:1.05fr .75fr;gap:70px;align-items:end}
+.projects-lead{color:var(--muted);font-size:16px;line-height:1.8;padding-bottom:8px}
+.project-showcase{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px;margin-top:44px}
+.project-v2{position:relative;min-height:390px;background:rgba(255,255,255,.92);border:1px solid #dcebe1;border-radius:28px;padding:27px 25px 23px;overflow:hidden;transition:transform .3s ease,box-shadow .3s ease,border-color .3s ease;display:flex;flex-direction:column}
+.project-v2:hover{transform:translateY(-8px);box-shadow:0 25px 65px rgba(7,53,39,.13);border-color:#b8d9c4}
+.project-no{font-size:38px;font-weight:950;color:#68ad7b;line-height:1;letter-spacing:-2px}
+.project-kicker{position:absolute;left:92px;top:25px;background:#e4f5d7;color:#1d613f;border-radius:999px;padding:7px 12px;font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.6px}
+.project-art{height:165px;margin:14px -8px 6px;display:flex;justify-content:flex-end;align-items:center;overflow:hidden}
+.project-art img{width:62%;height:100%;object-fit:contain;mix-blend-mode:multiply;filter:saturate(1.04);transition:transform .4s ease}
+.project-v2:hover .project-art img{transform:scale(1.055) rotate(-1deg)}
+.project-copy{position:relative;z-index:2;margin-top:-8px}
+.project-v2 h3{font-size:22px;line-height:1.12;color:var(--d);max-width:330px}
+.project-v2 p{margin-top:10px;color:var(--muted);font-size:13px;line-height:1.62}
+.project-status{margin-top:auto;padding-top:17px;display:flex;align-items:center;gap:9px;font-size:11px;font-weight:850;color:var(--g)}
+.project-status i{width:9px;height:9px;border-radius:50%;background:var(--lime);box-shadow:0 0 0 5px rgba(185,220,99,.18)}
+.projects-cycle{margin-top:22px;padding:28px 30px;border-radius:27px;background:#fff;border:1px solid #dcebe1;display:grid;grid-template-columns:.58fr 1.42fr;gap:30px;align-items:center;box-shadow:0 18px 50px rgba(7,53,39,.07)}
+.cycle-label span{display:block;color:#54a96b;font-size:10px;font-weight:900;letter-spacing:1.6px;text-transform:uppercase;margin-bottom:7px}
+.cycle-label strong{font-size:21px;color:var(--d);line-height:1.25}
+.cycle-steps{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.cycle-steps div{display:flex;flex-direction:column;gap:4px}
+.cycle-steps b{color:#54a96b;font-size:12px}
+.cycle-steps span{font-size:12px;font-weight:800;color:#445b50}
+.cycle-steps em{font-style:normal;color:#76b789;font-size:22px}
+@media(max-width:1100px){.project-showcase{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:900px){.projects-intro{grid-template-columns:1fr;gap:18px}.projects-cycle{grid-template-columns:1fr}.cycle-steps{flex-wrap:wrap;justify-content:flex-start}.cycle-steps em{display:none}}
+@media(max-width:650px){.project-showcase{grid-template-columns:1fr}.project-v2{min-height:auto}.project-art{height:190px}.project-art img{width:68%}.projects-cycle{padding:24px 20px}.cycle-steps{display:grid;grid-template-columns:1fr 1fr;gap:18px}}
+
+
+/* PRACTICAL TASKS V6 — three animated directions */
+.task-system{
+  position:relative;
+  overflow:hidden;
+  background:
+    radial-gradient(circle at 10% 10%,rgba(185,220,99,.18),transparent 28%),
+    radial-gradient(circle at 92% 84%,rgba(36,116,83,.10),transparent 30%),
+    #f7fbf8;
+}
+.task-system:before,.task-system:after{
+  content:"";position:absolute;border-radius:50%;pointer-events:none;filter:blur(1px)
+}
+.task-system:before{width:360px;height:360px;right:-160px;top:90px;border:1px solid rgba(36,116,83,.09)}
+.task-system:after{width:220px;height:220px;left:-110px;bottom:90px;border:1px solid rgba(185,220,99,.28)}
+.task-intro{max-width:920px;position:relative;z-index:2}
+.task-intro .lead{max-width:800px}
+.task-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:46px;position:relative;z-index:2}
+.task-chapter{
+  background:#fff;border:1px solid var(--border);border-radius:28px;overflow:hidden;
+  box-shadow:0 18px 55px rgba(9,53,38,.08);
+  opacity:0;transform:translateY(38px) scale(.985);
+  transition:opacity .7s ease,transform .7s cubic-bezier(.2,.75,.2,1),box-shadow .3s ease;
+}
+.task-chapter.is-visible{opacity:1;transform:none}
+.task-chapter:nth-child(2){transition-delay:.12s}.task-chapter:nth-child(3){transition-delay:.24s}
+.task-chapter:hover{transform:translateY(-7px);box-shadow:0 26px 70px rgba(9,53,38,.14)}
+.task-splash{
+  height:235px;position:relative;overflow:hidden;padding:24px;color:#fff;
+  display:flex;flex-direction:column;justify-content:space-between
+}
+.task-edu .task-splash{background:linear-gradient(145deg,#0a3d2d,#1c7451)}
+.task-values .task-splash{background:linear-gradient(145deg,#123b2c,#568c49)}
+.task-action .task-splash{background:linear-gradient(145deg,#0b3527,#7faa3b)}
+.task-splash:before{
+  content:"";position:absolute;width:240px;height:240px;border-radius:50%;
+  right:-78px;top:-92px;background:rgba(255,255,255,.08);animation:taskOrb 6s ease-in-out infinite
+}
+.task-splash:after{
+  content:"";position:absolute;width:150px;height:150px;border-radius:50%;
+  left:-55px;bottom:-70px;border:1px solid rgba(255,255,255,.13);animation:taskOrb 8s ease-in-out infinite reverse
+}
+.task-index{position:relative;z-index:2;font-size:11px;font-weight:950;letter-spacing:1.5px;color:rgba(255,255,255,.65)}
+.task-art{position:absolute;inset:28px 20px 42px;display:grid;place-items:center;z-index:1}
+.task-art svg{width:135px;height:135px;overflow:visible;filter:drop-shadow(0 16px 24px rgba(0,0,0,.18))}
+.task-edu .task-art svg{animation:taskFloat 4.7s ease-in-out infinite}
+.task-values .task-art svg{animation:taskPulse 3.6s ease-in-out infinite}
+.task-action .task-art svg{animation:taskSpinSoft 10s linear infinite}
+.task-splash-title{position:relative;z-index:2}
+.task-splash-title span{display:block;font-size:10px;letter-spacing:1.7px;text-transform:uppercase;font-weight:900;color:var(--lime);margin-bottom:6px}
+.task-splash-title strong{display:block;font-size:25px;line-height:1.05;max-width:280px}
+.task-body{padding:25px}
+.task-body p{font-size:14px;color:var(--muted);line-height:1.72}
+.task-points{display:grid;gap:10px;margin-top:18px}
+.task-point{display:flex;align-items:flex-start;gap:10px;font-size:12px;color:#41554b}
+.task-point i{width:8px;height:8px;border-radius:50%;background:var(--lime);margin-top:6px;flex:0 0 auto;box-shadow:0 0 0 5px rgba(185,220,99,.14)}
+.task-formula{
+  margin-top:24px;border:1px solid #dce8e1;border-radius:25px;background:#fff;padding:25px 28px;
+  display:grid;grid-template-columns:.65fr 1.35fr;align-items:center;gap:28px;
+  position:relative;overflow:hidden;box-shadow:0 16px 45px rgba(9,53,38,.06)
+}
+.task-formula-copy small{display:block;color:var(--g3);font-size:10px;font-weight:950;letter-spacing:1.5px;text-transform:uppercase;margin-bottom:5px}
+.task-formula-copy strong{font-size:21px;color:var(--g);line-height:1.25}
+.task-flow{display:grid;grid-template-columns:1fr auto 1fr auto 1fr auto 1fr;align-items:center;gap:9px;position:relative}
+.task-flow-step{padding:12px 9px;border-radius:14px;text-align:center;background:var(--p);font-size:11px;font-weight:900;color:var(--g)}
+.task-flow-arrow{font-size:22px;color:#75ae63;animation:taskArrow 1.6s ease-in-out infinite}
+.task-flow-arrow:nth-of-type(2){animation-delay:.2s}.task-flow-arrow:nth-of-type(3){animation-delay:.4s}
+@keyframes taskFloat{0%,100%{transform:translateY(0) rotate(-2deg)}50%{transform:translateY(-11px) rotate(2deg)}}
+@keyframes taskPulse{0%,100%{transform:scale(1)}50%{transform:scale(1.065)}}
+@keyframes taskSpinSoft{0%{transform:rotate(0deg)}100%{transform:rotate(360deg)}}
+@keyframes taskOrb{0%,100%{transform:translate(0,0)}50%{transform:translate(-16px,18px)}}
+@keyframes taskArrow{0%,100%{transform:translateX(0);opacity:.55}50%{transform:translateX(4px);opacity:1}}
+@media(max-width:1000px){.task-grid{grid-template-columns:1fr}.task-chapter{display:grid;grid-template-columns:.85fr 1.15fr}.task-splash{height:auto;min-height:270px}.task-formula{grid-template-columns:1fr}}
+@media(max-width:680px){.task-chapter{display:block}.task-splash{height:225px;min-height:0}.task-body{padding:22px}.task-formula{padding:22px 18px}.task-flow{grid-template-columns:1fr}.task-flow-arrow{transform:rotate(90deg);justify-self:center}.task-flow-arrow:nth-of-type(2),.task-flow-arrow:nth-of-type(3){transform:rotate(90deg)}}
+@media(prefers-reduced-motion:reduce){.task-art svg,.task-splash:before,.task-splash:after,.task-flow-arrow{animation:none!important}.task-chapter{opacity:1;transform:none;transition:none}}
+
+</style>
+</head>
+<body>
+<header><div class="container nav">
+<a class="brand" href="#home"><img src="eco-club-logo.png" alt="Eco Club"><span>ECO CLUB</span></a>
+<nav class="links" id="links"><a href="#about" data-ru="О нас" data-kz="Біз туралы">О нас</a><a href="#results" data-ru="Результаты" data-kz="Нәтижелер">Результаты</a><a href="#projects" data-ru="Проекты" data-kz="Жобалар">Проекты</a><a href="#news" data-ru="Новости" data-kz="Жаңалықтар">Новости</a><a href="#schedule" data-ru="План" data-kz="Жоспар">План</a><a href="#members" data-ru="Участники" data-kz="Мүшелер">Участники</a><a href="#team" data-ru="Команда" data-kz="Команда">Команда</a><a href="#application" data-ru="Вступить" data-kz="Қосылу">Вступить</a></nav>
+<div class="langs"><button id="kz" onclick="lang('kz')">ҚАЗ</button><button id="ru" class="active" onclick="lang('ru')">РУС</button></div><button class="menu" onclick="toggleMenu()">☰</button>
+</div></header>
+<main>
+<section class="hero" id="home">
+<div class="container hero-grid">
+  <div class="hero-content">
+    <div class="badge" data-ru="Экологическое сообщество нашей школы" data-kz="Мектебіміздің экологиялық қауымдастығы">Экологическое сообщество нашей школы</div>
+    <h1>ECO <span>CLUB</span></h1>
+    <h2 data-ru="Меняем экологическую культуру — начиная со своей школы." data-kz="Экологиялық мәдениетті өз мектебімізден бастап өзгертеміз.">Меняем экологическую культуру — начиная со своей школы.</h2>
+    <p class="school" data-ru="Общеобразовательная школа-лицей имени Мухтара Ауэзова" data-kz="Мұхтар Әуезов атындағы жалпы білім беретін мектеп-лицейі">Общеобразовательная школа-лицей имени Мухтара Ауэзова</p>
+    <p class="hero-desc" data-ru="Объединяем учеников и педагогов для экологических проектов, исследований и практических инициатив, которые делают школьную среду и наше сообщество более экологичными." data-kz="Оқушылар мен педагогтерді мектеп ортасы мен қоғамымызды экологиялық тұрғыдан жақсартатын жобаларға, зерттеулерге және практикалық бастамаларға біріктіреміз.">Объединяем учеников и педагогов для экологических проектов, исследований и практических инициатив, которые делают школьную среду и наше сообщество более экологичными.</p>
+    <div class="hero-actions">
+      <a class="btn primary" href="#projects" data-ru="Наши проекты" data-kz="Біздің жобалар">Наши проекты</a>
+      <a class="btn secondary" href="#join" data-ru="Вступить в Eco Club →" data-kz="Eco Club-қа қосылу →">Вступить в Eco Club →</a>
+    </div>
+    <div class="hero-stats" aria-label="Eco Club в цифрах">
+      <div class="hero-stat"><strong>6</strong><span data-ru="направлений работы" data-kz="жұмыс бағыты">направлений работы</span></div>
+      <div class="hero-stat"><strong id="heroMemberCount">—</strong><span data-ru="участников клуба" data-kz="клуб қатысушысы">участников клуба</span></div>
+      <div class="hero-stat"><strong>2026–2027</strong><span data-ru="учебный год" data-kz="оқу жылы">учебный год</span></div>
+    </div>
+    <div class="hero-directions">
+      <div class="hero-direction"><b>🌱</b><span data-ru="Эко-инициативы" data-kz="Эко-бастамалар">Эко-инициативы</span></div>
+      <div class="hero-direction"><b>♻️</b><span data-ru="Практические проекты" data-kz="Практикалық жобалар">Практические проекты</span></div>
+      <div class="hero-direction"><b>🧠</b><span data-ru="Эко-просвещение" data-kz="Эко-ағарту">Эко-просвещение</span></div>
+    </div>
+  </div>
+  <div class="hero-visual"><div class="logo-ring"><img src="eco-club-logo.png" alt="Логотип Eco Club"></div></div>
+</div>
+</section>
+<section class="section about" id="about">
+  <div class="about-photo">
+    <div class="container about-photo-content reveal">
+      <div class="eyebrow" data-ru="О нас" data-kz="Біз туралы">О нас</div>
+      <h2 class="title" data-ru="Экология начинается с нас" data-kz="Экология өзімізден басталады">Экология начинается с нас</h2>
+      <p class="lead" data-ru="Eco Club — экологическое объединение Общеобразовательной школы-лицея имени Мухтара Ауэзова. Мы объединяем учащихся и педагогов, чтобы экологические знания превращались в реальные дела, полезные школе и окружающей среде." data-kz="Eco Club — Мұхтар Әуезов атындағы жалпы білім беретін мектеп-лицейінің экологиялық бірлестігі. Біз оқушылар мен педагогтерді экологиялық білімді мектеп пен қоршаған ортаға пайдалы нақты істерге айналдыру үшін біріктіреміз.">Eco Club — экологическое объединение Общеобразовательной школы-лицея имени Мухтара Ауэзова. Мы объединяем учащихся и педагогов, чтобы экологические знания превращались в реальные дела, полезные школе и окружающей среде.</p>
+      <div class="about-signature"><span>🌿</span><span data-ru="ECO CLUB • Школа-лицей имени Мухтара Ауэзова" data-kz="ECO CLUB • Мұхтар Әуезов атындағы мектеп-лицей">ECO CLUB • Школа-лицей имени Мухтара Ауэзова</span></div>
+    </div>
+  </div>
+  <div class="about-body">
+    <div class="container">
+      <div class="about-mission reveal">
+        <div><div class="eyebrow" data-ru="Наша миссия" data-kz="Біздің миссиямыз">Наша миссия</div><h2 class="title" data-ru="От знаний — к экологической культуре" data-kz="Білімнен — экологиялық мәдениетке">От знаний — к экологической культуре</h2></div>
+        <p class="about-mission-copy" data-ru="Формируем ответственное отношение к природе через исследования, личное участие, командную работу и практические экологические инициативы." data-kz="Зерттеу, жеке қатысу, командалық жұмыс және практикалық экологиялық бастамалар арқылы табиғатқа жауапкершілікпен қарауды қалыптастырамыз.">Формируем ответственное отношение к природе через исследования, личное участие, командную работу и практические экологические инициативы.</p>
+      </div>
+      <div class="about-values">
+        <article class="about-value reveal"><b>🌱</b><h3 data-ru="Экологическая культура" data-kz="Экологиялық мәдениет">Экологическая культура</h3><p data-ru="Формируем осознанные экологические привычки." data-kz="Саналы экологиялық әдеттерді қалыптастырамыз.">Формируем осознанные экологические привычки.</p></article>
+        <article class="about-value reveal"><b>🔬</b><h3 data-ru="Исследования" data-kz="Зерттеулер">Исследования</h3><p data-ru="Изучаем экологические вопросы и ищем решения." data-kz="Экологиялық мәселелерді зерттеп, шешімдер іздейміз.">Изучаем экологические вопросы и ищем решения.</p></article>
+        <article class="about-value reveal"><b>♻️</b><h3 data-ru="Практические действия" data-kz="Практикалық әрекеттер">Практические действия</h3><p data-ru="Превращаем идеи в полезные школьные проекты." data-kz="Идеяларды пайдалы мектеп жобаларына айналдырамыз.">Превращаем идеи в полезные школьные проекты.</p></article>
+        <article class="about-value reveal"><b>🤝</b><h3 data-ru="Сообщество" data-kz="Қауымдастық">Сообщество</h3><p data-ru="Объединяем учеников и педагогов общей целью." data-kz="Оқушылар мен педагогтерді ортақ мақсатқа біріктіреміз.">Объединяем учеников и педагогов общей целью.</p></article>
+      </div>
+      <div class="eco-path reveal" id="ecoPath">
+        <div class="eyebrow" data-ru="Как мы работаем" data-kz="Біз қалай жұмыс істейміз">Как мы работаем</div>
+        <h3 data-ru="От идеи до измеримого результата" data-kz="Идеядан өлшенетін нәтижеге дейін">От идеи до измеримого результата</h3>
+        <div class="path-track"><div class="path-progress"></div>
+          <div class="path-step" style="--i:0"><div class="path-dot">01</div><strong data-ru="Узнать" data-kz="Білу">Узнать</strong><small data-ru="видим проблему" data-kz="мәселені көреміз">видим проблему</small></div>
+          <div class="path-step" style="--i:1"><div class="path-dot">02</div><strong data-ru="Исследовать" data-kz="Зерттеу">Исследовать</strong><small data-ru="собираем данные" data-kz="дерек жинаймыз">собираем данные</small></div>
+          <div class="path-step" style="--i:2"><div class="path-dot">03</div><strong data-ru="Предложить" data-kz="Ұсыну">Предложить</strong><small data-ru="находим решение" data-kz="шешім табамыз">находим решение</small></div>
+          <div class="path-step" style="--i:3"><div class="path-dot">04</div><strong data-ru="Реализовать" data-kz="Жүзеге асыру">Реализовать</strong><small data-ru="действуем вместе" data-kz="бірге әрекет етеміз">действуем вместе</small></div>
+          <div class="path-step" style="--i:4"><div class="path-dot">05</div><strong data-ru="Оценить результат" data-kz="Нәтижені бағалау">Оценить результат</strong><small data-ru="измеряем изменения" data-kz="өзгерісті өлшейміз">измеряем изменения</small></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<section class="section mission"><div class="container reveal"><div class="eyebrow" data-ru="Наша миссия" data-kz="Біздің миссиямыз">Наша миссия</div><h2 class="title" data-ru="Меняем отношение к природе через реальные действия" data-kz="Нақты әрекеттер арқылы табиғатқа деген көзқарасты өзгертеміз">Меняем отношение к природе через реальные действия</h2><p class="mission-text" data-ru="Формирование экологической культуры и осознанного отношения к окружающей среде у учащихся через личное участие, просвещение и командную работу." data-kz="Оқушылардың жеке қатысуы, экологиялық ағарту және командалық жұмыс арқылы экологиялық мәдениетін қалыптастыру және қоршаған ортаға саналы көзқарасын дамыту.">Формирование экологической культуры и осознанного отношения к окружающей среде у учащихся через личное участие, просвещение и командную работу.</p></div></section>
+<section class="section task-system" id="tasks">
+<div class="container">
+  <div class="task-intro reveal">
+    <div class="eyebrow" data-ru="Практические задачи" data-kz="Практикалық міндеттер">Практические задачи</div>
+    <h2 class="title" data-ru="Три направления работы Eco Club" data-kz="Eco Club жұмысының үш бағыты">Три направления работы Eco Club</h2>
+    <p class="lead" data-ru="Экологическая работа клуба строится как единая система: мы даём знания, формируем ценности и переводим их в реальные действия." data-kz="Клубтың экологиялық жұмысы біртұтас жүйе ретінде құрылады: білім береміз, құндылықтарды қалыптастырамыз және оларды нақты әрекетке айналдырамыз.">Экологическая работа клуба строится как единая система: мы даём знания, формируем ценности и переводим их в реальные действия.</p>
+  </div>
+
+  <div class="task-grid">
+    <article class="task-chapter task-edu">
+      <div class="task-splash">
+        <div class="task-index">01 / EDUCATION</div>
+        <div class="task-art" aria-hidden="true">
+          <svg viewBox="0 0 160 160" fill="none">
+            <path d="M24 48c18-8 38-7 56 4v70c-18-11-38-12-56-4V48Z" fill="rgba(255,255,255,.92)"/>
+            <path d="M136 48c-18-8-38-7-56 4v70c18-11 38-12 56-4V48Z" fill="rgba(255,255,255,.82)"/>
+            <path d="M80 53v68" stroke="#b9dc63" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="80" cy="31" r="12" fill="#b9dc63"/>
+            <path d="M80 14v8M63 20l6 6M97 20l-6 6" stroke="#dff39e" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="task-splash-title">
+          <span data-ru="Знания и исследование" data-kz="Білім және зерттеу">Знания и исследование</span>
+          <strong data-ru="Экологическое образование" data-kz="Экологиялық білім беру">Экологическое образование</strong>
+        </div>
+      </div>
+      <div class="task-body">
+        <p data-ru="Формируем экологические знания, развиваем исследовательское мышление и учим применять знания для решения реальных экологических проблем." data-kz="Экологиялық білімді қалыптастырамыз, зерттеушілік ойлауды дамытамыз және білімді нақты экологиялық мәселелерді шешуде қолдануға үйретеміз.">Формируем экологические знания, развиваем исследовательское мышление и учим применять знания для решения реальных экологических проблем.</p>
+        <div class="task-points">
+          <div class="task-point"><i></i><span data-ru="Эко-уроки, тренинги и мастер-классы" data-kz="Эко-сабақтар, тренингтер және шеберлік сабақтары">Эко-уроки, тренинги и мастер-классы</span></div>
+          <div class="task-point"><i></i><span data-ru="Исследования и проектная работа" data-kz="Зерттеулер және жобалық жұмыс">Исследования и проектная работа</span></div>
+          <div class="task-point"><i></i><span data-ru="Олимпиады, игры, ИИ и цифровые инструменты" data-kz="Олимпиадалар, ойындар, ЖИ және цифрлық құралдар">Олимпиады, игры, ИИ и цифровые инструменты</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="task-chapter task-values">
+      <div class="task-splash">
+        <div class="task-index">02 / VALUES</div>
+        <div class="task-art" aria-hidden="true">
+          <svg viewBox="0 0 160 160" fill="none">
+            <path d="M80 128S30 99 30 62c0-18 13-31 30-31 11 0 18 5 20 13 2-8 9-13 20-13 17 0 30 13 30 31 0 37-50 66-50 66Z" fill="rgba(255,255,255,.9)"/>
+            <path d="M83 104c18-13 28-29 30-48-17 3-31 13-39 28-6-10-14-17-26-21 2 18 13 32 35 41Z" fill="#b9dc63"/>
+            <path d="M78 102c8-18 18-32 34-45" stroke="#2c7551" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <div class="task-splash-title">
+          <span data-ru="Ценности и привычки" data-kz="Құндылықтар мен әдеттер">Ценности и привычки</span>
+          <strong data-ru="Экологическое воспитание" data-kz="Экологиялық тәрбие">Экологическое воспитание</strong>
+        </div>
+      </div>
+      <div class="task-body">
+        <p data-ru="Формируем ответственное отношение к природе, экологические ценности и повседневные привычки, основанные на бережном отношении к окружающей среде." data-kz="Табиғатқа жауапкершілікпен қарауды, экологиялық құндылықтарды және қоршаған ортаға ұқыпты қатынасқа негізделген күнделікті әдеттерді қалыптастырамыз.">Формируем ответственное отношение к природе, экологические ценности и повседневные привычки, основанные на бережном отношении к окружающей среде.</p>
+        <div class="task-points">
+          <div class="task-point"><i></i><span data-ru="Воспитательные часы и экологические привычки" data-kz="Тәрбие сағаттары және экологиялық әдеттер">Воспитательные часы и экологические привычки</span></div>
+          <div class="task-point"><i></i><span data-ru="Ответственное потребление и ресурсосбережение" data-kz="Саналы тұтыну және ресурстарды үнемдеу">Ответственное потребление и ресурсосбережение</span></div>
+          <div class="task-point"><i></i><span data-ru="Личная ответственность за окружающую среду" data-kz="Қоршаған ортаға жеке жауапкершілік">Личная ответственность за окружающую среду</span></div>
+        </div>
+      </div>
+    </article>
+
+    <article class="task-chapter task-action">
+      <div class="task-splash">
+        <div class="task-index">03 / ACTION</div>
+        <div class="task-art" aria-hidden="true">
+          <svg viewBox="0 0 160 160" fill="none">
+            <path d="M80 126V78" stroke="white" stroke-width="8" stroke-linecap="round"/>
+            <path d="M80 91c-23-1-35-13-36-36 23 1 35 13 36 36Z" fill="#dff39e"/>
+            <path d="M80 77c22-1 34-13 35-35-22 1-34 13-35 35Z" fill="#b9dc63"/>
+            <path d="M38 105a52 52 0 0 0 86 6" stroke="rgba(255,255,255,.9)" stroke-width="7" stroke-linecap="round"/>
+            <path d="M122 100l4 13-13 1" fill="none" stroke="rgba(255,255,255,.9)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M122 55A52 52 0 0 0 36 49" stroke="rgba(255,255,255,.72)" stroke-width="7" stroke-linecap="round"/>
+            <path d="M38 60l-4-13 13-1" fill="none" stroke="rgba(255,255,255,.72)" stroke-width="7" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+        <div class="task-splash-title">
+          <span data-ru="Практика и результат" data-kz="Практика және нәтиже">Практика и результат</span>
+          <strong data-ru="Экологическая деятельность" data-kz="Экологиялық іс-әрекет">Экологическая деятельность</strong>
+        </div>
+      </div>
+      <div class="task-body">
+        <p data-ru="Превращаем экологические знания и ценности в реальные проекты и действия, результаты которых можно увидеть в школе и школьном сообществе." data-kz="Экологиялық білім мен құндылықтарды мектеп пен мектеп қауымдастығында нақты нәтижесі көрінетін жобалар мен әрекеттерге айналдырамыз.">Превращаем экологические знания и ценности в реальные проекты и действия, результаты которых можно увидеть в школе и школьном сообществе.</p>
+        <div class="task-points">
+          <div class="task-point"><i></i><span data-ru="Раздельный сбор и переработка отходов" data-kz="Қалдықтарды бөлек жинау және қайта өңдеу">Раздельный сбор и переработка отходов</span></div>
+          <div class="task-point"><i></i><span data-ru="Озеленение, субботники и эко-акции" data-kz="Көгалдандыру, сенбіліктер және эко-акциялар">Озеленение, субботники и эко-акции</span></div>
+          <div class="task-point"><i></i><span data-ru="Эко-патруль, «Зелёная школа» и «Зелёный обмен»" data-kz="Эко-патруль, «Жасыл мектеп» және «Жасыл алмасу»">Эко-патруль, «Зелёная школа» и «Зелёный обмен»</span></div>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="task-formula reveal">
+    <div class="task-formula-copy">
+      <small data-ru="Логика работы клуба" data-kz="Клуб жұмысының логикасы">Логика работы клуба</small>
+      <strong data-ru="От знаний — к измеримому результату" data-kz="Білімнен — өлшенетін нәтижеге">От знаний — к измеримому результату</strong>
+    </div>
+    <div class="task-flow">
+      <div class="task-flow-step" data-ru="ЗНАНИЯ" data-kz="БІЛІМ">ЗНАНИЯ</div><div class="task-flow-arrow">→</div>
+      <div class="task-flow-step" data-ru="ЦЕННОСТИ" data-kz="ҚҰНДЫЛЫҚТАР">ЦЕННОСТИ</div><div class="task-flow-arrow">→</div>
+      <div class="task-flow-step" data-ru="ДЕЙСТВИЯ" data-kz="ӘРЕКЕТ">ДЕЙСТВИЯ</div><div class="task-flow-arrow">→</div>
+      <div class="task-flow-step" data-ru="РЕЗУЛЬТАТ" data-kz="НӘТИЖЕ">РЕЗУЛЬТАТ</div>
+    </div>
+  </div>
+</div>
+</section>
+<section class="section results" id="results"><div class="container">
+<div class="results-head reveal"><div class="results-kicker"><div class="eyebrow" data-ru="Eco Club в цифрах" data-kz="Eco Club сандармен">Eco Club в цифрах</div><h2 class="title" data-ru="Результат, который можно увидеть" data-kz="Көзге көрінетін нәтиже">Результат, который можно увидеть</h2><p class="lead" data-ru="Мы фиксируем практический вклад Eco Club: сбор вторсырья, озеленение, экологические занятия и участие школьного сообщества." data-kz="Біз Eco Club-тың практикалық үлесін тіркейміз: қайта өңделетін шикізатты жинау, көгалдандыру, экологиялық сабақтар және мектеп қауымдастығының қатысуы.">Мы фиксируем практический вклад Eco Club: сбор вторсырья, озеленение, экологические занятия и участие школьного сообщества.</p></div><div class="results-note"><b data-ru="Живые показатели" data-kz="Нақты көрсеткіштер">Живые показатели</b><span data-ru="Количество участников автоматически синхронизируется с заявками Eco Club. Остальные показатели отражают зафиксированные результаты клуба." data-kz="Қатысушылар саны Eco Club өтінімдерімен автоматты түрде синхрондалады. Қалған көрсеткіштер клубтың тіркелген нәтижелерін көрсетеді.">Количество участников автоматически синхронизируется с заявками Eco Club. Остальные показатели отражают зафиксированные результаты клуба.</span></div></div>
+<div class="goal reveal"><div class="goal-top"><div><h3 data-ru="Цель: 100 участников до конца учебного года" data-kz="Мақсат: оқу жылының соңына дейін 100 қатысушы">Цель: 100 участников до конца учебного года</h3><p id="mainMemberText" data-ru="Сейчас в Eco Club — 1 участник" data-kz="Қазір Eco Club-та — 1 қатысушы">Сейчас в Eco Club — 1 участник</p></div><strong id="mainMemberPercent">1%</strong></div><div class="bar"><div id="mainMemberBar" style="width:1%"></div></div></div>
+<div class="stats">
+<div class="stat reveal"><div class="sicon">📄</div><strong class="counter" data-target="50">0</strong><span data-ru="кг собранной макулатуры" data-kz="кг жиналған макулатура">кг собранной макулатуры</span></div>
+<div class="stat reveal"><div class="sicon">🟢</div><strong class="counter" data-target="13000">0</strong><span data-ru="собранных пластиковых крышек" data-kz="жиналған пластик қақпақ">собранных пластиковых крышек</span></div>
+<div class="stat reveal"><div class="sicon">🔋</div><strong class="counter" data-target="1200">0</strong><span data-ru="использованных батареек собрано" data-kz="жиналған пайдаланылған батарея">использованных батареек собрано</span></div>
+<div class="stat reveal"><div class="sicon">🌿</div><strong class="counter" data-target="12">0</strong><span data-ru="посаженных кустарников" data-kz="отырғызылған бұта">посаженных кустарников</span></div>
+<div class="stat reveal"><div class="sicon">🌸</div><strong class="counter" data-target="20">0</strong><span data-ru="посаженных цветов" data-kz="отырғызылған гүл">посаженных цветов</span></div>
+<div class="stat reveal"><div class="sicon">🧹</div><strong class="counter" data-target="2">0</strong><span data-ru="проведённых субботника" data-kz="өткізілген сенбілік">проведённых субботника</span></div>
+<div class="stat reveal"><div class="sicon">🎓</div><strong class="counter" data-target="5">0</strong><span data-ru="проведённых эко-уроков" data-kz="өткізілген эко-сабақ">проведённых эко-уроков</span></div>
+<div class="stat reveal"><div class="sicon">👥</div><strong class="counter" id="resultsMemberCount" data-target="8">0</strong><span data-ru="участников Eco Club" data-kz="Eco Club қатысушысы">участников Eco Club</span></div>
+</div>
+<div class="impact-strip reveal"><div class="impact"><b data-ru="♻️ Меньше отходов" data-kz="♻️ Қалдық азаяды">♻️ Меньше отходов</b><span data-ru="Развиваем привычку сортировать и передавать вторсырьё на переработку." data-kz="Қалдықтарды сұрыптау және қайта өңдеуге тапсыру әдетін дамытамыз.">Развиваем привычку сортировать и передавать вторсырьё на переработку.</span></div><div class="impact"><b data-ru="🌱 Больше зелени" data-kz="🌱 Көбірек жасыл желек">🌱 Больше зелени</b><span data-ru="Улучшаем школьную среду через посадку растений и практические эко-инициативы." data-kz="Өсімдіктер отырғызу және практикалық эко-бастамалар арқылы мектеп ортасын жақсартамыз.">Улучшаем школьную среду через посадку растений и практические эко-инициативы.</span></div><div class="impact"><b data-ru="🧠 Больше осознанности" data-kz="🧠 Экологиялық сана артады">🧠 Больше осознанности</b><span data-ru="Эко-уроки превращают экологические знания в повседневные действия." data-kz="Эко-сабақтар экологиялық білімді күнделікті әрекетке айналдырады.">Эко-уроки превращают экологические знания в повседневные действия.</span></div></div>
+</div></section>
+<section class="section projects projects-v2" id="projects"><div class="container">
+<div class="projects-intro reveal"><div><div class="eyebrow" data-ru="ПРОЕКТЫ" data-kz="ЖОБАЛАР">ПРОЕКТЫ</div><h2 class="title" data-ru="Наши экологические проекты" data-kz="Біздің экологиялық жобаларымыз">Наши экологические проекты</h2></div><p class="projects-lead" data-ru="Идеи, которые превращаются в реальные дела. Каждое направление — это вклад в более чистую, зелёную и осознанную школьную среду." data-kz="Нақты іске айналатын идеялар. Әр бағыт — таза, жасыл және саналы мектеп ортасына қосылған үлес.">Идеи, которые превращаются в реальные дела. Каждое направление — это вклад в более чистую, зелёную и осознанную школьную среду.</p></div>
+<div class="project-showcase"><article class="project-v2 reveal">
+<div class="project-no">01</div>
+<span class="project-kicker" data-ru="Сбор и переработка" data-kz="Жинау және қайта өңдеу">Сбор и переработка</span>
+<div class="project-art"><img src="project-recycling.jpg" alt="Раздельный сбор отходов" loading="lazy"></div>
+<div class="project-copy"><h3 data-ru="Раздельный сбор отходов" data-kz="Қалдықтарды бөлек жинау">Раздельный сбор отходов</h3><p data-ru="Собираем и передаём на переработку макулатуру, пластиковые крышечки, батарейки и другие вторичные материалы." data-kz="Макулатура, пластик қақпақтар, батареялар және басқа да қайталама материалдарды жинап, қайта өңдеуге тапсырамыз.">Собираем и передаём на переработку макулатуру, пластиковые крышечки, батарейки и другие вторичные материалы.</p></div>
+<div class="project-status"><i></i><span data-ru="Действующий проект" data-kz="Іске асырылып жатқан жоба">Действующий проект</span></div>
+</article><article class="project-v2 reveal">
+<div class="project-no">02</div>
+<span class="project-kicker" data-ru="Благоустройство" data-kz="Абаттандыру">Благоустройство</span>
+<div class="project-art"><img src="project-green-school.jpg" alt="Зелёная школа" loading="lazy"></div>
+<div class="project-copy"><h3 data-ru="Зелёная школа" data-kz="Жасыл мектеп">Зелёная школа</h3><p data-ru="Озеленяем школьную территорию: высаживаем кустарники, деревья и цветы, создаём уютную и комфортную среду." data-kz="Мектеп аумағын көгалдандырамыз: бұталар, ағаштар мен гүлдер отырғызып, жайлы орта қалыптастырамыз.">Озеленяем школьную территорию: высаживаем кустарники, деревья и цветы, создаём уютную и комфортную среду.</p></div>
+<div class="project-status"><i></i><span data-ru="Развиваем" data-kz="Дамытамыз">Развиваем</span></div>
+</article><article class="project-v2 reveal">
+<div class="project-no">03</div>
+<span class="project-kicker" data-ru="Волонтёрство" data-kz="Еріктілік">Волонтёрство</span>
+<div class="project-art"><img src="project-cleanup.jpg" alt="Чистый десант" loading="lazy"></div>
+<div class="project-copy"><h3 data-ru="Чистый десант" data-kz="Таза десант">Чистый десант</h3><p data-ru="Проводим субботники и экологические акции по уборке школьной территории и общественных мест." data-kz="Мектеп аумағы мен қоғамдық орындарды тазалау бойынша сенбіліктер және экологиялық акциялар өткіземіз.">Проводим субботники и экологические акции по уборке школьной территории и общественных мест.</p></div>
+<div class="project-status"><i></i><span data-ru="Практика" data-kz="Практика">Практика</span></div>
+</article><article class="project-v2 reveal">
+<div class="project-no">04</div>
+<span class="project-kicker" data-ru="Просвещение" data-kz="Ағарту">Просвещение</span>
+<div class="project-art"><img src="project-education.jpg" alt="Эко-просвещение" loading="lazy"></div>
+<div class="project-copy"><h3 data-ru="Эко-просвещение" data-kz="Эко-ағарту">Эко-просвещение</h3><p data-ru="Проводим эко-уроки, мастер-классы и тематические мероприятия, формируем экологическую культуру среди учащихся." data-kz="Эко-сабақтар, шеберлік сабақтары мен тақырыптық іс-шаралар өткізіп, оқушылардың экологиялық мәдениетін қалыптастырамыз.">Проводим эко-уроки, мастер-классы и тематические мероприятия, формируем экологическую культуру среди учащихся.</p></div>
+<div class="project-status"><i></i><span data-ru="Учимся и делимся" data-kz="Үйренеміз және бөлісеміз">Учимся и делимся</span></div>
+</article><article class="project-v2 reveal">
+<div class="project-no">05</div>
+<span class="project-kicker" data-ru="Разумное потребление" data-kz="Саналы тұтыну">Разумное потребление</span>
+<div class="project-art"><img src="project-exchange.jpg" alt="Зелёный обмен" loading="lazy"></div>
+<div class="project-copy"><h3 data-ru="Зелёный обмен" data-kz="Жасыл алмасу">Зелёный обмен</h3><p data-ru="Даём вторую жизнь вещам: организуем обмен книгами, канцелярией, школьными принадлежностями и другими полезными вещами." data-kz="Заттарға екінші өмір береміз: кітаптар, кеңсе және мектеп құралдары мен пайдалы заттар алмасуын ұйымдастырамыз.">Даём вторую жизнь вещам: организуем обмен книгами, канцелярией, школьными принадлежностями и другими полезными вещами.</p></div>
+<div class="project-status"><i></i><span data-ru="Повторное использование" data-kz="Қайта пайдалану">Повторное использование</span></div>
+</article><article class="project-v2 reveal">
+<div class="project-no">06</div>
+<span class="project-kicker" data-ru="Эко-мониторинг" data-kz="Эко-мониторинг">Эко-мониторинг</span>
+<div class="project-art"><img src="project-patrol.jpg" alt="Эко-патруль" loading="lazy"></div>
+<div class="project-copy"><h3 data-ru="Эко-патруль" data-kz="Эко-патруль">Эко-патруль</h3><p data-ru="Следим за экологическим поведением в школе, бережным использованием ресурсов и предлагаем улучшения." data-kz="Мектептегі экологиялық тәртіпті, ресурстарды ұқыпты пайдалануды бақылап, жақсарту жолдарын ұсынамыз.">Следим за экологическим поведением в школе, бережным использованием ресурсов и предлагаем улучшения.</p></div>
+<div class="project-status"><i></i><span data-ru="Наблюдаем и улучшаем" data-kz="Бақылаймыз және жақсартамыз">Наблюдаем и улучшаем</span></div>
+</article></div>
+<div class="projects-cycle reveal"><div class="cycle-label"><span data-ru="Как рождается проект?" data-kz="Жоба қалай пайда болады?">Как рождается проект?</span><strong data-ru="От идеи — к реальному результату" data-kz="Идеядан — нақты нәтижеге">От идеи — к реальному результату</strong></div><div class="cycle-steps">
+<div><b>01</b><span data-ru="Проблема" data-kz="Мәселе">Проблема</span></div><em>→</em>
+<div><b>02</b><span data-ru="Решение" data-kz="Шешім">Решение</span></div><em>→</em>
+<div><b>03</b><span data-ru="Действие" data-kz="Әрекет">Действие</span></div><em>→</em>
+<div><b>04</b><span data-ru="Результат" data-kz="Нәтиже">Результат</span></div>
+</div></div>
+</div></section>
+<section class="section news" id="news"><div class="container"><div class="reveal"><div class="eyebrow" data-ru="Жизнь Eco Club" data-kz="Eco Club өмірі">Жизнь Eco Club</div><h2 class="title" data-ru="Новости и события" data-kz="Жаңалықтар мен іс-шаралар">Новости и события</h2><p class="lead" data-ru="Практические занятия, экологические инициативы и проекты участников нашего клуба." data-kz="Клуб мүшелерінің практикалық сабақтары, экологиялық бастамалары мен жобалары.">Практические занятия, экологические инициативы и проекты участников нашего клуба.</p></div><div class="news-grid">
+<article class="news-card reveal"><img src="sorting.jpg.jpeg" alt="Сортируем правильно"><div class="news-body"><h3 data-ru="Сортируем правильно" data-kz="Қалдықтарды дұрыс сұрыптаймыз">Сортируем правильно</h3><p data-ru="Участники Eco Club изучают правила раздельного сбора отходов и учатся применять их на практике." data-kz="Eco Club мүшелері қалдықтарды бөлек жинау ережелерін үйреніп, оларды тәжірибеде қолданады.">Участники Eco Club изучают правила раздельного сбора отходов и учатся применять их на практике.</p></div></article>
+<article class="news-card reveal"><img src="merki.jpg.jpeg" alt="Меркі өңірі"><div class="news-body"><h3>«Меркі өңірі»</h3><p data-ru="Участники представляют экологические и краеведческие материалы, посвящённые родному региону." data-kz="Қатысушылар туған өлке туралы экологиялық және өлкетану материалдарын таныстырады.">Участники представляют экологические и краеведческие материалы, посвящённые родному региону.</p></div></article>
+<article class="news-card reveal"><img src="eco-olympiad.jpg.jpeg" alt="EcoOlympiad"><div class="news-body"><h3>EcoOlympiad</h3><p data-ru="Экологические знания, практические задания и командная работа объединяются в школьной EcoOlympiad." data-kz="Экологиялық білім, практикалық тапсырмалар және командалық жұмыс мектептік EcoOlympiad аясында бірігеді.">Экологические знания, практические задания и командная работа объединяются в школьной EcoOlympiad.</p></div></article>
+</div></div></section>
+<section class="section gallery" id="gallery"><div class="container"><div class="reveal"><div class="eyebrow" data-ru="Фотогалерея" data-kz="Фотогалерея">Фотогалерея</div><h2 class="title" data-ru="Eco Club в действии" data-kz="Eco Club іс жүзінде">Eco Club в действии</h2><p class="lead" data-ru="Моменты занятий, выступлений и экологических мероприятий нашего сообщества." data-kz="Қауымдастығымыздың сабақтары, таныстырылымдары және экологиялық іс-шараларынан сәттер.">Моменты занятий, выступлений и экологических мероприятий нашего сообщества.</p></div><div class="gallery-grid">
+<button class="gallery-item" onclick="openLightbox('sorting.jpg.jpeg')"><img src="sorting.jpg.jpeg" alt="Eco Club"></button>
+<button class="gallery-item wide" onclick="openLightbox('eco-event-2.jpg')"><img src="eco-event-2.jpg" alt="Eco Club"></button>
+<button class="gallery-item wide" onclick="openLightbox('merki.jpg.jpeg')"><img src="merki.jpg.jpeg" alt="Eco Club"></button>
+<button class="gallery-item" onclick="openLightbox('eco-event-4.jpg')"><img src="eco-event-4.jpg" alt="Eco Club"></button>
+<button class="gallery-item wide" onclick="openLightbox('eco-olympiad.jpg.jpeg')"><img src="eco-olympiad.jpg.jpeg" alt="EcoOlympiad"></button>
+</div></div></section>
+<section class="section schedule" id="schedule"><div class="container"><div class="reveal"><div class="eyebrow" data-ru="2026–2027 учебный год" data-kz="2026–2027 оқу жылы">2026–2027 учебный год</div><h2 class="title" data-ru="План мероприятий Eco Club" data-kz="Eco Club іс-шаралар жоспары">План мероприятий Eco Club</h2><p class="lead" data-ru="Мероприятия из рабочего плана педагогa-эколога с ученическим обществом «Экоклуб»." data-kz="Педагог-экологтың «Экоклуб» оқушылар қоғамымен жұмыс жоспарындағы іс-шаралар.">Мероприятия из рабочего плана педагога-эколога с ученическим обществом «Экоклуб».</p></div><div class="timeline">
+<div class="event reveal"><div class="month" data-ru="Сентябрь" data-kz="Қыркүйек">Сентябрь</div><div class="event-card"><h3>«Энергия қайдан келеді? Жасыл энергетика әлемі»</h3><p data-ru="Экологическое образование" data-kz="Экологиялық білім">Экологическое образование</p><span class="etype" data-ru="Коучинг" data-kz="Коучинг">Коучинг</span></div></div>
+<div class="event reveal"><div class="month" data-ru="Октябрь" data-kz="Қазан">Октябрь</div><div class="event-card"><h3>«AI EcoLab: ЖИ көмегімен экологиялық мәселені шеш»</h3><p data-ru="Экологическое образование" data-kz="Экологиялық білім">Экологическое образование</p><span class="etype" data-ru="Тренинг" data-kz="Тренинг">Тренинг</span></div></div>
+<div class="event reveal"><div class="month" data-ru="Октябрь" data-kz="Қазан">Октябрь</div><div class="event-card"><h3>«Экология әлемі» үстел ойындары фестивалі</h3><p data-ru="Экологическая деятельность" data-kz="Экологиялық іс-әрекет">Экологическая деятельность</p><span class="etype" data-ru="Экоэстафета" data-kz="Экоэстафета">Экоэстафета</span></div></div>
+<div class="event reveal"><div class="month" data-ru="Ноябрь" data-kz="Қараша">Ноябрь</div><div class="event-card"><h3>«Экологиялық ойлау: проблеманы көр, шешімін тап»</h3><p data-ru="Экологическое образование" data-kz="Экологиялық білім">Экологическое образование</p><span class="etype" data-ru="Интеллектуальный урок" data-kz="Интеллектуалды сабақ">Интеллектуальный урок</span></div></div>
+<div class="event reveal"><div class="month" data-ru="Декабрь" data-kz="Желтоқсан">Декабрь</div><div class="event-card"><h3>«Жасанды интеллект және экология: болашақтың жасыл технологиялары»</h3><p data-ru="Экологическое воспитание" data-kz="Экологиялық тәрбие">Экологическое воспитание</p><span class="etype" data-ru="Воспитательный час" data-kz="Тәрбие сағаты">Воспитательный час</span></div></div>
+<div class="event reveal"><div class="month" data-ru="Январь" data-kz="Қаңтар">Январь</div><div class="event-card"><h3>«Табиғат — біздің үйіміз: әрбір қадамның маңызы»</h3><p data-ru="Экологическое воспитание" data-kz="Экологиялық тәрбие">Экологическое воспитание</p><span class="etype" data-ru="Воспитательный час" data-kz="Тәрбие сағаты">Воспитательный час</span></div></div>
+<div class="event reveal"><div class="month" data-ru="Февраль" data-kz="Ақпан">Февраль</div><div class="event-card"><h3>«Бірге жасайық: экологиялық әдеп және менің рөлім»</h3><p data-ru="Экологическое воспитание" data-kz="Экологиялық тәрбие">Экологическое воспитание</p><span class="etype" data-ru="Воспитательный час" data-kz="Тәрбие сағаты">Воспитательный час</span></div></div>
+<div class="event reveal"><div class="month" data-ru="Март" data-kz="Наурыз">Март</div><div class="event-card"><h3>«Жасыл әдеттер: экологиялық мәдениеттен тұрақты өмір салтына дейін»</h3><p data-ru="Экологическая деятельность" data-kz="Экологиялық іс-әрекет">Экологическая деятельность</p><span class="etype" data-ru="Семинар" data-kz="Семинар">Семинар</span></div></div>
+<div class="event reveal"><div class="month" data-ru="Апрель" data-kz="Сәуір">Апрель</div><div class="event-card"><h3>«Жасыл марафон: өсімдіктерді отырғызу»</h3><p data-ru="Экологическая деятельность" data-kz="Экологиялық іс-әрекет">Экологическая деятельность</p><span class="etype" data-ru="Командное соревнование" data-kz="Командалық жарыс">Командное соревнование</span></div></div>
+<div class="event reveal"><div class="month" data-ru="Май" data-kz="Мамыр">Май</div><div class="event-card"><h3>Eco-Craft: апсайкл-мастерлік сайысы</h3><p data-ru="Экологическая деятельность" data-kz="Экологиялық іс-әрекет">Экологическая деятельность</p><span class="etype" data-ru="Командный конкурс" data-kz="Командалық сайыс">Командный конкурс</span></div></div>
+</div></div></section>
+<section class="section team" id="team"><div class="container"><div class="reveal"><div class="eyebrow" data-ru="Наша команда" data-kz="Біздің команда">Наша команда</div><h2 class="title" data-ru="Руководители Eco Club" data-kz="Eco Club жетекшілері">Руководители Eco Club</h2></div><div class="team-grid"><article class="person reveal"><div class="photo">🌿</div><div class="person-body"><div class="role" data-ru="Руководитель Eco Club" data-kz="Eco Club жетекшісі">Руководитель Eco Club</div><h3>Жуман Улбосын Ильясовна</h3><p data-ru="Учитель биологии и экологии" data-kz="Биология және экология пәнінің мұғалімі">Учитель биологии и экологии</p></div></article><article class="person reveal"><div class="photo">🌱</div><div class="person-body"><div class="role" data-ru="Руководитель Eco Club" data-kz="Eco Club жетекшісі">Руководитель Eco Club</div><h3>Гульянц Данил Витальевич</h3><p data-ru="Учитель математики" data-kz="Математика пәнінің мұғалімі">Учитель математики</p></div></article></div></div></section>
+<section class="section members" id="members"><div class="container"><div class="members-head reveal"><div><div class="eyebrow" data-ru="Сообщество Eco Club" data-kz="Eco Club қауымдастығы">Сообщество Eco Club</div><h2 class="title" data-ru="Участники клуба" data-kz="Клуб мүшелері">Участники клуба</h2><p class="lead" data-ru="Здесь автоматически отображаются ученики, чьи заявки одобрены руководителями Eco Club. Контактные данные и ответы из анкеты не публикуются." data-kz="Мұнда Eco Club жетекшілері өтінімін мақұлдаған оқушылар автоматты түрде көрсетіледі. Байланыс деректері мен сауалнама жауаптары жарияланбайды.">Здесь автоматически отображаются ученики, чьи заявки одобрены руководителями Eco Club. Контактные данные и ответы из анкеты не публикуются.</p></div><div class="members-goal"><div class="members-goal-top"><div><small data-ru="Принято участников" data-kz="Қабылданған мүшелер">Принято участников</small><div><strong id="memberCount">1</strong> <span data-ru="из" data-kz="/">из</span> <strong id="memberGoal">100</strong></div></div><small id="memberPercent">1%</small></div><div class="members-progress"><div class="members-progress-bar" id="membersProgressBar" style="width:1%"></div></div></div></div><div class="member-tools reveal"><input id="memberSearch" type="search" data-placeholder-ru="Поиск по имени или классу" data-placeholder-kz="Аты немесе сыныбы бойынша іздеу" placeholder="Поиск по имени или классу"><select id="memberDirection"><option value="all" data-ru="Все направления" data-kz="Барлық бағыттар">Все направления</option></select></div><div class="members-grid" id="membersGrid">
+<article class="member-card">
+<div class="member-avatar">КИ</div>
+<div>
+<div class="member-name">Ковалева Иллиана</div>
+<div class="member-meta" data-ru="6Б класс" data-kz="6Б сынып">6Б класс</div>
+<span class="member-direction">Зелёная школа</span>
+</div>
+</article>
+</div></div></section>
+<section class="section join"><div class="container"><div class="joinbox reveal"><h2 data-ru="Стань частью Eco Club" data-kz="Eco Club мүшесі бол">Стань частью Eco Club</h2><p data-ru="Наша цель — объединить 100 учащихся до конца года. Большие экологические изменения начинаются с небольших действий." data-kz="Біздің мақсатымыз — жыл соңына дейін 100 оқушыны біріктіру. Үлкен экологиялық өзгерістер кішкентай әрекеттерден басталады.">Наша цель — объединить 100 учащихся до конца года. Большие экологические изменения начинаются с небольших действий.</p><a class="btn primary" href="#application" data-ru="Подать заявку" data-kz="Өтінім беру">Подать заявку</a></div></div></section>
+<section class="section application" id="application"><div class="container"><div class="reveal"><div class="eyebrow" data-ru="Вступление в клуб" data-kz="Клубқа қосылу">Вступление в клуб</div><h2 class="title" data-ru="Подай заявку в Eco Club" data-kz="Eco Club-қа өтінім бер">Подай заявку в Eco Club</h2><p class="lead" data-ru="Заполни короткую анкету. Заявка автоматически поступит руководителям клуба в Google Таблицу." data-kz="Қысқа сауалнаманы толтыр. Өтінім автоматты түрде клуб жетекшілерінің Google кестесіне түседі.">Заполни короткую анкету. Заявка автоматически поступит руководителям клуба в Google Таблицу.</p></div><div class="application-grid"><aside class="application-info reveal"><h3 data-ru="Твой шаг к зелёным изменениям" data-kz="Жасыл өзгерістерге сенің қадамың">Твой шаг к зелёным изменениям</h3><p data-ru="Выбери направление, которое тебе интересно, и присоединяйся к практическим экологическим проектам школы." data-kz="Өзіңе қызықты бағытты таңдап, мектептің практикалық экологиялық жобаларына қосыл.">Выбери направление, которое тебе интересно, и присоединяйся к практическим экологическим проектам школы.</p><div class="application-points"><div class="application-point"><span>🌱</span><div><strong data-ru="8 участников сейчас" data-kz="Қазір 8 қатысушы">8 участников сейчас</strong><small data-ru="Цель — 100 учеников" data-kz="Мақсат — 100 оқушы">Цель — 100 учеников</small></div></div><div class="application-point"><span>🤝</span><div><strong data-ru="Командная работа" data-kz="Командалық жұмыс">Командная работа</strong><small data-ru="Проекты, акции и волонтёрство" data-kz="Жобалар, акциялар және волонтерлік">Проекты, акции и волонтёрство</small></div></div><div class="application-point"><span>♻️</span><div><strong data-ru="Реальные проекты" data-kz="Нақты жобалар">Реальные проекты</strong><small data-ru="От сортировки до озеленения" data-kz="Сұрыптаудан көгалдандыруға дейін">От сортировки до озеленения</small></div></div></div></aside><form class="eco-form reveal" id="ecoApplicationForm"><div class="form-grid"><div class="field full"><label for="studentName" data-ru="ФИО ученика *" data-kz="Оқушының аты-жөні *">ФИО ученика *</label><input id="studentName" name="name" type="text" required maxlength="120" autocomplete="name" placeholder="Например: Иванов Иван Иванович"></div><div class="field"><label for="studentClass" data-ru="Класс *" data-kz="Сынып *">Класс *</label><input id="studentClass" name="className" type="text" required maxlength="20" placeholder="Например: 8А"></div><div class="field"><label for="studentContact" data-ru="Контакт (необязательно)" data-kz="Байланыс (міндетті емес)">Контакт (необязательно)</label><input id="studentContact" name="contact" type="text" maxlength="100" placeholder="Телефон или другой контакт"></div><div class="field full"><label for="direction" data-ru="Интересующее направление *" data-kz="Қызықтыратын бағыт *">Интересующее направление *</label><select id="direction" name="direction" required><option value="" data-ru="Выберите направление" data-kz="Бағытты таңдаңыз">Выберите направление</option><option value="Школьный пункт раздельного сбора отходов" data-ru="♻️ Раздельный сбор отходов" data-kz="♻️ Қалдықтарды бөлек жинау">♻️ Раздельный сбор отходов</option><option value="Зелёная школа" data-ru="🌳 Зелёная школа / озеленение" data-kz="🌳 Жасыл мектеп / көгалдандыру">🌳 Зелёная школа / озеленение</option><option value="Чистый десант" data-ru="🧹 Чистый десант / эко-субботники" data-kz="🧹 Таза десант / эко-сенбіліктер">🧹 Чистый десант / эко-субботники</option><option value="Эко-просвещение и творчество" data-ru="🎨 Эко-просвещение и творчество" data-kz="🎨 Эко-ағарту және шығармашылық">🎨 Эко-просвещение и творчество</option><option value="Зелёный обмен" data-ru="🔄 Фримаркет «Зелёный обмен»" data-kz="🔄 «Жасыл алмасу» фримаркеті">🔄 Фримаркет «Зелёный обмен»</option><option value="Эко-патруль и энергосбережение" data-ru="⚡ Эко-патруль и энергосбережение" data-kz="⚡ Эко-патруль және энергияны үнемдеу">⚡ Эко-патруль и энергосбережение</option></select></div><div class="field full"><label for="motivation" data-ru="Почему ты хочешь вступить в Eco Club?" data-kz="Неліктен Eco Club-қа қосылғың келеді?">Почему ты хочешь вступить в Eco Club?</label><textarea id="motivation" name="motivation" maxlength="700" placeholder="Расскажи коротко о своём интересе к экологии"></textarea><span class="field-note" data-ru="Можно ответить в 1–3 предложениях." data-kz="1–3 сөйлеммен жауап беруге болады.">Можно ответить в 1–3 предложениях.</span></div></div><label class="consent"><input id="consent" type="checkbox" required><span data-ru="Я подтверждаю, что данные указаны для подачи заявки на участие в школьном Eco Club. *" data-kz="Деректер мектептің Eco Club клубына қатысуға өтінім беру үшін көрсетілгенін растаймын. *">Я подтверждаю, что данные указаны для подачи заявки на участие в школьном Eco Club. *</span></label><div class="submit-row"><button class="btn primary submit-btn" id="submitApplication" type="submit" data-ru="Отправить заявку" data-kz="Өтінімді жіберу">Отправить заявку</button><span class="form-status" id="formStatus" aria-live="polite"></span></div><p class="privacy-note" data-ru="Поля со звёздочкой обязательны. Контакт можно не указывать." data-kz="Жұлдызшамен белгіленген өрістер міндетті. Байланыс деректерін көрсетпеуге болады.">Поля со звёздочкой обязательны. Контакт можно не указывать.</p></form></div></div></section>
+</main>
+<footer><div class="container"><div class="foot"><div><div class="fbrand"><img src="eco-club-logo.png" alt="Eco Club">ECO CLUB</div><p class="fschool">Общеобразовательная школа-лицей имени Мухтара Ауэзова</p></div></div><div class="copy" data-ru="© 2026 Eco Club. Общеобразовательная школа-лицей имени Мухтара Ауэзова." data-kz="© 2026 Eco Club. Мұхтар Әуезов атындағы жалпы білім беретін мектеп-лицейі.">© 2026 Eco Club. Общеобразовательная школа-лицей имени Мухтара Ауэзова.</div></div></footer>
+<div class="lightbox" id="lightbox" onclick="if(event.target===this)closeLightbox()"><button class="lightbox-close" onclick="closeLightbox()" aria-label="Закрыть">×</button><img id="lightboxImage" src="" alt="Eco Club"></div>
+<script>
+function lang(l){
+  if(l!=='ru' && l!=='kz') l='ru';
+
+  document.querySelectorAll('[data-ru][data-kz]').forEach(function(el){
+    var value = el.getAttribute('data-' + l);
+    if(value !== null) el.textContent = value;
+  });
+
+  document.querySelectorAll('[data-placeholder-ru][data-placeholder-kz]').forEach(function(el){
+    var value = el.getAttribute('data-placeholder-' + l);
+    if(value !== null) el.setAttribute('placeholder', value);
+  });
+
+  var ruBtn = document.getElementById('ru');
+  var kzBtn = document.getElementById('kz');
+  if(ruBtn) ruBtn.classList.toggle('active', l==='ru');
+  if(kzBtn) kzBtn.classList.toggle('active', l==='kz');
+
+  document.documentElement.lang = l==='kz' ? 'kk' : 'ru';
+
+  try { localStorage.setItem('ecoLang', l); } catch(e) {}
+
+  try {
+    if (typeof ecoMembers !== 'undefined' && typeof renderMembers === 'function') renderMembers();
+  } catch(e) {}
+}
+
+function openLightbox(src){const b=document.getElementById('lightbox'),i=document.getElementById('lightboxImage');i.src=src;b.classList.add('open');document.body.style.overflow='hidden'}
+function closeLightbox(){document.getElementById('lightbox').classList.remove('open');document.body.style.overflow=''}
+document.addEventListener('keydown',e=>{if(e.key==='Escape')closeLightbox()});
+function toggleMenu(){document.getElementById('links').classList.toggle('open')}document.querySelectorAll('#links a').forEach(a=>a.onclick=()=>document.getElementById('links').classList.remove('open'));
+document.querySelectorAll('.reveal').forEach(e=>e.classList.add('visible'));
+const resultCounters=document.querySelectorAll('.counter');let countersDone=false;function animateResultCounters(){if(countersDone)return;countersDone=true;resultCounters.forEach(el=>{const target=+el.dataset.target||0,start=performance.now(),duration=1200;function tick(now){const p=Math.min(1,(now-start)/duration),ease=1-Math.pow(1-p,3);el.textContent=Math.round(target*ease).toLocaleString('ru-RU');if(p<1)requestAnimationFrame(tick)}requestAnimationFrame(tick)})}const resultsSection=document.getElementById('results');if('IntersectionObserver'in window&&resultsSection){new IntersectionObserver(entries=>{if(entries[0].isIntersecting)animateResultCounters()},{threshold:.25}).observe(resultsSection)}else animateResultCounters();
+
+const ECO_CLUB_SCRIPT_URL='https://script.google.com/macros/s/AKfycbz0DrR9pZv-R1L6T1HmhuYAAYJt2OoQgJf851uglXsxPtkGH9K1s_o0kCUB_LNRL9bmdA/exec';
+let ecoMembers=[];
+const directionKz={
+'Школьный пункт раздельного сбора отходов':'Қалдықтарды бөлек жинау',
+'Зелёная школа':'Жасыл мектеп',
+'Чистый десант':'Таза десант',
+'Эко-просвещение и творчество':'Эко-ағарту және шығармашылық',
+'Зелёный обмен':'Жасыл алмасу',
+'Эко-патруль и энергосбережение':'Эко-патруль және энергияны үнемдеу'
+};
+function esc(v){return String(v??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function initials(name){return String(name||'?').trim().split(/\s+/).slice(0,2).map(x=>x[0]||'').join('').toUpperCase()||'?'}
+function localDirection(d){return document.documentElement.lang==='kk'?(directionKz[d]||d):d}
+function fillDirectionFilter(){const sel=document.getElementById('memberDirection');if(!sel)return;const current=sel.value;const first=document.documentElement.lang==='kk'?'Барлық бағыттар':'Все направления';const dirs=[...new Set(ecoMembers.map(m=>m.direction).filter(Boolean))].sort();sel.innerHTML='<option value="all">'+first+'</option>'+dirs.map(d=>'<option value="'+esc(d)+'">'+esc(localDirection(d))+'</option>').join('');if([...sel.options].some(o=>o.value===current))sel.value=current}
+function renderMembers(){const grid=document.getElementById('membersGrid');if(!grid)return;fillDirectionFilter();const q=(document.getElementById('memberSearch')?.value||'').trim().toLowerCase();const dir=document.getElementById('memberDirection')?.value||'all';const list=ecoMembers.filter(m=>(dir==='all'||m.direction===dir)&&(!q||(`${m.name} ${m.className}`).toLowerCase().includes(q)));if(!list.length){grid.innerHTML='<div class="members-state">'+(document.documentElement.lang==='kk'?'Сұраныс бойынша қатысушылар табылмады.':'По вашему запросу участники не найдены.')+'</div>';return}grid.innerHTML=list.map(m=>`<article class="member-card"><div class="member-avatar">${esc(initials(m.name))}</div><div><div class="member-name">${esc(m.name)}</div><div class="member-meta">${esc(m.className)} ${document.documentElement.lang==='kk'?'сынып':'класс'}</div><span class="member-direction">${esc(localDirection(m.direction))}</span></div></article>`).join('')}
+function applyMembersData(data){const grid=document.getElementById('membersGrid');if(!grid)return;if(!data||!data.success){throw new Error((data&&data.message)||'API error')}ecoMembers=Array.isArray(data.members)?data.members:[];const count=Number(data.count??ecoMembers.length),goal=Number(data.goal??100),pct=goal?Math.min(100,Math.round(count/goal*100)):0;document.getElementById('memberCount').textContent=count;const heroMemberCount=document.getElementById('heroMemberCount');if(heroMemberCount)heroMemberCount.textContent=count;const resultsMemberCount=document.getElementById('resultsMemberCount');if(resultsMemberCount){resultsMemberCount.dataset.target=count;resultsMemberCount.textContent=count.toLocaleString('ru-RU');}document.getElementById('memberGoal').textContent=goal;document.getElementById('memberPercent').textContent=pct+'%';document.getElementById('membersProgressBar').style.width=pct+'%';
+const mainPct=document.getElementById('mainMemberPercent');
+const mainBar=document.getElementById('mainMemberBar');
+const mainText=document.getElementById('mainMemberText');
+if(mainPct)mainPct.textContent=pct+'%';
+if(mainBar)mainBar.style.width=pct+'%';
+if(mainText){
+  mainText.dataset.ru='Сейчас в Eco Club — '+count+' участников';
+  mainText.dataset.kz='Қазір Eco Club-та — '+count+' қатысушы';
+  mainText.textContent=document.documentElement.lang==='kk'?mainText.dataset.kz:mainText.dataset.ru;
+}
+renderMembers()}
+function loadMembers(){
+  const grid=document.getElementById('membersGrid');
+  window.ecoClubCallback=function(data){
+    try{
+      applyMembersData(data);
+    }catch(err){
+      console.error(err);
+    }
+  };
+  const script=document.createElement('script');
+  script.src=ECO_CLUB_SCRIPT_URL+'?callback=ecoClubCallback&t='+Date.now();
+  script.async=true;
+  script.onerror=function(){
+    console.error('Eco Club API could not be loaded');
+  };
+  document.head.appendChild(script);
+}
+document.getElementById('memberSearch')?.addEventListener('input',renderMembers);document.getElementById('memberDirection')?.addEventListener('change',renderMembers);loadMembers();
+
+// Animate the Eco Club process when it enters the viewport
+(function(){var path=document.getElementById('ecoPath');if(!path)return;if('IntersectionObserver' in window){var obs=new IntersectionObserver(function(entries){entries.forEach(function(entry){if(entry.isIntersecting){path.classList.add('visible');obs.unobserve(path)}})},{threshold:.3});obs.observe(path)}else{path.classList.add('visible')}})();
+
+// Language initialization after all variables/functions are defined
+(function(){ var saved='ru'; try{saved=localStorage.getItem('ecoLang')||'ru'}catch(e){} lang(saved); })();
+
+const applicationForm=document.getElementById('ecoApplicationForm');
+if(applicationForm){applicationForm.addEventListener('submit',async function(e){e.preventDefault();const button=document.getElementById('submitApplication'),status=document.getElementById('formStatus'),currentLang=document.documentElement.lang==='kk'?'kz':'ru';if(!applicationForm.reportValidity())return;button.disabled=true;button.textContent=currentLang==='kz'?'Жіберілуде...':'Отправляем...';status.className='form-status';status.textContent=currentLang==='kz'?'Өтінім жіберілуде...':'Заявка отправляется...';const payload={name:document.getElementById('studentName').value.trim(),className:document.getElementById('studentClass').value.trim(),contact:document.getElementById('studentContact').value.trim(),direction:document.getElementById('direction').value,motivation:document.getElementById('motivation').value.trim(),language:currentLang};try{const response=await fetch(ECO_CLUB_SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain;charset=utf-8'},body:JSON.stringify(payload),redirect:'follow'});let result={success:response.ok};try{result=await response.json()}catch(_){/* Apps Script may return a redirected/opaque response */}if(result.success===false)throw new Error(result.message||'Request failed');applicationForm.reset();status.className='form-status success';status.textContent=currentLang==='kz'?'✓ Өтінім қабылданды! Жақында клуб жетекшілері сізбен байланысады.':'✓ Заявка принята! Руководители клуба скоро её рассмотрят.'}catch(err){console.error(err);status.className='form-status error';status.textContent=currentLang==='kz'?'Өтінімді жіберу мүмкін болмады. Кейінірек қайталап көріңіз.':'Не удалось отправить заявку. Попробуйте ещё раз позже.'}finally{button.disabled=false;button.textContent=currentLang==='kz'?'Өтінімді жіберу':'Отправить заявку'}})}
+
+
+// Animated splash screens for Practical Tasks
+(function(){
+  var chapters = document.querySelectorAll('.task-chapter');
+  if(!chapters.length) return;
+  if(!('IntersectionObserver' in window)){
+    chapters.forEach(function(el){ el.classList.add('is-visible'); });
+    return;
+  }
+  var observer = new IntersectionObserver(function(entries){
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        entry.target.classList.add('is-visible');
+        observer.unobserve(entry.target);
+      }
+    });
+  }, {threshold:0.18});
+  chapters.forEach(function(el){ observer.observe(el); });
+})();
+</script>
+</body></html>
