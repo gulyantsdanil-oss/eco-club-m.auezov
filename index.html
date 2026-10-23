@@ -3220,4 +3220,7 @@ load();
  document.addEventListener('keydown',e=>{if(modal.hidden)return;if(e.key==='Escape'){e.preventDefault();close();}else if(e.key==='Tab'){const els=[closer,modal.querySelector('.eco-teacher-open-direct')];if(e.shiftKey&&document.activeElement===els[0]){e.preventDefault();els[1].focus();}else if(!e.shiftKey&&document.activeElement===els[1]){e.preventDefault();els[0].focus();}}});
 })();
 </script>
+ 
+<script defer src="./eco-sidebar.js"></script>
+
 </body></html>
