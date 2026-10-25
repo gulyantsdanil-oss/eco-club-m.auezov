@@ -1,55 +1,98 @@
-/* Eco Club Living Nature Hero v1 — additive visual enhancement.
-   This module decorates the existing .hero. It does not replace its contents,
-   touch application API calls, or change any original language handlers. */
-(()=>{
- 'use strict';
- if(window.__ecoHeroV1) return;
- const hero=document.querySelector('main .hero, section.hero, .hero');
- if(!hero) return;
- window.__ecoHeroV1=true;
- const motion=window.matchMedia('(prefers-reduced-motion: reduce)');
- const style=document.createElement('style');
- style.textContent=`
-  body.eco-hero-enhanced .hero{isolation:isolate;background:#082b21!important;overflow:hidden;min-height:calc(100svh - 78px)}
-  body.eco-hero-enhanced .hero .hero-grid{position:relative;z-index:3}
-  body.eco-hero-enhanced .hero .hero-grid > *{min-width:0}
-  body.eco-hero-enhanced .hero .hero-grid h1{letter-spacing:-.055em;line-height:.9;text-shadow:0 18px 75px rgba(0,0,0,.26)}
-  body.eco-hero-enhanced .hero .hero-desc{color:#d9efe3}
-  body.eco-hero-enhanced .hero .logo-ring{background:rgba(7,41,30,.28);border:1px solid rgba(195,255,205,.25);box-shadow:0 0 0 24px rgba(217,255,220,.025),0 0 85px 15px rgba(178,234,156,.12),0 40px 110px rgba(0,0,0,.4);backdrop-filter:blur(4px)}
-  body.eco-hero-enhanced .hero .logo-ring img{filter:drop-shadow(0 25px 35px rgba(0,0,0,.38))}
-  .eco-hero-environment{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;contain:paint}
-  .eco-hero-photo{position:absolute;inset:-4%;background:linear-gradient(90deg,rgba(3,22,16,.94) 0%,rgba(4,34,24,.87) 36%,rgba(4,40,28,.43) 76%,rgba(4,24,18,.55) 100%),linear-gradient(0deg,rgba(2,21,13,.85),transparent 46%),url('./merki-2.jpg.jpeg') center 48%/cover no-repeat;transform:scale(1.04);filter:saturate(1.12) contrast(1.02);animation:ecoHeroBreath 20s ease-in-out infinite alternate}
-  .eco-hero-vignette{position:absolute;inset:0;background:radial-gradient(ellipse at 79% 35%,rgba(160,255,160,.16),transparent 34%),linear-gradient(180deg,rgba(0,0,0,.05),transparent 44%,rgba(0,18,9,.55))}
-  .eco-hero-rays{position:absolute;inset:-20%;transform-origin:75% 0;background:conic-gradient(from 188deg at 75% 0%,transparent 0 7deg,rgba(232,255,189,.13) 12deg,transparent 21deg,transparent 33deg,rgba(228,255,200,.07) 40deg,transparent 50deg);opacity:.8;mix-blend-mode:screen;animation:ecoHeroRay 14s ease-in-out infinite alternate}
-  .eco-hero-orb{position:absolute;left:70%;top:18%;width:29vw;height:29vw;max-width:430px;max-height:430px;border-radius:50%;background:radial-gradient(circle,rgba(207,255,186,.15),rgba(88,180,118,.05) 47%,transparent 70%);filter:blur(12px);animation:ecoHeroFloat 13s ease-in-out infinite alternate}
-  .eco-hero-foreground{position:absolute;bottom:-4%;left:-8%;right:-8%;height:22%;background:linear-gradient(0deg,#05261a 8%,rgba(5,35,23,.75) 45%,transparent);filter:blur(9px)}
-  .eco-hero-particles{position:absolute;inset:0}
-  .eco-hero-particle{position:absolute;border-radius:50%;width:3px;height:3px;background:#dcffbe;box-shadow:0 0 13px rgba(215,255,177,.72);opacity:.47;animation:ecoHeroSpark var(--time) ease-in-out infinite alternate;animation-delay:var(--delay)}
-  .eco-hero-lab{position:relative;z-index:4;display:flex;gap:10px;flex-wrap:wrap;margin-top:22px;max-width:700px}
-  .eco-hero-lab a{display:inline-flex;align-items:center;gap:8px;min-height:42px;padding:9px 14px;border-radius:13px;background:rgba(13,66,46,.55);border:1px solid rgba(199,250,202,.26);color:#f0fff2;font:750 13px/1.3 inherit;backdrop-filter:blur(12px);box-shadow:0 8px 24px rgba(0,0,0,.13);text-decoration:none;transition:transform .23s ease,background .23s ease,border-color .23s ease}
-  .eco-hero-lab a:hover,.eco-hero-lab a:focus-visible{transform:translateY(-3px);background:rgba(19,91,61,.78);border-color:rgba(215,255,215,.62)}
-  .eco-hero-lab a:focus-visible{outline:2px solid #d2fa9b;outline-offset:3px}
-  .eco-hero-section-note{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:#bbf9bd;margin-top:16px;font-weight:900}
-  @keyframes ecoHeroBreath{from{transform:scale(1.04) translateY(0)}to{transform:scale(1.11) translateY(-1%)}}
-  @keyframes ecoHeroRay{from{transform:rotate(-2deg);opacity:.42}to{transform:rotate(4deg);opacity:.93}}
-  @keyframes ecoHeroFloat{from{transform:translate(0,0)}to{transform:translate(-4%,5%)}}
-  @keyframes ecoHeroSpark{from{opacity:.15;transform:translateY(15px) scale(.7)}to{opacity:.8;transform:translateY(-20px) scale(1.4)}}
-  @media(max-width:780px){body.eco-hero-enhanced .hero .hero-grid{gap:22px;padding-top:54px;padding-bottom:56px}body.eco-hero-enhanced .hero .hero-grid h1{font-size:clamp(55px,15vw,91px);letter-spacing:-.06em}.eco-hero-photo{background-position:center 45%}.eco-hero-lab{gap:8px}.eco-hero-lab a{font-size:12px;padding:8px 11px}.eco-hero-rays{opacity:.4}}
-  @media(max-width:480px){.eco-hero-lab{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}.eco-hero-lab a{justify-content:center}.eco-hero-lab a:last-child{grid-column:1/-1}}
-  @media(prefers-reduced-motion:reduce){.eco-hero-photo,.eco-hero-rays,.eco-hero-orb,.eco-hero-particle{animation:none!important}body.eco-hero-enhanced .hero .logo-ring{animation:none!important}.eco-hero-lab a{transition:none!important}}
- `;
- document.head.appendChild(style);
- const env=document.createElement('div');env.className='eco-hero-environment';env.setAttribute('aria-hidden','true');
- env.innerHTML='<div class="eco-hero-photo"></div><div class="eco-hero-vignette"></div><div class="eco-hero-rays"></div><div class="eco-hero-orb"></div><div class="eco-hero-particles"></div><div class="eco-hero-foreground"></div>';
- hero.insertBefore(env,hero.firstChild);
- if(!motion.matches){const holder=env.querySelector('.eco-hero-particles');for(let i=0;i<18;i++){const dot=document.createElement('i');dot.className='eco-hero-particle';dot.style.left=(6+(i*37)%87)+'%';dot.style.top=(9+(i*23)%73)+'%';dot.style.setProperty('--delay',(-i*0.37)+'s');dot.style.setProperty('--time',(4+(i%5))+'s');holder.append(dot)}}
- const grid=hero.querySelector('.hero-grid');
- const info=grid&&grid.firstElementChild;
- if(info){
-   const lab=document.createElement('nav');lab.className='eco-hero-lab';lab.setAttribute('aria-label','ECO LAB');
-   const links=[['📊','Waste Audit','./waste-audit.html'],['🎮','EcoGames','./eco-games.html'],['♻️','EcoCraft','./eco-craft.html']];
-   links.forEach(([icon,title,url])=>{const a=document.createElement('a');a.href=url;a.textContent=icon+' '+title;lab.appendChild(a)});
-   info.append(lab);
- }
- document.body.classList.add('eco-hero-enhanced');
+/* Living Nature Hero v2 — additive motion layer for Eco Club.
+   Preserves original HTML, language switching, emblem, links, and site integrations. */
+(() => {
+  'use strict';
+  if (window.__ecoHeroMotionV2) return;
+  const hero = document.querySelector('main .hero, section.hero, .hero');
+  if (!hero) return;
+  window.__ecoHeroMotionV2 = true;
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const style = document.createElement('style');
+  style.textContent = `
+    /* Effects are layered behind the existing hero content. Original light design is retained. */
+    .hero.eco-cinema-v2{position:relative;isolation:isolate;overflow:hidden}
+    .hero.eco-cinema-v2 > :not(.eco-cinema-layer){position:relative;z-index:2}
+    .hero.eco-cinema-v2 .eco-cinema-layer{position:absolute;inset:0;z-index:0;pointer-events:none;overflow:hidden;contain:paint}
+    .hero.eco-cinema-v2 .eco-cinema-layer::before{
+      content:"";position:absolute;inset:-9%;background:
+      radial-gradient(ellipse 36% 43% at 76% 39%,rgba(183,230,147,.25),transparent 78%),
+      radial-gradient(ellipse 28% 52% at 12% 75%,rgba(92,156,113,.13),transparent 76%);
+      transform:translate3d(calc(var(--eco-mx,0) * 16px),calc(var(--eco-my,0) * 12px),0);
+      transition:transform .5s ease;will-change:transform
+    }
+    .hero.eco-cinema-v2 .eco-cinema-rays{
+      position:absolute;inset:-20% -10%;opacity:.48;
+      background:conic-gradient(from 207deg at 77% 0%,transparent 0deg,rgba(228,246,175,.16) 8deg,transparent 15deg,transparent 25deg,rgba(186,233,167,.13) 33deg,transparent 42deg);
+      mix-blend-mode:multiply;animation:ecoCinemaRay 16s ease-in-out infinite alternate
+    }
+    .hero.eco-cinema-v2 .eco-cinema-glow{
+      position:absolute;width:min(60vw,640px);height:min(60vw,640px);right:6%;top:6%;
+      border-radius:50%;background:radial-gradient(circle,rgba(160,224,113,.19),rgba(150,213,146,.07) 48%,transparent 72%);
+      filter:blur(22px);animation:ecoCinemaGlow 12s ease-in-out infinite alternate
+    }
+    .hero.eco-cinema-v2 .eco-cinema-specks{position:absolute;inset:0}
+    .hero.eco-cinema-v2 .eco-cinema-speck{position:absolute;width:3px;height:3px;border-radius:50%;background:#7fa86c;opacity:.38;box-shadow:0 0 13px rgba(139,198,100,.32);animation:ecoCinemaSpeck var(--eco-speed) ease-in-out infinite alternate;animation-delay:var(--eco-delay)}
+    .hero.eco-cinema-v2 .hero-visual{transform:translate3d(calc(var(--eco-mx,0) * -7px),calc(var(--eco-my,0) * -5px),0);transition:transform .6s ease;will-change:transform}
+    .hero.eco-cinema-v2 .logo-ring{box-shadow:0 0 0 16px rgba(178,223,152,.06),0 0 80px rgba(123,180,109,.16),0 22px 58px rgba(26,86,52,.09)}
+    .hero.eco-cinema-v2 .hero-content{transform:translate3d(calc(var(--eco-mx,0) * 4px),calc(var(--eco-my,0) * 3px),0);transition:transform .6s ease}
+    .hero.eco-cinema-v2 .eco-cinema-entry{animation:ecoCinemaEntry .95s cubic-bezier(.19,.8,.2,1) both}
+    .hero.eco-cinema-v2 .eco-cinema-entry:nth-child(2){animation-delay:.09s}
+    .hero.eco-cinema-v2 .eco-cinema-entry:nth-child(3){animation-delay:.16s}
+    .hero.eco-cinema-v2 .eco-cinema-entry:nth-child(4){animation-delay:.23s}
+    @keyframes ecoCinemaEntry{from{opacity:0;translate:0 19px;filter:blur(5px)}to{opacity:1;translate:0 0;filter:blur(0)}}
+    @keyframes ecoCinemaRay{from{transform:rotate(-3deg);opacity:.25}to{transform:rotate(4deg);opacity:.55}}
+    @keyframes ecoCinemaGlow{from{transform:translate(-1%,0) scale(.97)}to{transform:translate(2%,2%) scale(1.06)}}
+    @keyframes ecoCinemaSpeck{from{transform:translateY(9px);opacity:.16}to{transform:translateY(-17px);opacity:.65}}
+    @media(max-width:900px){
+      .hero.eco-cinema-v2 .hero-visual,.hero.eco-cinema-v2 .hero-content{transform:none!important}
+      .hero.eco-cinema-v2 .eco-cinema-rays{opacity:.24}
+    }
+    @media(prefers-reduced-motion:reduce){
+      .hero.eco-cinema-v2 .eco-cinema-rays,.hero.eco-cinema-v2 .eco-cinema-glow,
+      .hero.eco-cinema-v2 .eco-cinema-speck,.hero.eco-cinema-v2 .eco-cinema-entry{animation:none!important;filter:none!important}
+      .hero.eco-cinema-v2 .hero-visual,.hero.eco-cinema-v2 .hero-content{transform:none!important;transition:none!important}
+    }
+  `;
+  document.head.append(style);
+  const layer = document.createElement('div');
+  layer.className='eco-cinema-layer';
+  layer.setAttribute('aria-hidden','true');
+  layer.innerHTML='<div class="eco-cinema-rays"></div><div class="eco-cinema-glow"></div><div class="eco-cinema-specks"></div>';
+  hero.insertBefore(layer,hero.firstChild);
+  hero.classList.add('eco-cinema-v2');
+  const specks=layer.querySelector('.eco-cinema-specks');
+  if(!reduced.matches){
+    for(let i=0;i<18;i++){
+      const dot=document.createElement('i');
+      dot.className='eco-cinema-speck';
+      dot.style.left=(8+i*41%84)+'%';
+      dot.style.top=(10+i*29%73)+'%';
+      dot.style.setProperty('--eco-speed',(4+i%6)+'s');
+      dot.style.setProperty('--eco-delay',(-i*.32)+'s');
+      specks.append(dot);
+    }
+  }
+  const content=hero.querySelector('.hero-content');
+  if(content){
+    [...content.children].slice(0,5).forEach(el=>el.classList.add('eco-cinema-entry'));
+  }
+  let raf=0;
+  function move(ev){
+    if(reduced.matches || window.innerWidth<=900) return;
+    if(raf) cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(()=>{
+      const box=hero.getBoundingClientRect();
+      const x=((ev.clientX-box.left)/box.width-.5)*2;
+      const y=((ev.clientY-box.top)/box.height-.5)*2;
+      hero.style.setProperty('--eco-mx',String(Math.max(-1,Math.min(1,x))));
+      hero.style.setProperty('--eco-my',String(Math.max(-1,Math.min(1,y))));
+      raf=0;
+    });
+  }
+  hero.addEventListener('pointermove',move,{passive:true});
+  hero.addEventListener('pointerleave',()=>{
+    hero.style.setProperty('--eco-mx','0');
+    hero.style.setProperty('--eco-my','0');
+  });
 })();
