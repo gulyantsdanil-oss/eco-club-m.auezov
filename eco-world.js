@@ -1,7 +1,7 @@
 (function(){
   'use strict';
-  if (window.__ECO_WORLD_22_LOADED__) return;
-  window.__ECO_WORLD_22_LOADED__ = true;
+  if (window.__ECO_WORLD_23_LOADED__) return;
+  window.__ECO_WORLD_23_LOADED__ = true;
 
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -77,14 +77,14 @@
   const style = document.createElement('style');
   style.textContent = `
     .ew22-launch{position:fixed;right:18px;bottom:18px;z-index:99992;display:inline-flex;align-items:center;gap:10px;padding:14px 18px;border-radius:999px;border:1px solid rgba(147,255,175,.24);background:linear-gradient(135deg,rgba(6,48,34,.94),rgba(17,84,56,.94));color:#eaffea;font:800 14px/1.1 system-ui,-apple-system,Segoe UI,Roboto,sans-serif;box-shadow:0 18px 48px rgba(0,0,0,.28),0 0 0 1px rgba(255,255,255,.05) inset;cursor:pointer;backdrop-filter:blur(12px);transition:transform .2s ease,box-shadow .2s ease,opacity .2s ease}
-    .ew22-launch:hover{transform:translateY(-2px);box-shadow:0 22px 54px rgba(0,0,0,.36),0 0 0 1px rgba(255,255,255,.08) inset}
-    .ew22-root{position:fixed;inset:0;z-index:99991;display:none;background:
+    .ew22-launch.ew22-hidden{display:none!important}.ew22-launch:hover{transform:translateY(-2px);box-shadow:0 22px 54px rgba(0,0,0,.36),0 0 0 1px rgba(255,255,255,.08) inset}
+    .ew22-root{position:fixed;inset:0;width:100%;height:100dvh;max-width:100%;z-index:99991;display:none;overflow-x:hidden;overflow-y:auto;overscroll-behavior:contain;background:
       radial-gradient(circle at 75% 20%, rgba(138,255,196,.18), transparent 22%),
       radial-gradient(circle at 20% 75%, rgba(63,173,118,.13), transparent 28%),
       linear-gradient(135deg,#06281f 0%, #0b3127 34%, #072118 100%);color:#eef8ef;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;overflow:auto}
     .ew22-root.ew22-open{display:block}
-    .ew22-root *{box-sizing:border-box}
-    .ew22-shell{max-width:1180px;margin:0 auto;padding:28px 20px 34px;position:relative}
+    .ew22-root *{box-sizing:border-box;min-width:0}.ew22-root img,.ew22-root svg{max-width:100%}
+    .ew22-shell{max-width:1180px;width:100%;min-width:0;margin:0 auto;padding:28px 20px 34px;position:relative}
     .ew22-atmo,.ew22-atmo:before,.ew22-atmo:after{pointer-events:none;position:absolute;inset:0;content:""}
     .ew22-atmo{background:radial-gradient(circle at 80% 25%,rgba(214,255,214,.12),transparent 22%), radial-gradient(circle at 50% 100%,rgba(73,168,108,.16),transparent 35%)}
     .ew22-atmo:before{background:linear-gradient(120deg,transparent 0 30%, rgba(220,255,220,.07) 38%, transparent 45%, transparent 55%, rgba(220,255,220,.04) 64%, transparent 70%);opacity:.8;animation:ew22rays 18s linear infinite}
@@ -93,7 +93,7 @@
     .ew22-badge{display:inline-flex;align-items:center;gap:10px;font-weight:900;letter-spacing:.14em;color:#b2ffc2;font-size:16px;text-transform:uppercase}
     .ew22-controls{display:flex;gap:10px;flex-wrap:wrap}
     .ew22-btn{border:1px solid rgba(149,240,176,.25);background:rgba(14,58,42,.72);color:#eef8ef;padding:12px 18px;border-radius:999px;font-weight:700;cursor:pointer;backdrop-filter:blur(12px);box-shadow:inset 0 0 0 1px rgba(255,255,255,.04)}
-    .ew22-main{display:grid;grid-template-columns:1.05fr .95fr;gap:28px;align-items:start;position:relative;z-index:1}
+    .ew22-main{display:grid;grid-template-columns:minmax(0,1.05fr) minmax(0,.95fr);gap:28px;align-items:start;position:relative;z-index:1}
     .ew22-eyebrow{font-size:12px;font-weight:900;letter-spacing:.28em;color:#b4ffc4;margin:20px 0 14px;text-transform:uppercase}
     .ew22-title{font-size:clamp(42px,7vw,86px);line-height:.96;font-weight:950;letter-spacing:-.05em;margin:0 0 18px;max-width:760px}
     .ew22-subtitle{font-size:clamp(19px,2.1vw,27px);line-height:1.45;color:#d4ebd9;max-width:720px;margin:0 0 28px}
@@ -221,7 +221,11 @@
     els.hint.textContent = steps[idx];
   }
 
+  let prevHtmlOverflow="", prevBodyOverflow="";
   function openWorld(){
+    prevHtmlOverflow=document.documentElement.style.overflow;
+    prevBodyOverflow=document.body.style.overflow;
+    launch.classList.add("ew22-hidden");
     root.classList.add('ew22-open');
     root.setAttribute('aria-hidden','false');
     document.documentElement.style.overflow='hidden';
@@ -230,8 +234,9 @@
   function closeWorld(){
     root.classList.remove('ew22-open');
     root.setAttribute('aria-hidden','true');
-    document.documentElement.style.overflow='';
-    document.body.style.overflow='';
+    document.documentElement.style.overflow=prevHtmlOverflow;
+    document.body.style.overflow=prevBodyOverflow;
+    launch.classList.remove('ew22-hidden');
   }
 
   function lerp(a,b,t){ return a + (b-a)*t; }
@@ -261,7 +266,7 @@
     const p = progress / 100;
     const trunkH = lerp(40, 160, p);
     const trunkTopY = 300 - trunkH;
-    const canopyR = lerp(14, 82, p);
+    const canopyR = lerp(14, 82, p); // Scene tree scales progressively to 150%
     const canopyY = trunkTopY + 10;
     const branchA = p > .22 ? 1 : 0;
     const branchB = p > .35 ? 1 : 0;
@@ -381,7 +386,7 @@
           <path d="M580 335 q9 -15 14 0 q-1 -11 7 -16 q-2 12 10 17" fill="none" stroke="#79c482" stroke-width="2.2" stroke-linecap="round"/>
         </g>
         ${shrubs}
-        <g filter="url(#treeShadow)">
+        <g transform="translate(322 300) scale(${(1 + 0.50*p).toFixed(3)}) translate(-322 -300)" filter="url(#treeShadow)">
           <rect x="313" y="${300-trunkH}" width="18" height="${trunkH}" rx="9" fill="url(#trunkGrad)"/>
           ${branchA ? `<path d="M322 ${trunkTopY+18} C300 ${trunkTopY+4}, 286 ${trunkTopY-8}, 274 ${trunkTopY-18}" fill="none" stroke="url(#branchGrad)" stroke-width="7" stroke-linecap="round"/>` : ''}
           ${branchB ? `<path d="M322 ${trunkTopY+6} C346 ${trunkTopY-12}, 367 ${trunkTopY-21}, 392 ${trunkTopY-24}" fill="none" stroke="url(#branchGrad)" stroke-width="7" stroke-linecap="round"/>` : ''}
