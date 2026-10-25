@@ -1,7 +1,7 @@
 (function(){
   'use strict';
-  if (window.__ECO_WORLD_23_LOADED__) return;
-  window.__ECO_WORLD_23_LOADED__ = true;
+  if (window.__ECO_WORLD_24_LOADED__) return;
+  window.__ECO_WORLD_24_LOADED__ = true;
 
   const reduceMotion = window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -116,7 +116,7 @@
     .ew22-cardTitle{font-size:18px;font-weight:900;margin-bottom:8px}
     .ew22-cardDesc{font-size:14px;color:#d0ead6}
     .ew22-mist{position:absolute;left:-10%;right:-10%;bottom:6%;height:34%;background:radial-gradient(ellipse at center, rgba(213,255,222,.12), rgba(213,255,222,0) 60%);filter:blur(22px);animation:ew22mist 16s ease-in-out infinite;pointer-events:none}
-    .ew22-svg{display:block;width:100%;height:auto;position:relative;z-index:1}
+    .ew22-svg{display:block;width:100%;height:auto;max-height:440px;position:relative;z-index:1}
     .ew22-closeHint{margin-top:18px;color:#b8d1be;font-size:13px}
     .ew22-hidden{display:none!important}
     @keyframes ew22rays{0%{transform:translateX(-2%) translateY(0)}50%{transform:translateX(2%) translateY(1%)}100%{transform:translateX(-2%) translateY(0)}}
@@ -159,7 +159,7 @@
           <div class="ew22-sceneGlow"></div>
           <div class="ew22-mist"></div>
           <div class="ew22-scene"></div>
-          <div class="ew22-sceneLabel ew22-i18n" data-k="sceneLabel"></div>
+          <div class="ew22-sceneLabel ew22-i18n" data-k="sceneLabel" aria-hidden="true" style="display:none"></div>
           <div class="ew22-badgePct">🌱 <span class="ew22-pctText">35%</span></div>
         </div>
       </div>
@@ -266,7 +266,7 @@
     const p = progress / 100;
     const trunkH = lerp(40, 160, p);
     const trunkTopY = 300 - trunkH;
-    const canopyR = lerp(14, 82, p); // Scene tree scales progressively to 150%
+    const canopyR = lerp(14, 82, p); // Growth within safe SVG bounds
     const canopyY = trunkTopY + 10;
     const branchA = p > .22 ? 1 : 0;
     const branchB = p > .35 ? 1 : 0;
@@ -283,13 +283,13 @@
       [330,canopyY,0],[365,canopyY-15,18],[398,canopyY+3,-12],[350,canopyY-45,7],[390,canopyY-38,-18],[314,canopyY-24,-22],
       [425,canopyY-18,12],[288,canopyY+7,-14],[346,canopyY+18,-7],[389,canopyY+24,20],[332,canopyY-70,10],[370,canopyY-72,-10]
     ];
-    const totalLeaves = Math.max(3, Math.round(centers.length * (0.18 + p*0.92)));
+    const totalLeaves = Math.max(3, Math.round(centers.length * (0.26 + p*1.7)));
     for(let i=0;i<totalLeaves;i++){
       const c = centers[i % centers.length];
       const cx = c[0] + ((i%3)-1)*6;
       const cy = c[1] + ((i%4)-1.5)*4;
-      const rx = lerp(6,18,p) * (0.85 + (i%4)*0.08);
-      const ry = lerp(10,24,p) * (0.82 + (i%3)*0.1);
+      const rx = lerp(5,15,p) * (0.85 + (i%4)*0.08);
+      const ry = lerp(8,20,p) * (0.82 + (i%3)*0.1);
       const rot = c[2] + (i*13 % 22) - 11;
       const fill = colors[i % colors.length];
       leaves.push(leaf(cx,cy,rx,ry,rot,fill,0.4 + p*0.5));
@@ -386,11 +386,12 @@
           <path d="M580 335 q9 -15 14 0 q-1 -11 7 -16 q-2 12 10 17" fill="none" stroke="#79c482" stroke-width="2.2" stroke-linecap="round"/>
         </g>
         ${shrubs}
-        <g transform="translate(322 300) scale(${(1 + 0.50*p).toFixed(3)}) translate(-322 -300)" filter="url(#treeShadow)">
+        <g transform="translate(322 300) scale(${(1 + 0.10*p).toFixed(3)}) translate(-322 -300)" filter="url(#treeShadow)">
           <rect x="313" y="${300-trunkH}" width="18" height="${trunkH}" rx="9" fill="url(#trunkGrad)"/>
           ${branchA ? `<path d="M322 ${trunkTopY+18} C300 ${trunkTopY+4}, 286 ${trunkTopY-8}, 274 ${trunkTopY-18}" fill="none" stroke="url(#branchGrad)" stroke-width="7" stroke-linecap="round"/>` : ''}
           ${branchB ? `<path d="M322 ${trunkTopY+6} C346 ${trunkTopY-12}, 367 ${trunkTopY-21}, 392 ${trunkTopY-24}" fill="none" stroke="url(#branchGrad)" stroke-width="7" stroke-linecap="round"/>` : ''}
           ${branchC ? `<path d="M322 ${trunkTopY+2} C335 ${trunkTopY-26}, 325 ${trunkTopY-44}, 315 ${trunkTopY-60}" fill="none" stroke="url(#branchGrad)" stroke-width="6" stroke-linecap="round"/>` : ''}
+          ${p > .48 ? `<path d="M322 ${trunkTopY+24} Q300 ${trunkTopY-6} 283 ${trunkTopY-36} M322 ${trunkTopY+16} Q353 ${trunkTopY-6} 382 ${trunkTopY-48}" fill="none" stroke="#825337" stroke-width="4" stroke-linecap="round" opacity=".8"/>` : ''}
           <g>${leaves.join('')}</g>
           ${fruits}
         </g>
