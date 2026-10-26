@@ -1,0 +1,14 @@
+{
+  "public": false,
+  "verified": false,
+  "updatedAt": null,
+  "metrics": {
+    "members": null,
+    "paperKg": null,
+    "capsCount": null,
+    "batteriesCount": null,
+    "plantsCount": null,
+    "eventsCount": null
+  },
+  "note": "Replace only with approved, published metrics. Remove duplicate/test records before approving."
+}
