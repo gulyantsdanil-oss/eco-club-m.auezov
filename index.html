@@ -2682,8 +2682,10 @@ function updateContributionStats(data){
   if(!data) return;
   // New public counting period. Old records remain intact in Google Sheets.
   // Edit these baselines ONLY when a new reporting period is intentionally started.
-  const PUBLIC_BASELINE_PAPER_KG=50;
-  const PUBLIC_BASELINE_CAPS_COUNT=13000;
+  
+const PUBLIC_BASELINE_PAPER_KG=0;
+const PUBLIC_BASELINE_CAPS_COUNT=0;
+
   const rawPaper=(data.paperKg===null||data.paperKg===undefined||data.paperKg==='')?NaN:Number(data.paperKg);
   const rawCaps=(data.capsCount===null||data.capsCount===undefined||data.capsCount==='')?NaN:Number(data.capsCount);
   const paper=Number.isFinite(rawPaper)?Math.max(0,rawPaper-PUBLIC_BASELINE_PAPER_KG):NaN;
