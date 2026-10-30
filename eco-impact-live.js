@@ -70,7 +70,7 @@ for(let i=0;i<tabNames.length;i++) {const b=elem('button','eco46-tab');b.type='b
 tabs.addEventListener('keydown',e=>{if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;e.preventDefault();const i=tabNames.indexOf(active),next=(i+(e.key==='ArrowRight'?1:-1)+tabNames.length)%tabNames.length;tabs.children[next].click();tabs.children[next].focus();});view.setAttribute('role','tabpanel');ui.metrics.after(tabs,view);const modal=ui.panel.closest('.modal');
 function render(){
  const t=dict(),extra=eco50Text[lang()];
- passportLink.href='./eco-passport.html?lang='+lang();passportLink.textContent=lang()==='kk'?'🌿 Менің экопаспортым (демо)':'🌿 Мой экопаспорт (демо)';
+ passportLink.href='./eco-passport.html?lang='+lang();passportLink.textContent=lang()==='kk'?'🌿 Менің экопаспортым':'🌿 Мой экопаспорт';
  ui.heading.textContent=t.heading;
  ui.retry.textContent=t.refresh;
  [...tabs.children].forEach((b,i)=>{b.textContent=t.tabs[i];const on=active===tabNames[i];b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});
