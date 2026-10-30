@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#092c22">
+<meta name="description" content="Eco Club — экологический паспорт участника, демонстрация интерфейса без персональных данных">
+<title>Экологический паспорт — Eco Club</title>
+<style>
+:root{color-scheme:dark;--bg:#061c16;--surface:#103b2d;--surface2:#174b39;--line:#b6efad55;--accent:#d0ffaa;--text:#ebf9ee;--muted:#bad9c5;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 60% -15%,#1b5941,var(--bg) 58%);color:var(--text);line-height:1.5}a{color:inherit}button{font:inherit;cursor:pointer}button:focus-visible,a:focus-visible{outline:3px solid var(--accent);outline-offset:3px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:14px;padding:14px max(18px,calc((100vw - 1100px)/2));background:#07261ddd;border-bottom:1px solid #ffffff22;backdrop-filter:blur(14px);position:sticky;top:0;z-index:10}.logo{text-decoration:none;font-weight:850;letter-spacing:.04em;font-size:14px}.logo b{color:var(--accent)}.topnav{display:flex;gap:10px;align-items:center}.back{font-size:12px;text-decoration:none;border:1px solid #a7dfb65f;border-radius:30px;padding:8px 12px}.langs{display:flex;gap:3px;background:#ffffff12;padding:3px;border-radius:25px}.langs button{border:0;background:none;color:#d4eade;border-radius:22px;font-size:12px;font-weight:800;padding:7px 11px}.langs button.active{background:var(--accent);color:#113a26}
+main{max-width:1120px;margin:auto;padding:48px 24px 80px}.tag{display:inline-flex;gap:8px;align-items:center;padding:6px 13px;border:1px solid #b8efa877;background:#b8efa814;color:#d4ffbb;border-radius:30px;font-size:11px;letter-spacing:.11em;font-weight:800;text-transform:uppercase}.hero h1{font:normal clamp(36px,6vw,62px)/1.09 Georgia,serif;letter-spacing:-.05em;margin:16px 0 12px;max-width:850px}.hero h1 span{color:var(--accent)}.hero p{max-width:770px;color:#c5e0cd;font-size:15px}
+.notice{padding:15px 17px;border:1px solid #9dcfac66;border-radius:15px;background:#143f305e;color:#e3f6e5;font-size:13px;margin:23px 0}.notice strong{color:var(--accent)}.actions{display:flex;gap:12px;flex-wrap:wrap;margin:18px 0 30px}.action{border-radius:12px;border:1px solid #bdf1a9;padding:12px 17px;background:var(--accent);color:#133825;font-size:14px;font-weight:800;min-height:45px}.action.secondary{background:transparent;color:#d9ffd4}.action:hover{filter:brightness(1.07)}
+.section{margin:34px 0}.section h2{font-size:clamp(21px,3vw,29px);margin:0 0 6px}.lead{font-size:13px;color:var(--muted);margin:0 0 16px}.ladder{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px}.step,.panel,.metric,.badge-card,.event{background:linear-gradient(150deg,#19503c,#0e3328);border:1px solid var(--line);border-radius:17px}.step{padding:18px;text-align:center;min-width:0}.step .emoji{font-size:34px}.step strong{display:block;margin:9px 0 4px}.step small{display:block;font-size:12px;color:#bddac7}.step:last-child{border-color:#e2efad}.panel{padding:22px;margin-top:18px}.locked{display:flex;gap:18px;align-items:center}.lockicon{font-size:34px;flex:none}.locked h3{margin:0 0 5px}.locked p{margin:0;color:#c2dfc9;font-size:13px}.passport{display:none}.passport.visible{display:block}.demo-label{background:#f0e3a821;color:#f9e5ac;border:1px solid #e8d08b8a;padding:8px 11px;border-radius:10px;font-size:12px;font-weight:800;margin:0 0 14px}.profile{display:flex;gap:16px;align-items:center;flex-wrap:wrap}.avatar{width:72px;height:72px;display:grid;place-items:center;font-size:34px;background:#cef3a91e;border:1px solid #c8f3b66a;border-radius:22px}.profile h2{margin:0}.profile p{margin:5px 0;color:#badfc7;font-size:13px}.levelpill{margin-left:auto;padding:8px 12px;border-radius:30px;background:#c9f5a81e;border:1px solid #b9eda765;color:#ddffce;font-size:12px;font-weight:800}
+.metrics{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:17px 0}.metric{padding:16px}.metric b{font-size:30px;color:var(--accent);display:block;font-variant-numeric:tabular-nums}.metric small{color:#c1e1cb;font-size:12px}.progress-title{display:flex;justify-content:space-between;gap:12px;font-size:13px;margin:14px 0 9px}.track{height:10px;border-radius:20px;background:#ffffff26;overflow:hidden}.fill{height:100%;background:linear-gradient(90deg,#7edca3,#c9faa7);border-radius:20px}.twocol{display:grid;grid-template-columns:1fr 1fr;gap:18px}.minihead{font-size:17px;font-weight:800;margin:0 0 12px}.badges{display:grid;gap:10px}.badge-card,.event{padding:13px;display:flex;gap:12px;align-items:center}.badge-icon{font-size:26px}.badge-card strong,.event strong{display:block;font-size:13px}.badge-card small,.event small{display:block;font-size:11px;color:#bad7c2;margin-top:3px}.empty{font-size:13px;color:#c5dbc9;padding:16px;border:1px dashed #a7cfa774;border-radius:13px}.footer{border-top:1px solid #ffffff17;text-align:center;font-size:12px;color:#95b8a2;padding:24px}
+@media(max-width:760px){.ladder{grid-template-columns:repeat(2,minmax(0,1fr))}.twocol{grid-template-columns:1fr}main{padding:27px 16px 60px}}
+@media(max-width:460px){.top{padding:9px 11px}.logo{font-size:11px}.back{font-size:11px;padding:7px}.langs button{padding:7px}.hero h1{font-size:38px}.metrics{gap:7px}.metric{padding:12px}.metric b{font-size:23px}.metric small{font-size:10px}.step{padding:12px}.levelpill{margin-left:0}.panel{padding:15px}.notice{padding:12px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+</style>
+</head>
+<body>
+<header class="top"><a class="logo" href="./eco-world-campus.html" id="brand">🌿 <b>ECO</b> CLUB / PASSPORT</a><nav class="topnav"><a class="back" id="back" href="./eco-world-campus.html">← ECO WORLD</a><div class="langs"><button type="button" id="ru" aria-pressed="true">РУС</button><button type="button" id="kk" aria-pressed="false">ҚАЗ</button></div></nav></header>
+<main>
+<section class="hero">
+<span class="tag" id="status-tag"></span>
+<h1 id="title"></h1>
+<p id="description"></p>
+<div class="notice"><strong id="privacy-title"></strong> <span id="privacy-info"></span></div>
+<div class="actions"><button class="action" type="button" id="demo-toggle" aria-expanded="false" aria-controls="passport"></button></div>
+</section>
+<section id="passport" class="passport" aria-live="polite">
+<div class="demo-label" id="demo-warning"></div>
+<div class="panel">
+<div class="profile"><div class="avatar" aria-hidden="true">🌿</div><div><h2 id="demo-name"></h2><p id="demo-note"></p></div><span class="levelpill" id="current-level"></span></div>
+<div class="metrics"><div class="metric"><b>4</b><small id="m-contrib"></small></div><div class="metric"><b>12,5</b><small id="m-paper"></small></div><div class="metric"><b>150</b><small id="m-caps"></small></div></div>
+<div class="progress-title"><strong id="next-level"></strong><span id="progress-value"></span></div>
+<div class="track" role="progressbar" aria-valuemin="3" aria-valuemax="10" aria-valuenow="4" id="progress"><div class="fill" style="width:14.2857%"></div></div>
+</div>
+<div class="twocol">
+<section class="section"><h3 class="minihead" id="sample-awards-title"></h3><div class="badges"><div class="badge-card"><span class="badge-icon">🌿</span><div><strong id="award1"></strong><small id="award1-desc"></small></div></div><div class="badge-card"><span class="badge-icon">✨</span><div><strong id="award2"></strong><small id="award2-desc"></small></div></div><div class="badge-card"><span class="badge-icon">🌱</span><div><strong id="award3"></strong><small id="award3-desc"></small></div></div></div></section>
+<section class="section"><h3 class="minihead" id="history-title"></h3><div class="badges"><div class="event"><span class="badge-icon">♻️</span><div><strong id="event1"></strong><small id="event1-desc"></small></div></div><div class="event"><span class="badge-icon">📄</span><div><strong id="event2"></strong><small id="event2-desc"></small></div></div><div class="event"><span class="badge-icon">🌟</span><div><strong id="event3"></strong><small id="event3-desc"></small></div></div></div></section>
+</div>
+</section>
+<section class="section"><h2 id="levels-title"></h2><p class="lead" id="levels-description"></p><div class="ladder" id="levels"></div></section>
+<section class="panel locked"><span class="lockicon" aria-hidden="true">🔐</span><div><h3 id="locked-title"></h3><p id="locked-description"></p></div></section>
+</main>
+<footer class="footer">Eco Club · Digital Campus · 2026–2027</footer>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const copy={
+ru:{tag:'ECOIMPACT 5.2 · ПРОТОТИП',title:'Мой экологический паспорт',description:'Личные достижения, экологические вклады и путь от новичка до эколидера — в одном цифровом паспорте.',privacyTitle:'Защита участников.',privacy:'Сайт пока не запрашивает ФИО, пароль или персональный код. Реальные паспорта будут доступны только после настройки защищённой авторизации.',show:'Показать демонстрационный паспорт',hide:'Скрыть демонстрацию',warning:'ДЕМОНСТРАЦИЯ — все показатели вымышленные, не относятся к ученикам Eco Club.',name:'Участник (пример)',note:'Вымышленный профиль для проверки интерфейса',current:'Уровень: Экоактивист',contrib:'Подтверждённых вкладов (пример)',paper:'Макулатура, кг (пример)',caps:'Крышки, шт. (пример)',next:'До уровня «Экогерой»',progress:'4 / 10 · осталось 6 вкладов',awards:'Награды (пример)',a1:'3 вклада',a2:'Первые 5 кг',a3:'Первый вклад',earned:'Показано только для демонстрации',history:'История вкладов (пример)',e1:'Сбор крышек',e1d:'150 крышек — демонстрационная запись',e2:'Сдача макулатуры',e2d:'12,5 кг — демонстрационная запись',e3:'Участие в экологической акции',e3d:'Демонстрационная запись',levels:'Уровни участника',levelsDesc:'Уровень определяется подтверждённым количеством вкладов, а не только количеством собранного сырья.',levelNames:['Новичок','Экоактивист','Экогерой','Эколидер'],requirements:['1 подтверждённый вклад','3 подтверждённых вклада','10 подтверждённых вкладов','25 подтверждённых вкладов'],lockedTitle:'Реальный паспорт пока закрыт',lockedDesc:'Следующий шаг — отдельная авторизация ученика через школьный аккаунт и серверная проверка доступа к его данным. Публичная статистика клуба остаётся доступной без входа.'},
+kk:{tag:'ECOIMPACT 5.2 · ПРОТОТИП',title:'Менің экологиялық паспортым',description:'Жеке жетістіктер, экологиялық үлестер және бастаушыдан экокөшбасшыға дейінгі жол — бір цифрлық паспортта.',privacyTitle:'Қатысушыларды қорғау.',privacy:'Сайт әзірге аты-жөнді, құпиясөзді немесе жеке кодты сұрамайды. Нақты паспорттар тек қорғалған авторизация орнатылғаннан кейін қолжетімді болады.',show:'Демонстрациялық паспортты көрсету',hide:'Демонстрацияны жасыру',warning:'ДЕМОНСТРАЦИЯ — барлық көрсеткіштер ойдан алынған, Eco Club оқушыларына қатысты емес.',name:'Қатысушы (мысал)',note:'Интерфейсті тексеруге арналған ойдан алынған профиль',current:'Деңгей: Экоактивист',contrib:'Расталған үлестер (мысал)',paper:'Макулатура, кг (мысал)',caps:'Қақпақтар, дана (мысал)',next:'«Экобатыр» деңгейіне дейін',progress:'4 / 10 · тағы 6 үлес',awards:'Марапаттар (мысал)',a1:'3 үлес',a2:'Алғашқы 5 кг',a3:'Бірінші үлес',earned:'Тек көрсету мақсатында берілген',history:'Үлестер тарихы (мысал)',e1:'Қақпақтарды жинау',e1d:'150 қақпақ — демонстрациялық жазба',e2:'Макулатура тапсыру',e2d:'12,5 кг — демонстрациялық жазба',e3:'Экологиялық акцияға қатысу',e3d:'Демонстрациялық жазба',levels:'Қатысушы деңгейлері',levelsDesc:'Деңгей тек жиналған шикізат емес, расталған үлестер саны бойынша анықталады.',levelNames:['Бастаушы','Экоактивист','Экобатыр','Экокөшбасшы'],requirements:['1 расталған үлес','3 расталған үлес','10 расталған үлес','25 расталған үлес'],lockedTitle:'Нақты паспорт әзірге жабық',lockedDesc:'Келесі қадам — оқушының мектеп аккаунты арқылы жеке кіруі және сервердің деректерге қолжетімділікті тексеруі. Клубтың ашық статистикасы кірусіз қолжетімді.'}
+};
+let lang=new URLSearchParams(location.search).get('lang')==='kk'?'kk':'ru';
+let demo=false;
+const mapping={tag:'status-tag',title:'title',description:'description',privacyTitle:'privacy-title',privacy:'privacy-info',warning:'demo-warning',name:'demo-name',note:'demo-note',current:'current-level',contrib:'m-contrib',paper:'m-paper',caps:'m-caps',next:'next-level',progress:'progress-value',awards:'sample-awards-title',a1:'award1',a2:'award2',a3:'award3',history:'history-title',e1:'event1',e1d:'event1-desc',e2:'event2',e2d:'event2-desc',e3:'event3',e3d:'event3-desc',levels:'levels-title',levelsDesc:'levels-description',lockedTitle:'locked-title',lockedDesc:'locked-description'};
+function render(){
+ const t=copy[lang];document.documentElement.lang=lang;document.title=t.title+' — Eco Club';
+ Object.entries(mapping).forEach(([key,id])=>$(id).textContent=t[key]);
+ ['award1-desc','award2-desc','award3-desc'].forEach(id=>$(id).textContent=t.earned);
+ $('demo-toggle').textContent=demo?t.hide:t.show;$('demo-toggle').setAttribute('aria-expanded',String(demo));
+ $('passport').classList.toggle('visible',demo);
+ for(const code of ['ru','kk']){$(code).classList.toggle('active',lang===code);$(code).setAttribute('aria-pressed',String(lang===code));}
+ const back='./eco-world-campus.html?lang='+lang; $('back').href=back;$('brand').href=back;
+ const ladder=$('levels');ladder.replaceChildren();
+ ['🌱','🌿','🌳','🏆'].forEach((symbol,i)=>{const step=document.createElement('div');step.className='step';const emoji=document.createElement('div');emoji.className='emoji';emoji.textContent=symbol;const title=document.createElement('strong');title.textContent=t.levelNames[i];const desc=document.createElement('small');desc.textContent=t.requirements[i];step.append(emoji,title,desc);ladder.append(step);});
+}
+for(const code of ['ru','kk'])$(code).addEventListener('click',()=>{lang=code;const next=new URL(location.href);next.searchParams.set('lang',lang);history.replaceState(null,'',next);render();});
+$('demo-toggle').addEventListener('click',()=>{demo=!demo;render();});
+render();
+})();
+</script>
+</body>
+</html>
