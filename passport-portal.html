@@ -49,7 +49,6 @@ function set(id,value){d(id).textContent=value;}
 function paint(){
  document.documentElement.lang=lang;document.title=t().heading+' — Eco Club';
  ['ru','kk'].forEach(function(code){d(code).classList.toggle('active',code===lang);d(code).setAttribute('aria-pressed',String(code===lang));});
- ({heading:'heading',intro:'intro',label:'code-label',enter:'submit',security:'security',count:'label-count',paper:'label-paper',caps:'label-caps',logout:'logout',awards:'badges-title',history:'history-title',privacy:'privacy'}).valueOf();
  var mapping={heading:'heading',intro:'intro',label:'code-label',enter:'submit',security:'security',count:'label-count',paper:'label-paper',caps:'label-caps',logout:'logout',awards:'badges-title',history:'history-title',privacy:'privacy'};
  Object.keys(mapping).forEach(function(key){set(mapping[key],t()[key]);});
  if(current)show(current);
