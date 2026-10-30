@@ -1,4 +1,4 @@
-/* ECO WORLD 5.1 — ecological achievement milestones and earned/locked catalog. */
+/* ECO WORLD 5.2 — ecological passport entry point; personal data stays private. */
 (()=>{'use strict';
 const API='https://script.google.com/macros/s/AKfycbz0DrR9pZv-R1L6T1HmhuYAAYJt2OoQgJf851uglXsxPtkGH9K1s_o0kCUB_LNRL9bmdA/exec';
 const get=id=>document.getElementById(id);
@@ -60,6 +60,9 @@ const eco50Text={ru:{awarded:'Отмечено у участников Eco Club.
 const eco51Text={ru:{title:'Путь экоактивиста',info:'Уровни присваиваются за подтверждённые вклады. Показаны правила получения, а не выданные награды.',requirements:['1 подтверждённый вклад','3 подтверждённых вклада','10 подтверждённых вкладов','25 подтверждённых вкладов'],catalog:'Коллекция наград',locked:'Пока не получено',lockedNote:'Эту награду пока не получали участники Eco Club.'},kk:{title:'Экоактивист жолы',info:'Деңгейлер расталған үлестер үшін беріледі. Мұнда берілген марапаттар емес, оларды алу шарттары көрсетілген.',requirements:['1 расталған үлес','3 расталған үлес','10 расталған үлес','25 расталған үлес'],catalog:'Марапаттар топтамасы',locked:'Әзірге алынбаған',lockedNote:'Бұл марапатты Eco Club қатысушылары әлі алған жоқ.'}};
 const eco51Style=elem('style');eco51Style.id='eco51-styles';eco51Style.textContent='.eco51-ladder{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin:10px 0 14px}.eco51-step{padding:12px 8px;border:1px solid #b9edae66;border-radius:13px;background:linear-gradient(140deg,#1b513d,#123d2e);text-align:center;min-width:0}.eco51-step strong{display:block;font-size:12px;margin:5px 0;overflow-wrap:anywhere}.eco51-step small{display:block;font-size:10px;color:#bcdcc6;line-height:1.4}.eco51-step-icon{font-size:26px}.eco51-explain{font-size:11px;color:#c0dec9;line-height:1.5;margin:5px 0}.eco51-locked{opacity:.72;border-style:dashed}.eco51-locked .eco50-emoji{filter:grayscale(.75)}@media(max-width:600px){.eco51-ladder{grid-template-columns:repeat(2,minmax(0,1fr))}.eco51-step small{font-size:11px}}';document.head.append(eco51Style);
 
+const eco52Style=elem('style');eco52Style.id='eco-passport-52-link-css';eco52Style.textContent='.eco52-passport-link{display:inline-flex;justify-content:center;align-items:center;gap:7px;margin:12px 0 11px;padding:11px 14px;min-height:44px;color:#0e3925;background:#c9f9a9;border:1px solid #ddffbe;border-radius:12px;font-weight:800;font-size:12px;text-decoration:none}.eco52-passport-link:hover{background:#e4ffc9}.eco52-passport-link:focus-visible{outline:2px solid #e2ffb5;outline-offset:3px}';document.head.append(eco52Style);
+const passportLink=elem('a','eco52-passport-link');passportLink.href='./eco-passport.html';passportLink.textContent='🌿 Мой экопаспорт (демо)';ui.retry.before(passportLink);
+
 const tabs=elem('div','eco46-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','EcoImpact');
 const view=elem('section','eco46-view');view.id='eco46-view';view.setAttribute('aria-live','polite');
 const tabNames=['overview','classes','awards'];
@@ -67,6 +70,7 @@ for(let i=0;i<tabNames.length;i++) {const b=elem('button','eco46-tab');b.type='b
 tabs.addEventListener('keydown',e=>{if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;e.preventDefault();const i=tabNames.indexOf(active),next=(i+(e.key==='ArrowRight'?1:-1)+tabNames.length)%tabNames.length;tabs.children[next].click();tabs.children[next].focus();});view.setAttribute('role','tabpanel');ui.metrics.after(tabs,view);const modal=ui.panel.closest('.modal');
 function render(){
  const t=dict(),extra=eco50Text[lang()];
+ passportLink.href='./eco-passport.html?lang='+lang();passportLink.textContent=lang()==='kk'?'🌿 Менің экопаспортым (демо)':'🌿 Мой экопаспорт (демо)';
  ui.heading.textContent=t.heading;
  ui.retry.textContent=t.refresh;
  [...tabs.children].forEach((b,i)=>{b.textContent=t.tabs[i];const on=active===tabNames[i];b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});
