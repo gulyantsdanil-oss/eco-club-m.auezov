@@ -1,4 +1,4 @@
-/* ECO WORLD 4.9 — EcoImpact dashboard. Public, read-only, bilingual. */
+/* ECO WORLD 5.0 — responsive EcoImpact dashboard. Public, read-only, bilingual. */
 (()=>{'use strict';
 const API='https://script.google.com/macros/s/AKfycbz0DrR9pZv-R1L6T1HmhuYAAYJt2OoQgJf851uglXsxPtkGH9K1s_o0kCUB_LNRL9bmdA/exec';
 const get=id=>document.getElementById(id);
@@ -50,31 +50,62 @@ const goals=[['paperKg',25],['paperKg',50],['paperKg',100],['capsCount',100],['c
 const shown=eco48ShowAll?goals: [goals.slice(0,3),goals.slice(3,6),goals.slice(6,9)].map(section=>section.find(([key,target])=>finite(data[key])&&data[key]<target)||section.findLast(([key])=>finite(data[key]))).filter(Boolean);
 shown.forEach(([key,target])=>{const i=goals.findIndex(([k,v])=>k===key&&v===target);reward(t.goals[i],data[key],target,i18n.units[key],key==='paperKg'?1:0);});
 }
-if(active==='classes'){const ranks=Array.isArray(data.rankings?.classes)?data.rankings.classes.filter(r=>r&&finite(r.points)):[];if(ranks.length){view.append(elem('h4','eco47-subhead',t.class));const thresholds=[0,10,50,150,300];ranks.forEach(r=>{let level=0;thresholds.forEach((n,i)=>{if(r.points>=n)level=i});const target=thresholds[level+1];if(target)reward(r.className+' · '+t.levels[level],r.points,target);else group.append(elem('div','eco47-level',r.className+' · 🏆 '+t.levels[level]));});}}
 if(active==='awards'){view.append(elem('h4','eco47-subhead',t.people));const people=Array.isArray(data.awards?.participants)?data.awards.participants:[];let n=0;people.forEach((p,i)=>{const count=p?.confirmedContributionsCount??p?.contributionsCount;if(!finite(count))return;n++;let level=-1;[1,3,10,25].forEach((v,j)=>{if(count>=v)level=j});const target=[1,3,10,25][level+1];if(target)reward((lang()==='kk'?'Қатысушы ':'Участник ')+(i+1)+' · '+(level<0?'—':t.names[level]),count,target);else group.append(elem('div','eco47-level','🏆 '+(lang()==='kk'?'Қатысушы ':'Участник ')+(i+1)+' · '+t.names[3]));});if(!n)group.append(elem('p','eco47-level',t.unavailable));}
-view.append(group);
+if(group.children.length)view.append(group);
 if(active==='overview'){const toggle=elem('button','eco48-toggle',eco48ShowAll?i18n.hide:i18n.show);toggle.type='button';toggle.setAttribute('aria-expanded',String(eco48ShowAll));toggle.onclick=()=>{eco48ShowAll=!eco48ShowAll;render();};view.append(toggle);}
 }
 
+const eco50Style=elem('style');eco50Style.id='eco-impact-50-css';eco50Style.textContent="\n/* EcoImpact 5.0 — responsive panel, podium and interactive award cards */\n.modal.eco-impact-46-modal{max-width:720px;width:min(100%,720px);scrollbar-gutter:stable;overflow-x:hidden;box-shadow:0 28px 90px #000b}\n.modal.eco-impact-46-modal>.close{position:sticky;float:right;top:9px;right:auto;z-index:8;width:42px;height:42px;margin:-3px 0 -40px 0;border:1px solid #bbefb854;background:#244f40;backdrop-filter:blur(6px)}\n.eco-impact-46-modal>#modal-title{padding-right:46px;min-height:35px}\n.eco-impact-46-modal .impact-panel{border-radius:17px}\n.eco-impact-46-modal .impact-metric{background:linear-gradient(145deg,#1a533d,#113f31);border-color:#ceffbd26}\n.eco-impact-46-modal .impact-metric strong{color:#c9f9a9}\n.eco-impact-46-modal .impact-status{overflow-wrap:anywhere}\n.eco46-tabs{position:sticky;top:0;z-index:4;backdrop-filter:blur(10px);background:#113a2fed;border:1px solid #ffffff12}\n.eco46-tab{min-height:44px;touch-action:manipulation;transition:background .16s}\n.eco46-tab:focus-visible,.eco50-badge:focus-visible{outline:2px solid #d5ffb8;outline-offset:2px}\n.eco46-rank{padding:12px;transition:border-color .2s;min-width:0}\n.eco46-rank.eco50-top{background:linear-gradient(125deg,#205642,#103a2e);border-color:#c4f0ad55}\n.eco46-rank-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:4px}\n.eco50-rank-name{display:flex;align-items:center;gap:10px;min-width:0;flex:1}\n.eco50-rank-name strong{font-size:14px;overflow-wrap:anywhere}\n.eco50-medal{width:35px;height:35px;border-radius:12px;background:#ffffff14;display:grid;place-items:center;flex:none;font-size:20px}\n.eco50-score{font-size:13px;font-weight:800;color:#d1ffad;font-variant-numeric:tabular-nums;white-space:nowrap}\n.eco50-level{font-size:11px;color:#cee5d2;margin:4px 0 9px 45px}\n.eco46-rank-track{height:8px}\n.eco50-award-grid{gap:10px}\n.eco50-badge{border-radius:15px;overflow:hidden;background:linear-gradient(145deg,#1b4b3b,#12382c);border:1px solid #a6e4aa48}\n.eco50-badge[open]{border-color:#bef4a0;box-shadow:0 0 18px #b5f9a01c}\n.eco50-badge summary{cursor:pointer;display:flex;gap:10px;align-items:center;padding:13px;list-style:none;min-height:72px}\n.eco50-badge summary::-webkit-details-marker{display:none}\n.eco50-badge .eco50-emoji{height:43px;width:43px;display:grid;place-items:center;border-radius:14px;background:#c8f6aa1b;flex:none;font-size:25px}\n.eco50-badge .eco50-badge-copy{min-width:0;flex:1}\n.eco50-badge strong{display:block;font-size:13px;line-height:1.4;overflow-wrap:anywhere}\n.eco50-badge small{display:block;color:#b8dcc4;font-size:11px;margin-top:4px}\n.eco50-arrow{color:#caffaf;flex:none;font-size:14px;transition:transform .2s}\n.eco50-badge[open] .eco50-arrow{transform:rotate(180deg)}\n.eco50-badge p{border-top:1px solid #ffffff20;margin:0;padding:11px 13px;font-size:12px;color:#d2e8d5;line-height:1.5}\n.eco48-toggle{min-height:44px;touch-action:manipulation}\n.eco47-reward-top{align-items:baseline}\n.eco47-reward-top strong{min-width:0;overflow-wrap:anywhere}\n.eco47-reward-top span{flex:none;font-variant-numeric:tabular-nums}\n@media(max-width:600px){\n .overlay:has(.eco-impact-46-modal){padding:8px}\n .modal.eco-impact-46-modal{width:100%;max-height:calc(100dvh - 16px);padding:13px 12px 17px;border-radius:19px;scrollbar-gutter:auto}\n .modal.eco-impact-46-modal>.close{height:44px;width:44px;top:4px}\n .eco-impact-46-modal>#modal-title{font-size:22px;margin:4px 44px 9px 0;padding-right:0}\n .eco-impact-46-modal .impact-panel{padding:12px 10px}\n .eco-impact-46-modal .impact-head{display:flex;flex-direction:column;gap:3px}\n .eco-impact-46-modal .impact-head h4{font-size:14px}\n .eco-impact-46-modal .impact-stamp{font-size:10px}\n .eco-impact-46-modal .impact-metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}\n .eco-impact-46-modal .impact-metric{min-height:75px;padding:12px}\n .eco-impact-46-modal .impact-metric strong{font-size:25px}\n .eco-impact-46-modal .impact-metric span{font-size:11px}\n .eco46-tab{font-size:12px;padding:10px 3px;min-width:0}\n .eco46-badges.eco50-award-grid{grid-template-columns:1fr}\n .eco47-reward-top{flex-wrap:wrap;gap:3px}\n .eco47-reward-top span{font-size:11px}\n .eco46-rank{padding:10px}\n .eco50-score{font-size:12px}\n}\n@media(max-width:360px){\n .eco-impact-46-modal .impact-metric{padding:9px}\n .eco-impact-46-modal .impact-metric strong{font-size:21px}\n .eco50-rank-name{gap:5px}\n .eco50-level{margin-left:40px}\n .eco50-medal{width:32px;height:32px}\n}\n@media(prefers-reduced-motion:reduce){.eco50-arrow,.eco46-tab{transition:none}}\n";document.head.append(eco50Style);
+const eco50Text={ru:{awarded:'Отмечено у участников Eco Club. Имена не публикуются.',medals:['🥇','🥈','🥉'],level:'Уровень класса'},kk:{awarded:'Eco Club қатысушыларына берілген. Есімдер жарияланбайды.',medals:['🥇','🥈','🥉'],level:'Сынып деңгейі'}};
 const tabs=elem('div','eco46-tabs');tabs.setAttribute('role','tablist');tabs.setAttribute('aria-label','EcoImpact');
 const view=elem('section','eco46-view');view.id='eco46-view';view.setAttribute('aria-live','polite');
 const tabNames=['overview','classes','awards'];
-for(let i=0;i<tabNames.length;i++) {const b=elem('button','eco46-tab');b.type='button';b.dataset.tab=tabNames[i];b.setAttribute('role','tab');b.setAttribute('aria-controls',view.id);b.onclick=()=>{active=tabNames[i];render();};tabs.append(b);}
-ui.metrics.after(tabs,view);const modal=ui.panel.closest('.modal');
-function render(){const t=dict();ui.heading.textContent=t.heading;ui.retry.textContent=t.refresh;[...tabs.children].forEach((b,i)=>{b.textContent=t.tabs[i];b.setAttribute('aria-selected',String(active===tabNames[i]));});ui.metrics.replaceChildren();view.replaceChildren();if(!data){tabs.hidden=true;view.hidden=true;return;}tabs.hidden=false;view.hidden=false;
- const values=[data.count,data.paperKg,data.capsCount,data.contributionsCount];values.forEach((v,i)=>{if(!finite(v))return;const tile=elem('div','impact-metric');tile.append(elem('strong','',number(v,i===1?1:0)),elem('span','',t.labels[i]));ui.metrics.append(tile)});
+for(let i=0;i<tabNames.length;i++) {const b=elem('button','eco46-tab');b.type='button';b.dataset.tab=tabNames[i];b.setAttribute('role','tab');b.setAttribute('aria-controls',view.id);b.onclick=()=>{active=tabNames[i];render();if(modal)modal.scrollTop=0;};tabs.append(b);}
+tabs.addEventListener('keydown',e=>{if(e.key!=='ArrowRight'&&e.key!=='ArrowLeft')return;e.preventDefault();const i=tabNames.indexOf(active),next=(i+(e.key==='ArrowRight'?1:-1)+tabNames.length)%tabNames.length;tabs.children[next].click();tabs.children[next].focus();});view.setAttribute('role','tabpanel');ui.metrics.after(tabs,view);const modal=ui.panel.closest('.modal');
+function render(){
+ const t=dict(),extra=eco50Text[lang()];
+ ui.heading.textContent=t.heading;
+ ui.retry.textContent=t.refresh;
+ [...tabs.children].forEach((b,i)=>{b.textContent=t.tabs[i];const on=active===tabNames[i];b.setAttribute('aria-selected',String(on));b.tabIndex=on?0:-1;});
+ ui.metrics.replaceChildren();view.replaceChildren();if(!data){tabs.hidden=true;view.hidden=true;return;}
+ tabs.hidden=false;view.hidden=false;
+ const values=[data.count,data.paperKg,data.capsCount,data.contributionsCount];
+ values.forEach((v,i)=>{if(!finite(v))return;const tile=elem('div','impact-metric');tile.append(elem('strong','',number(v,i===1?1:0)),elem('span','',t.labels[i]));ui.metrics.append(tile)});
  ui.status.textContent=(data.duplicateSuspected===true||data.quality?.duplicateSuspected===true||data.quality?.possibleDuplicate===true)?t.duplicate:(data.preliminary===true||data.quality?.preliminary===true)?t.prelim:t.ok;
+ ui.stamp.textContent='';
  if(data.updatedAt){const date=new Date(data.updatedAt);ui.stamp.textContent=t.date+': '+(Number.isNaN(date.getTime())?String(data.updatedAt).slice(0,10):new Intl.DateTimeFormat(lang()==='kk'?'kk-KZ':'ru-RU',{dateStyle:'medium',timeStyle:'short'}).format(date));}
  if(active==='overview'){
-  const goal=finite(data.goal)&&data.goal>0?data.goal:null;const total=finite(data.count)?data.count:0;
-  if(goal){const hdr=elem('div','eco46-goal-top');hdr.append(elem('span','',t.goal),elem('strong','',`${number(total)} / ${number(goal)} · ${number(Math.min(100,total/goal*100))}%`));const tr=elem('div','eco46-track');const f=elem('i');f.style.width=Math.min(100,total/goal*100)+'%';tr.append(f);view.append(hdr,tr);}
+  const goal=finite(data.goal)&&data.goal>0?data.goal:null,total=finite(data.count)?data.count:0;
+  if(goal){const hdr=elem('div','eco46-goal-top');hdr.append(elem('span','',t.goal),elem('strong','',number(total)+' / '+number(goal)+' · '+number(Math.min(100,total/goal*100))+'%'));const tr=elem('div','eco46-track');tr.setAttribute('role','progressbar');tr.setAttribute('aria-label',t.goal);tr.setAttribute('aria-valuemin','0');tr.setAttribute('aria-valuemax',String(goal));tr.setAttribute('aria-valuenow',String(Math.min(total,goal)));const fill=elem('i');fill.style.width=Math.min(100,total/goal*100)+'%';tr.append(fill);view.append(hdr,tr);}
   else view.append(elem('p','eco46-small',t.empty));
- } else if(active==='classes'){
-  view.append(elem('strong','',t.ranking));const ranks=Array.isArray(data.rankings?.classes)?data.rankings.classes.filter(c=>c&&typeof c.className==='string'&&finite(c.points)).slice().sort((a,b)=>b.points-a.points).slice(0,6):[];
-  if(!ranks.length)view.append(elem('p','eco46-small',t.noRanks));else{const max=Math.max(1,...ranks.map(r=>r.points));const list=elem('div','eco46-list');ranks.forEach((r,i)=>{const card=elem('div','eco46-rank');const h=elem('div','eco46-rank-heading');h.append(elem('b','',`${i+1}. ${r.className.slice(0,24)}`),elem('span','',`${number(r.points,1)} ${t.points}`));const track=elem('div','eco46-rank-track');const f=elem('i');f.style.width=100*r.points/max+'%';track.append(f);card.append(h,track);list.append(card)});view.append(list)}view.append(elem('p','eco46-small',t.rankNote));
+ }else if(active==='classes'){
+  view.append(elem('strong','',t.ranking));
+  const ranks=Array.isArray(data.rankings?.classes)?data.rankings.classes.filter(r=>r&&typeof r.className==='string'&&finite(r.points)).slice().sort((a,b)=>b.points-a.points).slice(0,20):[];
+  if(!ranks.length)view.append(elem('p','eco46-small',t.noRanks));
+  else{const max=Math.max(1,...ranks.map(r=>r.points)),list=elem('div','eco46-list');const thresholds=[0,10,50,150,300],levelNames=eco47[lang()].levels;
+   ranks.forEach((r,i)=>{let level=0;thresholds.forEach((value,j)=>{if(r.points>=value)level=j;});
+    const card=elem('article','eco46-rank'+(i<3?' eco50-top':'')),header=elem('div','eco46-rank-heading'),name=elem('div','eco50-rank-name'),medal=elem('span','eco50-medal',i<3?extra.medals[i]:String(i+1));
+    medal.setAttribute('aria-label',String(i+1));name.append(medal,elem('strong','',r.className.slice(0,32)));
+    header.append(name,elem('span','eco50-score',number(r.points,1)+' '+t.points));card.append(header,elem('div','eco50-level',extra.level+': '+levelNames[level]));
+    const track=elem('div','eco46-rank-track'),bar=elem('i');bar.style.width=Math.min(100,100*r.points/max)+'%';
+    track.setAttribute('role','progressbar');track.setAttribute('aria-label',r.className);track.setAttribute('aria-valuemin','0');track.setAttribute('aria-valuemax',String(max));track.setAttribute('aria-valuenow',String(r.points));track.append(bar);card.append(track);list.append(card);
+   });view.append(list);
+  }
+  view.append(elem('p','eco46-small',t.rankNote));
  }else if(active==='awards'){
-  view.append(elem('strong','',t.awards));const raw=Array.isArray(data.awards?.participants)?data.awards.participants:[];const all=Array.isArray(data.awards?.badges)?data.awards.badges:[];const badges=all.map(b=>({...b,total:raw.filter(p=>Array.isArray(p.badges)&&p.badges.includes(b.id)).length})).filter(b=>b.total>0).sort((a,b)=>b.total-a.total);
-  if(!badges.length)view.append(elem('p','eco46-small',t.noAwards));else{const wrap=elem('div','eco46-badges');for(const b of badges){const x=elem('div','eco46-badge');const title=elem('strong');title.append(elem('span','eco46-badge-icon',typeof b.icon==='string'?b.icon:'🏅'),document.createTextNode(typeof b[lang()]==='string'?b[lang()]:String(b.id)));x.append(title,elem('small','',`${number(b.total)} ${t.earned}`));wrap.append(x)}view.append(wrap)}view.append(elem('p','eco46-small',t.awardsNote));
+  view.append(elem('strong','',t.awards));
+  const persons=Array.isArray(data.awards?.participants)?data.awards.participants:[],all=Array.isArray(data.awards?.badges)?data.awards.badges:[];
+  const badges=all.filter(b=>b&&typeof b.id==='string').map(b=>({...b,total:persons.filter(p=>Array.isArray(p?.badges)&&p.badges.includes(b.id)).length})).filter(b=>b.total>0).sort((a,b)=>b.total-a.total);
+  if(!badges.length)view.append(elem('p','eco46-small',t.noAwards));
+  else{const wrap=elem('div','eco46-badges eco50-award-grid');
+   for(const b of badges){const tile=elem('details','eco50-badge'),sum=elem('summary'),copy=elem('span','eco50-badge-copy'),label=typeof b[lang()]==='string'?b[lang()]:b.id;
+    copy.append(elem('strong','',label),elem('small','',number(b.total)+' '+t.earned));
+    sum.append(elem('span','eco50-emoji',typeof b.icon==='string'?b.icon:'🏅'),copy,elem('span','eco50-arrow','⌄'));
+    tile.append(sum,elem('p','',extra.awarded));wrap.append(tile);
+   }
+   view.append(wrap);
+  }
+  view.append(elem('p','eco46-small',t.awardsNote));
  }
  eco47Render();
 }
