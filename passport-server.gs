@@ -10,7 +10,7 @@
  *    then run adminIssueCode_(). Collect code from "Паспорт — выдача", deliver privately,
  *    and delete the plaintext after delivery.
  * 6) Deploy as Web App, execute as owner, access "Anyone with the link".
- *    SECURITY: User data is never returned without a 256-bit possession credential.
+ *    SECURITY: User data is never returned without a long high-entropy possession credential.
  *    Do not expose the private spreadsheet via separate public API actions.
  * 7) Paste ONLY the web-app /exec URL into public eco-passport.html.
  *
@@ -147,6 +147,7 @@ function adminIssueCode_() {
   const name=String(props.getProperty('PASSPORT_ISSUE_NAME')||'').trim();
   const cl=String(props.getProperty('PASSPORT_ISSUE_CLASS')||'').trim();
   if(name.length<3||!cl)throw new Error('Set PASSPORT_ISSUE_NAME and PASSPORT_ISSUE_CLASS in Script Properties.');
+  if(/тест/i.test(name))throw new Error('Do not issue credentials for test identities.');
   const book=sourceWorkbook_();
   const contributions=book.getSheetByName(ECO_PASSPORT.contributionTab).getDataRange().getValues();
   if(!contributions.slice(1).some(row=>identityKey_(row[1],row[2])===identityKey_(name,cl))){
@@ -188,4 +189,26 @@ function adminRevokeCode_() {
   props.deleteProperty('PASSPORT_REVOKE_NAME');
   props.deleteProperty('PASSPORT_REVOKE_CLASS');
   return 'Revoked '+changed+' credential(s).';
+}
+
+
+// Editor-only, aggregate diagnostics. This function never returns student names.
+function adminAudit_() {
+  const source=sourceWorkbook_().getSheetByName(ECO_PASSPORT.contributionTab);
+  if(!source)throw new Error('Contribution sheet missing.');
+  const rows=source.getDataRange().getValues().slice(1);
+  const stats={total:0,confirmed:0,rejectedOrUnconfirmed:0,testMarkedConfirmed:0,confirmedMissingRequestId:0,duplicateConfirmedRequestIds:0};
+  const ids=new Set();
+  rows.forEach(row=>{
+    if(!row.some(v=>v!==''&&v!==null&&v!==undefined))return;
+    stats.total++;
+    if(!isConfirmed_(row[7])){stats.rejectedOrUnconfirmed++;return;}
+    stats.confirmed++;
+    if(/тест/i.test(String(row[1]||'')))stats.testMarkedConfirmed++;
+    const requestId=String(row[8]||'').trim();
+    if(!requestId)stats.confirmedMissingRequestId++;
+    else if(ids.has(requestId))stats.duplicateConfirmedRequestIds++;
+    else ids.add(requestId);
+  });
+  return stats;
 }
