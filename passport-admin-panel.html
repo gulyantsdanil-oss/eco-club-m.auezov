@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EcoPassport | Кабинет руководителя</title>
+<style>
+:root{color-scheme:dark;--bg:#071e18;--panel:#103c2e;--panel2:#164a38;--border:#9ad6a655;--green:#caffaa;--text:#eafaed;--dim:#b9d8c3;--red:#ffb6a8;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
+*{box-sizing:border-box}body{margin:0;color:var(--text);background:radial-gradient(ellipse at top right,#18533c 0%,#071e18 70%);line-height:1.45}
+button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.55;cursor:wait}button:focus-visible,input:focus-visible,select:focus-visible{outline:3px solid var(--green);outline-offset:3px}
+main{max-width:1160px;padding:34px 22px 80px;margin:auto}.top{display:flex;gap:15px;justify-content:space-between;align-items:center}.logo{font-weight:900;letter-spacing:.055em;color:#c9f9a8}.tag{font-size:11px;border:1px solid #c7e9aa77;padding:7px 10px;border-radius:30px;color:#d0ffc0}
+h1{font:normal clamp(34px,5vw,57px)/1.1 Georgia,serif;letter-spacing:-.04em;margin:24px 0 12px}.intro{max-width:790px;color:#c0dec6;font-size:14px}.notice{font-size:12px;border:1px solid #b5db9950;background:#b3cf9920;border-radius:13px;padding:12px;margin:17px 0}
+.metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:24px 0}.metric,.panel,.person,.warning{border:1px solid var(--border);background:linear-gradient(145deg,#19503d,#0f3328);border-radius:17px}.metric{padding:18px;min-width:0}.metric b{display:block;color:var(--green);font-variant-numeric:tabular-nums;font-size:clamp(24px,3vw,34px)}.metric span{color:var(--dim);font-size:12px}
+.toolbar{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar h2{font-size:22px;margin:0}.action{padding:10px 15px;min-height:43px;background:var(--green);border:1px solid var(--green);color:#123923;font-size:13px;font-weight:800;border-radius:11px}.action.secondary{background:transparent;border-color:#a4ddb56b;color:#ebffdf}.action.danger{background:transparent;color:#ffd2c7;border-color:#e8988682}.action:hover:not(:disabled){filter:brightness(1.08)}
+.search{min-height:44px;flex:1;min-width:200px;max-width:410px;border:1px solid #d0e4be70;background:#0b3026;color:#f5fff1;border-radius:12px;padding:10px 14px}.search::placeholder{color:#c0d2c6}
+.items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.person{padding:17px;min-width:0}.heading{display:flex;align-items:start;gap:12px;justify-content:space-between}.person h3{font-size:16px;overflow-wrap:anywhere;margin:0 0 5px}.class{font-size:12px;color:var(--dim)}.state{font-size:11px;font-weight:800;white-space:nowrap;border-radius:30px;background:#c8f7a825;color:#dcffbe;padding:6px 10px;border:1px solid #d3f7b565}.state.off{background:#ffffff12;border-color:#ffffff45;color:#c0d9c4}.stats{display:flex;gap:13px;flex-wrap:wrap;color:#c1e1c8;font-size:12px;margin:15px 0}.stats strong{color:#ebffdb}.person-actions{display:flex;gap:8px;flex-wrap:wrap}.warning{padding:16px;color:#e5eddb;margin:20px 0}.warning h2{font-size:16px;margin:0 0 7px}.warning p{font-size:12px;color:#c9dec8;margin:0 0 10px}.audit-list{display:flex;gap:12px;flex-wrap:wrap;color:#d3efdb;font-size:12px}.audit-list span{border:1px solid #a1c9a349;border-radius:25px;padding:6px 10px}
+.empty{font-size:13px;line-height:1.6;background:#ffffff08;border:1px dashed #b4e19b70;padding:20px;border-radius:14px}.feedback{font-size:13px;color:#e6ffd6;margin:8px 0 12px;min-height:20px}.feedback.error{color:var(--red)}
+dialog{width:min(560px,calc(100vw - 30px));background:#123a2c;color:#eaffea;border:1px solid #b3ebb29b;border-radius:20px;padding:23px;box-shadow:0 25px 100px #000b}dialog::backdrop{background:#03150ebd;backdrop-filter:blur(4px)}dialog h2{font-size:24px;margin:0 0 10px}dialog p{font-size:13px;line-height:1.6;color:#d0e9d2}.code{width:100%;min-height:90px;border-radius:12px;padding:12px;word-break:break-all;resize:vertical;background:#eaf9e9;color:#123523;font-size:15px;border:0}.dialog-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:15px}.private-warning{font-weight:700;color:#ffddad}
+footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;text-align:center}
+@media(max-width:720px){main{padding:20px 12px 60px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric{padding:12px}.items{grid-template-columns:1fr}.heading{flex-wrap:wrap}.toolbar{align-items:stretch}.search{max-width:none}.person{padding:13px}}
+</style></head>
+<body>
+<main>
+<header class="top"><strong class="logo">🌿 ECO CLUB / ADMIN</strong><span class="tag">EcoPassport 5.4 · PRIVATE</span></header>
+<h1>Управление экопаспортами</h1>
+<p class="intro">Закрытая панель руководителя: подтверждённые участники, наличие действующего кода, безопасная выдача и отзыв. Только для владельца таблицы.</p>
+<div class="notice">🔒 Панель размещается отдельно от кабинета учеников. Новый код виден только один раз и <strong>не сохраняется в листе выдачи</strong>. Доступ — только владельцу проекта.</div>
+<div class="metrics">
+<div class="metric"><b id="total">—</b><span>Участников с подтверждёнными вкладами</span></div>
+<div class="metric"><b id="active">—</b><span>Действующих доступов</span></div>
+<div class="metric"><b id="without">—</b><span>Без личного кода</span></div>
+<div class="metric"><b id="confirmed">—</b><span>Подтверждённых записей</span></div>
+</div>
+<div class="toolbar"><h2>Участники</h2><input class="search" id="search" type="search" placeholder="Поиск по ФИО или классу" aria-label="Поиск участников"><button class="action secondary" id="refresh" type="button">↻ Обновить</button></div>
+<p class="feedback" id="message" role="status" aria-live="polite">Загрузка списка…</p>
+<div class="items" id="participants"></div>
+<section class="warning">
+<h2>Проверка данных реестра</h2><p>Отсутствие ID запроса не доказывает дублирование. Перед выдачей кода проверьте спорные записи. Система не удаляет и не исправляет вклады автоматически.</p>
+<div id="audit" class="audit-list"></div>
+</section>
+<dialog id="issued" aria-labelledby="issued-title">
+<h2 id="issued-title">Новый код создан</h2>
+<p>Код необходимо передать участнику или законному представителю лично. После закрытия этого окна <strong>восстановить код будет невозможно</strong>; при утрате придётся выпустить новый.</p>
+<textarea id="one-time-code" class="code" readonly aria-label="Одноразовый код доступа"></textarea>
+<p class="private-warning">Не фотографируйте и не публикуйте код. Не пересылайте его в общий чат. Если код был выдан повторно, предыдущий отозван.</p>
+<div class="dialog-actions">
+<button class="action secondary" id="copy" type="button">Копировать</button>
+<button class="action" id="hide" type="button">Я сохранил код — закрыть</button>
+</div>
+</dialog>
+</main><footer>Eco Club · Private Passport Management · 2026–2027</footer>
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+let state=[],busy=false;
+function el(tag,klass,text){const e=document.createElement(tag);if(klass)e.className=klass;if(text!==undefined)e.textContent=String(text);return e;}
+function message(text,isError){$('message').textContent=text;$('message').className='feedback'+(isError?' error':'');}
+function fmt(n,frac=0){return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:frac}).format(n);}
+function server(fn,args,success){
+ if(busy)return;busy=true;$('refresh').disabled=true;
+ let runner=google.script.run.withFailureHandler(error=>{
+   busy=false;$('refresh').disabled=false;
+   message('Операция не выполнена. '+(error?.message||'Проверьте права доступа.'),true);
+ }).withSuccessHandler(result=>{busy=false;$('refresh').disabled=false;success(result);});
+ if(fn==='overview')runner.admin54Overview();
+ if(fn==='issue')runner.admin54Issue(args[0],args[1]);
+ if(fn==='revoke')runner.admin54Revoke(args[0],args[1]);
+}
+function paint(){
+ const term=$('search').value.trim().toLocaleLowerCase('ru-RU');
+ const filtered=state.filter(p=>(p.name+' '+p.className).toLocaleLowerCase('ru-RU').includes(term));
+ const wrap=$('participants');wrap.replaceChildren();
+ if(!filtered.length){wrap.append(el('p','empty','Нет участников по заданному запросу.'));return;}
+ filtered.forEach(p=>{
+  const card=el('article','person'),head=el('div','heading'),who=el('div');
+  who.append(el('h3','',p.name),el('div','class','Класс: '+p.className));
+  const status=el('span','state'+(p.accessActive?'':' off'),p.accessActive?'Код активен':'Код не выдан');
+  head.append(who,status);
+  const stats=el('div','stats');
+  [['Вкладов',p.contributions],['Макулатура',fmt(p.paperKg,1)+' кг'],['Крышки',fmt(p.capsCount)+' шт.']].forEach(([label,val])=>{
+    const span=el('span');span.append(el('strong','',String(val)+' '),document.createTextNode(label));stats.append(span);
+  });
+  const actions=el('div','person-actions');
+  const issue=el('button','action',p.accessActive?'Заменить код':'Выдать код');issue.type='button';
+  issue.addEventListener('click',()=>{
+    const question=p.accessActive?'Заменить действующий код? Предыдущий код перестанет работать.':'Выдать новый код для участника?';
+    if(!confirm(question))return;
+    message('Создаём код…',false);
+    server('issue',[p.name,p.className],result=>{
+      if(!result?.ok||!/^[a-f0-9]{64}$/.test(result.code||'')){message('Неожиданный ответ сервера.',true);return;}
+      $('one-time-code').value=result.code;
+      $('issued').showModal();
+      message('Код выпущен. Сохраните его в закрытом окне.',false);
+    });
+  });
+  actions.append(issue);
+  if(p.accessActive){
+    const revoke=el('button','action danger','Отозвать');revoke.type='button';
+    revoke.addEventListener('click',()=>{
+      if(!confirm('Отозвать все действующие коды этого участника? Это нельзя отменить.'))return;
+      message('Отзываем доступ…',false);
+      server('revoke',[p.name,p.className],result=>{
+       message(result?.ok?'Отозвано кодов: '+result.revoked:'Операция не завершена.',!result?.ok);load();
+      });
+    });
+    actions.append(revoke);
+  }
+  card.append(head,stats,actions);wrap.append(card);
+ });
+}
+function load(){
+ message('Обновляем сведения…',false);
+ server('overview',[],result=>{
+  if(!result?.ok){message('Не удалось получить список.',true);return;}
+  state=Array.isArray(result.participants)?result.participants:[];
+  $('total').textContent=fmt(result.summary.total);
+  $('active').textContent=fmt(result.summary.active);
+  $('without').textContent=fmt(result.summary.withoutAccess);
+  $('confirmed').textContent=fmt(result.audit.confirmed);
+  const audit=$('audit');audit.replaceChildren();
+  [['Записей без ID',result.audit.confirmedWithoutRequestId],
+   ['Тестовых подтверждённых',result.audit.testConfirmed],
+   ['Повторных ID',result.audit.duplicateRequestIds],
+   ['Совпадений по объёму',result.audit.possibleRepeatedSubmissions],
+   ['Несколько активных кодов',result.summary.moreThanOneActive]]
+  .forEach(([name,value])=>audit.append(el('span','',name+': '+fmt(value))));
+  message(result.isTruncated?'Показаны первые 500 участников.':'Данные загружены.',false);
+  paint();
+ });
+}
+function clearSecret(){$('one-time-code').value='';$('issued').close();load();}
+$('hide').addEventListener('click',clearSecret);
+$('issued').addEventListener('cancel',e=>{e.preventDefault();clearSecret();});
+$('copy').addEventListener('click',async()=>{
+ const code=$('one-time-code').value;
+ try{await navigator.clipboard.writeText(code);$('copy').textContent='Скопировано';}
+ catch(e){$('one-time-code').focus();$('one-time-code').select();$('copy').textContent='Скопируйте выделенное';}
+});
+$('issued').addEventListener('close',()=>{$('one-time-code').value='';$('copy').textContent='Копировать';});
+$('search').addEventListener('input',paint);
+$('refresh').addEventListener('click',load);
+load();
+})();
+</script>
+</body></html>
