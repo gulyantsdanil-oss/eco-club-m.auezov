@@ -97,5 +97,5 @@ function closeModal(){overlay.hidden=true;if(lastFocus)lastFocus.focus()}
 document.querySelectorAll('[data-zone]').forEach(b=>b.addEventListener('click',()=>openModal(b.dataset.zone)));document.getElementById('close').addEventListener('click',closeModal);overlay.addEventListener('click',e=>{if(e.target===overlay)closeModal()});document.addEventListener('keydown',e=>{if(e.key==='Escape'&&!overlay.hidden)closeModal();if(e.key==='Tab'&&!overlay.hidden){const focusable=[document.getElementById('close'),document.getElementById('modal-go')],idx=focusable.indexOf(document.activeElement);if(e.shiftKey&&idx===0){e.preventDefault();focusable[1].focus()}else if(!e.shiftKey&&idx===1){e.preventDefault();focusable[0].focus()}}});for(const k of ['ru','kk'])document.getElementById(k).addEventListener('click',()=>{lang=k;const u=new URL(location.href);u.searchParams.set('lang',lang);history.replaceState(null,'',u);render();if(!overlay.hidden)closeModal()});render();
 })();
 </script>
-<script defer src="./eco-impact-live.js?v=49"></script>
+<script defer src="./eco-impact-live.js?v=50"></script>
 </body></html>
