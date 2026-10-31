@@ -1,5 +1,5 @@
 /**
- * EcoPassport 5.5 — OWNER-ONLY administration.
+ * EcoPassport 5.6 — OWNER-ONLY administration.
  * Standalone Apps Script project, NEVER put this in the pupils' project.
  * Deploy: execute as USER ACCESSING THE APP; only owner may access.
  * Script properties: ECO_SOURCE_SPREADSHEET_ID and ECO_ADMIN_EMAIL.
@@ -68,10 +68,14 @@ function admin54Overview(){
  if(roster)rosterById.forEach(p=>{
   if(!persons.has(p.id))persons.set(p.id,{...p,contributions:0,paperKg:0,capsCount:0});
  });
+ const expiry=passportAdmin56ExpiryOverview_(issued);
  const participants=Array.from(persons.values()).map(p=>{
   const key=passportAdminIdentity_(p.name,p.className);
   const n=(p.id?(activeById.get(p.id)||0):0)+(activeByKey.get(key)||0);
+  const accessState=passportAdmin56ExpiryForPerson_(issued,p.id,key);
   return {...p,paperKg:Math.round(p.paperKg*1000)/1000,accessActive:n>0,accessCount:n,
+   credentialStatus:accessState.status,expiryDate:accessState.expiryDate,
+   daysUntilExpiry:accessState.daysUntilExpiry,
    participantRef:p.id?'ECO-'+p.id.slice(0,8).toUpperCase():null};
  }).sort((a,b)=>a.className.localeCompare(b.className,'ru')||a.name.localeCompare(b.name,'ru'));
  return {ok:true,participants:participants.slice(0,PASSPORT_ADMIN54.limit),
@@ -79,7 +83,9 @@ function admin54Overview(){
   active:participants.filter(p=>p.accessActive).length,
   withoutAccess:participants.filter(p=>!p.accessActive).length,
   moreThanOneActive:participants.filter(p=>p.accessCount>1).length,
-  expiredCodes,legacyCodes},audit,isTruncated:participants.length>PASSPORT_ADMIN54.limit};
+  expiredCodes,legacyCodes,expiresWithin7Days:expiry.within7,
+  expiresWithin30Days:expiry.within30,invalidExpiry:expiry.invalid},
+  audit,isTruncated:participants.length>PASSPORT_ADMIN54.limit};
 }
 /** Called from admin UI after explicit review. Idempotent; no deletions. */
 function admin54Migrate(confirm){
@@ -292,4 +298,108 @@ function passportAdminNumber_(n){
 function passportAdminHash_(code){
  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,code,Utilities.Charset.UTF_8)
   .map(v=>(v&255).toString(16).padStart(2,'0')).join('');
+}
+
+
+// --- EcoPassport 5.6: owner-facing expiry status and optional weekly mail digest ---
+// These functions never log or email plaintext codes, hashes, pupil names or IDs.
+// Old credentials without an expiry are explicitly reported as legacy.
+function passportAdmin56ExpiryOverview_(rows,now) {
+  const current=typeof now==='number'?now:Date.now();
+  const result={within7:0,within30:0,expired:0,legacy:0,invalid:0,valid:0};
+  rows.forEach(r=>{
+    if(r[3]!==true)return;
+    const check=passportAdmin56Classify_(r,current);
+    if(check.status==='legacy')result.legacy++;
+    else if(check.status==='expired')result.expired++;
+    else if(check.status==='invalid')result.invalid++;
+    else if(check.status==='within7'){result.within7++;result.within30++;}
+    else if(check.status==='within30')result.within30++;
+    else if(check.status==='valid')result.valid++;
+  });
+  return result;
+}
+function passportAdmin56Classify_(row,now) {
+  const current=typeof now==='number'?now:Date.now();
+  if(row[3]!==true)return {status:'revoked',expiryDate:null,daysUntilExpiry:null};
+  const raw=row[6];
+  if(raw===''||raw==null)return {status:'legacy',expiryDate:null,daysUntilExpiry:null};
+  const millis=raw instanceof Date?raw.getTime():new Date(raw).getTime();
+  if(!Number.isFinite(millis))return {status:'invalid',expiryDate:null,daysUntilExpiry:null};
+  const days=Math.ceil((millis-current)/86400000);
+  const expiryDate=Utilities.formatDate(new Date(millis),Session.getScriptTimeZone(),'yyyy-MM-dd');
+  if(millis<=current)return {status:'expired',expiryDate,daysUntilExpiry:0};
+  if(millis-current<=7*86400000)return {status:'within7',expiryDate,daysUntilExpiry:days};
+  if(millis-current<=30*86400000)return {status:'within30',expiryDate,daysUntilExpiry:days};
+  return {status:'valid',expiryDate,daysUntilExpiry:days};
+}
+function passportAdmin56ExpiryForPerson_(issued,id,key,now) {
+  const all=issued.filter(r=>String(r[7]||'').trim()===id&&id||
+    !String(r[7]||'').trim()&&passportAdminIdentity_(r[0],r[1])===key);
+  const priorities={within7:1,within30:2,legacy:3,valid:4,expired:5,invalid:6,revoked:7};
+  const summary=all.map(r=>passportAdmin56Classify_(r,now)).sort((a,b)=>
+    priorities[a.status]-priorities[b.status]);
+  return summary[0]||{status:'none',expiryDate:null,daysUntilExpiry:null};
+}
+/** Owner-only settings, no email sent by status lookup. */
+function admin56NotificationStatus(){
+  requirePassportAdmin_();
+  const enabled=PropertiesService.getScriptProperties().getProperty('ECO56_REMINDERS_ENABLED')==='1';
+  const actual=ScriptApp.getProjectTriggers().some(t=>t.getHandlerFunction()==='passportAdmin56WeeklyDigest_');
+  return {enabled:enabled&&actual,timezone:Session.getScriptTimeZone(),
+    schedule:'Понедельник, около 08:00 (временная зона проекта)'};
+}
+/** Called only after explicit click and confirmation in the owner-only admin panel. */
+function admin56SetNotifications(enabled){
+  requirePassportAdmin_();
+  if(typeof enabled!=='boolean')throw new Error('INVALID_VALUE');
+  const props=PropertiesService.getScriptProperties();
+  const triggers=ScriptApp.getProjectTriggers().filter(t=>
+    t.getHandlerFunction()==='passportAdmin56WeeklyDigest_');
+  if(enabled){
+    if(triggers.length===0)ScriptApp.newTrigger('passportAdmin56WeeklyDigest_')
+      .timeBased().onWeekDay(ScriptApp.WeekDay.MONDAY).atHour(8)
+      .everyWeeks(1).inTimezone('Asia/Almaty').create();
+    // Remove duplicate triggers if any; do not affect other workflows.
+    const matching=ScriptApp.getProjectTriggers().filter(t=>
+      t.getHandlerFunction()==='passportAdmin56WeeklyDigest_');
+    matching.slice(1).forEach(t=>ScriptApp.deleteTrigger(t));
+  }else{
+    triggers.forEach(t=>ScriptApp.deleteTrigger(t));
+  }
+  props.setProperty('ECO56_REMINDERS_ENABLED',enabled?'1':'0');
+  passportAdminLog_(enabled?'REMINDERS_ENABLED':'REMINDERS_DISABLED','', 'OK','aggregate counts only');
+  return admin56NotificationStatus();
+}
+/**
+ * Private installable trigger — never remotely callable via google.script.run.
+ * Triggers may have no active-user email; trust only effective account,
+ * project-owned property and the flag for owner-initiated scheduling.
+ */
+function passportAdmin56WeeklyDigest_(){
+  const props=PropertiesService.getScriptProperties();
+  const owner=String(props.getProperty('ECO_ADMIN_EMAIL')||'').trim().toLowerCase();
+  const effective=String(Session.getEffectiveUser().getEmail()||'').trim().toLowerCase();
+  if(!owner||!effective||owner!==effective||props.getProperty('ECO56_REMINDERS_ENABLED')!=='1')
+    throw new Error('REMINDER_ACCESS_DENIED');
+  const access=passportAdminSheet_(passportAdminBook_(),PASSPORT_ADMIN54.access)
+    .getDataRange().getValues().slice(1);
+  const counts=passportAdmin56ExpiryOverview_(access);
+  // Do not send an empty report. Legacy keys are included to encourage rotation.
+  if(!counts.within7&&!counts.within30&&!counts.legacy&&!counts.expired&&!counts.invalid)
+    return {sent:false,reason:'NO_ATTENTION_REQUIRED'};
+  const lines=[
+    'Eco Club — сводный отчёт по доступам EcoPassport',
+    '',
+    'Истекают в ближайшие 7 дней: '+counts.within7,
+    'Истекают в ближайшие 30 дней (включая 7 дней): '+counts.within30,
+    'Старые коды без срока действия: '+counts.legacy,
+    'Уже истёкшие коды: '+counts.expired,
+    'Некорректные даты окончания: '+counts.invalid,
+    '',
+    'Откройте закрытую панель Eco Club — Passport Admin для действий.',
+    'В письме намеренно отсутствуют ФИО учащихся и секретные коды.'
+  ];
+  MailApp.sendEmail({to:owner,subject:'EcoPassport: контроль сроков кодов',body:lines.join('\n')});
+  return {sent:true,counts};
 }
