@@ -10,7 +10,7 @@ button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.
 main{max-width:1160px;padding:34px 22px 80px;margin:auto}.top{display:flex;gap:15px;justify-content:space-between;align-items:center}.logo{font-weight:900;letter-spacing:.055em;color:#c9f9a8}.tag{font-size:11px;border:1px solid #c7e9aa77;padding:7px 10px;border-radius:30px;color:#d0ffc0}
 h1{font:normal clamp(34px,5vw,57px)/1.1 Georgia,serif;letter-spacing:-.04em;margin:24px 0 12px}.intro{max-width:790px;color:#c0dec6;font-size:14px}.notice{font-size:12px;border:1px solid #b5db9950;background:#b3cf9920;border-radius:13px;padding:12px;margin:17px 0}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:24px 0}.metric,.panel,.person,.warning{border:1px solid var(--border);background:linear-gradient(145deg,#19503d,#0f3328);border-radius:17px}.metric{padding:18px;min-width:0}.metric b{display:block;color:var(--green);font-variant-numeric:tabular-nums;font-size:clamp(24px,3vw,34px)}.metric span{color:var(--dim);font-size:12px}
-.toolbar{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar h2{font-size:22px;margin:0}.action{padding:10px 15px;min-height:43px;background:var(--green);border:1px solid var(--green);color:#123923;font-size:13px;font-weight:800;border-radius:11px}.action.secondary{background:transparent;border-color:#a4ddb56b;color:#ebffdf}.action.danger{background:transparent;color:#ffd2c7;border-color:#e8988682}.action:hover:not(:disabled){filter:brightness(1.08)}
+.toolbar{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar h2{font-size:22px;margin:0}.action{padding:10px 15px;min-height:43px;background:var(--green);border:1px solid var(--green);color:#123923;font-size:13px;font-weight:800;border-radius:11px}.action.secondary{background:transparent;border-color:#a4ddb56b;color:#ebffdf}.action.danger{background:transparent;color:#ffd2c7;border-color:#e8988682}.action:hover:not(:disabled){filter:brightness(1.08)}.subnote{color:var(--dim);font-size:12px;line-height:1.5}
 .search{min-height:44px;flex:1;min-width:200px;max-width:410px;border:1px solid #d0e4be70;background:#0b3026;color:#f5fff1;border-radius:12px;padding:10px 14px}.search::placeholder{color:#c0d2c6}
 .items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.person{padding:17px;min-width:0}.heading{display:flex;align-items:start;gap:12px;justify-content:space-between}.person h3{font-size:16px;overflow-wrap:anywhere;margin:0 0 5px}.class{font-size:12px;color:var(--dim)}.state{font-size:11px;font-weight:800;white-space:nowrap;border-radius:30px;background:#c8f7a825;color:#dcffbe;padding:6px 10px;border:1px solid #d3f7b565}.state.off{background:#ffffff12;border-color:#ffffff45;color:#c0d9c4}.stats{display:flex;gap:13px;flex-wrap:wrap;color:#c1e1c8;font-size:12px;margin:15px 0}.stats strong{color:#ebffdb}.person-actions{display:flex;gap:8px;flex-wrap:wrap}.warning{padding:16px;color:#e5eddb;margin:20px 0}.warning h2{font-size:16px;margin:0 0 7px}.warning p{font-size:12px;color:#c9dec8;margin:0 0 10px}.audit-list{display:flex;gap:12px;flex-wrap:wrap;color:#d3efdb;font-size:12px}.audit-list span{border:1px solid #a1c9a349;border-radius:25px;padding:6px 10px}
 .empty{font-size:13px;line-height:1.6;background:#ffffff08;border:1px dashed #b4e19b70;padding:20px;border-radius:14px}.feedback{font-size:13px;color:#e6ffd6;margin:8px 0 12px;min-height:20px}.feedback.error{color:var(--red)}
@@ -20,7 +20,7 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 </style></head>
 <body>
 <main>
-<header class="top"><strong class="logo">🌿 ECO CLUB / ADMIN</strong><span class="tag">EcoPassport 5.4 · PRIVATE</span></header>
+<header class="top"><strong class="logo">🌿 ECO CLUB / ADMIN</strong><span class="tag">EcoPassport 5.5 · PRIVATE</span></header>
 <h1>Управление экопаспортами</h1>
 <p class="intro">Закрытая панель руководителя: подтверждённые участники, наличие действующего кода, безопасная выдача и отзыв. Только для владельца таблицы.</p>
 <div class="notice">🔒 Панель размещается отдельно от кабинета учеников. Новый код виден только один раз и <strong>не сохраняется в листе выдачи</strong>. Доступ — только владельцу проекта.</div>
@@ -30,6 +30,13 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 <div class="metric"><b id="without">—</b><span>Без личного кода</span></div>
 <div class="metric"><b id="confirmed">—</b><span>Подтверждённых записей</span></div>
 </div>
+<section class="warning" id="migration-box" style="display:none">
+<h2>Постоянные ID участников · EcoPassport 5.5</h2>
+<p id="migration-copy">Прежде чем выдавать новые коды, проведите однократную миграцию: проверьте, что одноимённые ученики в одном классе не перепутаны, и что одинаковые вклады действительно отдельные. Записи не удаляются, старые коды сохраняются.</p>
+<button class="action" id="migrate" type="button">Создать ID и привязать подтверждённые вклады</button>
+<button class="action secondary" id="sync" type="button" style="display:none">Проверить и привязать новые вклады</button>
+<p class="subnote" id="migration-result"></p>
+</section>
 <div class="toolbar"><h2>Участники</h2><input class="search" id="search" type="search" placeholder="Поиск по ФИО или классу" aria-label="Поиск участников"><button class="action secondary" id="refresh" type="button">↻ Обновить</button></div>
 <p class="feedback" id="message" role="status" aria-live="polite">Загрузка списка…</p>
 <div class="items" id="participants"></div>
@@ -40,6 +47,7 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 <dialog id="issued" aria-labelledby="issued-title">
 <h2 id="issued-title">Новый код создан</h2>
 <p>Код необходимо передать участнику или законному представителю лично. После закрытия этого окна <strong>восстановить код будет невозможно</strong>; при утрате придётся выпустить новый.</p>
+<p class="subnote" id="expires-note"></p>
 <textarea id="one-time-code" class="code" readonly aria-label="Одноразовый код доступа"></textarea>
 <p class="private-warning">Не фотографируйте и не публикуйте код. Не пересылайте его в общий чат. Если код был выдан повторно, предыдущий отозван.</p>
 <div class="dialog-actions">
@@ -52,7 +60,7 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 (function(){
 'use strict';
 const $=id=>document.getElementById(id);
-let state=[],busy=false;
+let state=[],busy=false,migrationNeeded=true;
 function el(tag,klass,text){const e=document.createElement(tag);if(klass)e.className=klass;if(text!==undefined)e.textContent=String(text);return e;}
 function message(text,isError){$('message').textContent=text;$('message').className='feedback'+(isError?' error':'');}
 function fmt(n,frac=0){return new Intl.NumberFormat('ru-RU',{maximumFractionDigits:frac}).format(n);}
@@ -65,6 +73,8 @@ function server(fn,args,success){
  if(fn==='overview')runner.admin54Overview();
  if(fn==='issue')runner.admin54Issue(args[0],args[1]);
  if(fn==='revoke')runner.admin54Revoke(args[0],args[1]);
+ if(fn==='migrate')runner.admin54Migrate('MIGRATE_ECO55');
+ if(fn==='sync')runner.admin54Sync('SYNC_ECO55');
 }
 function paint(){
  const term=$('search').value.trim().toLocaleLowerCase('ru-RU');
@@ -74,6 +84,7 @@ function paint(){
  filtered.forEach(p=>{
   const card=el('article','person'),head=el('div','heading'),who=el('div');
   who.append(el('h3','',p.name),el('div','class','Класс: '+p.className));
+  if(p.participantRef)who.append(el('div','class','ID: '+p.participantRef));
   const status=el('span','state'+(p.accessActive?'':' off'),p.accessActive?'Код активен':'Код не выдан');
   head.append(who,status);
   const stats=el('div','stats');
@@ -81,7 +92,7 @@ function paint(){
     const span=el('span');span.append(el('strong','',String(val)+' '),document.createTextNode(label));stats.append(span);
   });
   const actions=el('div','person-actions');
-  const issue=el('button','action',p.accessActive?'Заменить код':'Выдать код');issue.type='button';
+  const issue=el('button','action',p.accessActive?'Заменить код':'Выдать код');issue.type='button';issue.disabled=migrationNeeded||!p.id;
   issue.addEventListener('click',()=>{
     const question=p.accessActive?'Заменить действующий код? Предыдущий код перестанет работать.':'Выдать новый код для участника?';
     if(!confirm(question))return;
@@ -89,13 +100,14 @@ function paint(){
     server('issue',[p.name,p.className],result=>{
       if(!result?.ok||!/^[a-f0-9]{64}$/.test(result.code||'')){message('Неожиданный ответ сервера.',true);return;}
       $('one-time-code').value=result.code;
+      $('expires-note').textContent='Срок действия: 180 дней, до '+new Date(result.expiresAt).toLocaleDateString('ru-RU')+'.';
       $('issued').showModal();
       message('Код выпущен. Сохраните его в закрытом окне.',false);
     });
   });
   actions.append(issue);
   if(p.accessActive){
-    const revoke=el('button','action danger','Отозвать');revoke.type='button';
+    const revoke=el('button','action danger','Отозвать');revoke.type='button';revoke.disabled=migrationNeeded||!p.id;
     revoke.addEventListener('click',()=>{
       if(!confirm('Отозвать все действующие коды этого участника? Это нельзя отменить.'))return;
       message('Отзываем доступ…',false);
@@ -113,6 +125,11 @@ function load(){
  server('overview',[],result=>{
   if(!result?.ok){message('Не удалось получить список.',true);return;}
   state=Array.isArray(result.participants)?result.participants:[];
+  migrationNeeded=!!result.setupRequired;
+  $('migration-box').style.display='block';
+  $('migrate').style.display=migrationNeeded?'inline-block':'none';
+  $('sync').style.display=migrationNeeded?'none':'inline-block';
+  $('migration-copy').textContent=migrationNeeded?'Однократная миграция: создаём постоянные ID, заполняем столбец M листа «Вклад» и связываем старые коды без их отзыва. Проверьте совпадающие ФИО и класс до нажатия.':'ID настроены. После появления новых подтверждённых вкладов проверяйте их и нажимайте «Привязать новые вклады» — до синхронизации они не появятся в личных паспортах.';
   $('total').textContent=fmt(result.summary.total);
   $('active').textContent=fmt(result.summary.active);
   $('without').textContent=fmt(result.summary.withoutAccess);
@@ -122,6 +139,9 @@ function load(){
    ['Тестовых подтверждённых',result.audit.testConfirmed],
    ['Повторных ID',result.audit.duplicateRequestIds],
    ['Совпадений по объёму',result.audit.possibleRepeatedSubmissions],
+   ['Подтверждённых без ID участника',result.audit.unlinkedConfirmed],
+   ['Кодов старого формата (без срока)',result.summary.legacyCodes],
+   ['Истёкших кодов',result.summary.expiredCodes],
    ['Несколько активных кодов',result.summary.moreThanOneActive]]
   .forEach(([name,value])=>audit.append(el('span','',name+': '+fmt(value))));
   message(result.isTruncated?'Показаны первые 500 участников.':'Данные загружены.',false);
@@ -137,6 +157,24 @@ $('copy').addEventListener('click',async()=>{
  catch(e){$('one-time-code').focus();$('one-time-code').select();$('copy').textContent='Скопируйте выделенное';}
 });
 $('issued').addEventListener('close',()=>{$('one-time-code').value='';$('copy').textContent='Копировать';});
+$('migrate').addEventListener('click',()=>{
+ if(!confirm('Вы проверили совпадающие ФИО и классы? Создать ID участников, привязать записи и сохранить старые коды?'))return;
+ message('Выполняется миграция ID…',false);
+ server('migrate',[],result=>{
+   if(!result?.ok){message('Миграция не завершена.',true);return;}
+   $('migration-result').textContent='Готово: новых ID — '+result.newIds+', привязано вкладов — '+result.linked+', старых кодов — '+result.linkedCodes+'.';
+   load();
+ });
+});
+$('sync').addEventListener('click',()=>{
+ if(!confirm('Вы проверили принадлежность новых подтверждённых вкладов ученикам?'))return;
+ message('Синхронизируем ID…',false);
+ server('sync',[],result=>{
+   if(!result?.ok){message('Синхронизация не завершена.',true);return;}
+   $('migration-result').textContent='Привязано новых записей: '+result.linked+'. Создано ID: '+result.newIds+'.';
+   load();
+ });
+});
 $('search').addEventListener('input',paint);
 $('refresh').addEventListener('click',load);
 load();
