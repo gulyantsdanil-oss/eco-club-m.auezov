@@ -30,6 +30,13 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 .hub-card p{font-size:12px;margin:5px 0;color:#c8e4ce;overflow-wrap:anywhere}
 .hub-card .hub-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
 .hub-card .hub-status{display:inline-block;font-size:11px;color:#e2ffcf;border:1px solid #a7dbb066;border-radius:20px;padding:5px 9px;margin-top:7px}
+.hub-filterbar{display:flex;flex-wrap:wrap;gap:8px;margin:15px 0 11px}
+.hub-filterbar button{border:1px solid #b7e5ad65;background:#1c4b38;color:#e1f2e3;border-radius:11px;font:inherit;font-weight:700;font-size:12px;padding:10px 14px;min-height:44px;cursor:pointer}
+.hub-filterbar button[aria-pressed="true"]{background:var(--green);color:#153823;border-color:var(--green)}
+.hub-filterbar button span:not(:empty){display:inline-block;margin-left:5px;border-radius:20px;padding:0 6px;background:#ffffff2a}
+.hub-app-searchbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:12px}
+.hub-app-searchbar .search{max-width:560px;min-width:200px}
+.hub-app-searchbar .action{min-height:44px}
 .hub-class-row{padding:9px 0;border-bottom:1px solid #ffffff20;font-size:13px}
 .hub-class-track{height:7px;border-radius:20px;background:#ffffff30;margin-top:7px;overflow:hidden}
 .hub-class-track i{display:block;height:100%;background:var(--green)}
@@ -63,7 +70,18 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 </div>
 </section>
 <section id="hub-members" class="hub-view" hidden><h2>Участники</h2><p class="subnote">Общие результаты и статус паспортов, управление кодами — в разделе «Паспорта».</p><div id="hub-members-list" class="hub-list"></div></section>
-<section id="hub-applications" class="hub-view" hidden><h2>Заявки</h2><p class="subnote">Принимайте и отклоняйте новые заявки; решения записываются в журнал.</p><input class="search" id="hub-app-search" placeholder="Поиск ученика или класса" type="search"><div id="hub-app-list" class="hub-list"></div></section>
+<section id="hub-applications" class="hub-view" hidden>
+<h2>Заявки</h2>
+<p class="subnote">Новые заявки показаны отдельно. Обработанные заявления хранятся в истории. Приём или отклонение записывается в журнал решений.</p>
+<div class="hub-filterbar" id="hub-app-filters" aria-label="Фильтр заявок">
+<button type="button" data-app-filter="pending" aria-pressed="true">На рассмотрении <span id="hub-app-pending-count"></span></button>
+<button type="button" data-app-filter="history" aria-pressed="false">История <span id="hub-app-history-count"></span></button>
+<button type="button" data-app-filter="all" aria-pressed="false">Все заявки</button>
+</div>
+<div class="hub-app-searchbar"><input class="search" id="hub-app-search" placeholder="Поиск в выбранном разделе по имени, классу или статусу" type="search"><button id="hub-app-clear" class="action secondary" type="button">Очистить</button></div>
+<p id="hub-app-context" class="subnote" aria-live="polite"></p>
+<div id="hub-app-list" class="hub-list"></div>
+</section>
 <section id="hub-contributions" class="hub-view" hidden><h2>Экологические вклады</h2><p class="subnote">Решения доступны только для вкладов со статусом «Ожидает». После подтверждения синхронизируйте ID в разделе «Паспорта».</p><input class="search" id="hub-con-search" placeholder="Поиск ученика, класса или статуса" type="search"><div id="hub-con-list" class="hub-list"></div></section>
 <section id="hub-events" class="hub-view" hidden><h2>Мероприятия</h2><p class="subnote">Реестр мероприятий из Google Sheets.</p><div id="hub-event-list" class="hub-list"></div></section>
 <section id="hub-quality" class="hub-view" hidden><h2>Контроль качества данных</h2><div id="hub-quality-kpis" class="hub-kpis"></div><h3>Последние решения</h3><div id="hub-audit-list" class="hub-list"></div></section>
@@ -278,7 +296,7 @@ load();
 'use strict';
 const get=id=>document.getElementById(id);
 const tabs=['overview','members','applications','contributions','events','passports','quality','site'];
-let current='overview',hub=null,people=[],busy=false;
+let current='overview',hub=null,people=[],busy=false,appFilter='pending';
 const format=(n,d=0)=>Number.isFinite(Number(n))?new Intl.NumberFormat('ru-RU',{maximumFractionDigits:d}).format(Number(n)):'—';
 function element(tag,cls,content){
  const e=document.createElement(tag);
@@ -422,14 +440,40 @@ function renderMembers(){
   btn.type='button';btn.addEventListener('click',()=>switchTo('passports'));c.append(btn);wrap.append(c);
  });
 }
+function applicationListFiltered(list,mode,search){
+ const needle=String(search||'').trim().toLocaleLowerCase('ru-RU');
+ return list.filter(x=>{
+  const pending=!!x.canDecide;
+  if(mode==='pending'&&!pending)return false;
+  if(mode==='history'&&pending)return false;
+  return [x.name,x.className,x.status,x.notes,x.direction].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
+ }).slice().sort((a,b)=>Number(!!b.canDecide)-Number(!!a.canDecide)||(Number(b.row)||0)-(Number(a.row)||0));
+}
+function updateApplicationControls(){
+ if(!hub)return;
+ const all=hub.applications;
+ const pending=all.filter(x=>x.canDecide).length;
+ const history=all.length-pending;
+ get('hub-app-pending-count').textContent=String(pending);
+ get('hub-app-history-count').textContent=String(history);
+ document.querySelectorAll('[data-app-filter]').forEach(button=>
+  button.setAttribute('aria-pressed',String(button.dataset.appFilter===appFilter)));
+ const label={pending:'Ожидают решения',history:'История рассмотренных заявок',all:'Все заявки'};
+ get('hub-app-context').textContent=label[appFilter]+': '+applicationListFiltered(all,appFilter,get('hub-app-search').value).length;
+}
 function renderItems(type){
  if(!hub)return;
  const app=type==='application';
  const list=app?hub.applications:hub.contributions;
  const search=get(app?'hub-app-search':'hub-con-search').value.trim().toLocaleLowerCase('ru-RU');
  const wrap=get(app?'hub-app-list':'hub-con-list');wrap.replaceChildren();
- const filtered=list.filter(x=>([x.name,x.className,x.status,x.notes,x.direction].join(' ')).toLocaleLowerCase('ru-RU').includes(search));
- if(!filtered.length){wrap.append(element('p','empty','Записей по этому запросу нет.'));return;}
+ const filtered=app?applicationListFiltered(list,appFilter,search):
+  list.filter(x=>([x.name,x.className,x.status,x.notes,x.direction].join(' ')).toLocaleLowerCase('ru-RU').includes(search));
+ if(app)updateApplicationControls();
+ if(!filtered.length){
+  const empty=app&&appFilter==='pending'&&!search?'Все новые заявки рассмотрены. Для просмотра обработанных откройте «История».':'Записей по этому запросу нет.';
+  wrap.append(element('p','empty',empty));return;
+ }
  filtered.forEach(x=>{
   const c=card(x.name||'Без имени');
   c.append(line('Дата',x.date),line('Класс',x.className));
@@ -477,6 +521,16 @@ document.querySelectorAll('[data-preview]').forEach(button=>{
   get('hub-iframe').src=url;
   document.querySelectorAll('[data-preview]').forEach(b=>b.className='action'+(b===button?'':' secondary'));
  });
+});
+document.querySelectorAll('[data-app-filter]').forEach(button=>button.addEventListener('click',()=>{
+ appFilter=button.dataset.appFilter;
+ get('hub-app-search').value='';
+ renderItems('application');
+}));
+get('hub-app-clear').addEventListener('click',()=>{
+ get('hub-app-search').value='';
+ renderItems('application');
+ get('hub-app-search').focus();
 });
 get('hub-app-search').addEventListener('input',()=>renderItems('application'));
 get('hub-con-search').addEventListener('input',()=>renderItems('contribution'));
