@@ -34,6 +34,7 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 .hub-class-track{height:7px;border-radius:20px;background:#ffffff30;margin-top:7px;overflow:hidden}
 .hub-class-track i{display:block;height:100%;background:var(--green)}
 #hub-iframe{width:100%;height:min(80vh,850px);border:1px solid #aad6ae7c;border-radius:13px;background:white}
+.hub-site-tools{display:flex;gap:9px;flex-wrap:wrap;margin:12px 0}.hub-site-tools .action{min-width:110px}
 @media(max-width:760px){.hub-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.hub-columns,.hub-list{grid-template-columns:1fr}}
 </style></head>
 <body>
@@ -66,7 +67,8 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 <section id="hub-contributions" class="hub-view" hidden><h2>Экологические вклады</h2><p class="subnote">Решения доступны только для вкладов со статусом «Ожидает». После подтверждения синхронизируйте ID в разделе «Паспорта».</p><input class="search" id="hub-con-search" placeholder="Поиск ученика, класса или статуса" type="search"><div id="hub-con-list" class="hub-list"></div></section>
 <section id="hub-events" class="hub-view" hidden><h2>Мероприятия</h2><p class="subnote">Реестр мероприятий из Google Sheets.</p><div id="hub-event-list" class="hub-list"></div></section>
 <section id="hub-quality" class="hub-view" hidden><h2>Контроль качества данных</h2><div id="hub-quality-kpis" class="hub-kpis"></div><h3>Последние решения</h3><div id="hub-audit-list" class="hub-list"></div></section>
-<section id="hub-site" class="hub-view" hidden><h2>Публичный сайт</h2><p class="subnote">Предпросмотр опубликованного Eco Club в этом же кабинете. Изменения дизайна сайта по-прежнему выполняются через GitHub.</p><iframe id="hub-iframe" title="Предпросмотр Eco Club" loading="lazy" referrerpolicy="no-referrer" src="https://gulyantsdanil-oss.github.io/eco-club-m.auezov/"></iframe><p><a href="https://gulyantsdanil-oss.github.io/eco-club-m.auezov/" target="_blank" rel="noopener" style="color:var(--green)">Открыть сайт отдельно, если предпросмотр недоступен</a></p></section>
+<section id="hub-site" class="hub-view" hidden><h2>Публичный сайт</h2><p class="subnote">Предпросмотр опубликованного Eco Club в этом же кабинете. Изменения дизайна сайта по-прежнему выполняются через GitHub.</p><div class="hub-site-tools" role="group" aria-label="Просмотр разделов публичного сайта"><button type="button" class="action" data-preview="home">Главная</button><button type="button" class="action secondary" data-preview="world">ECO WORLD</button><button type="button" class="action secondary" data-preview="passport">Паспорт · демо</button></div>
+<iframe id="hub-iframe" title="Предпросмотр Eco Club" loading="lazy" referrerpolicy="no-referrer" src="https://gulyantsdanil-oss.github.io/eco-club-m.auezov/"></iframe><p><a href="https://gulyantsdanil-oss.github.io/eco-club-m.auezov/" target="_blank" rel="noopener" style="color:var(--green)">Открыть сайт отдельно, если предпросмотр недоступен</a></p></section>
 <section id="hub-passports" class="hub-view" hidden>
 <div class="notice">🔒 Панель размещается отдельно от кабинета учеников. Новый код виден только один раз и <strong>не сохраняется в листе выдачи</strong>. Доступ — только владельцу проекта.</div>
 <div class="metrics">
@@ -467,6 +469,15 @@ function decide(kind,record,action){
 }
 document.querySelectorAll('#hub-nav button[data-target]').forEach(btn=>
  btn.addEventListener('click',()=>switchTo(btn.dataset.target)));
+document.querySelectorAll('[data-preview]').forEach(button=>{
+ button.addEventListener('click',()=>{
+  const urls={home:'https://gulyantsdanil-oss.github.io/eco-club-m.auezov/',world:'https://gulyantsdanil-oss.github.io/eco-club-m.auezov/eco-world-campus.html',passport:'https://gulyantsdanil-oss.github.io/eco-club-m.auezov/eco-passport.html'};
+  const url=urls[button.dataset.preview];
+  if(!url)return;
+  get('hub-iframe').src=url;
+  document.querySelectorAll('[data-preview]').forEach(b=>b.className='action'+(b===button?'':' secondary'));
+ });
+});
 get('hub-app-search').addEventListener('input',()=>renderItems('application'));
 get('hub-con-search').addEventListener('input',()=>renderItems('contribution'));
 refresh();
