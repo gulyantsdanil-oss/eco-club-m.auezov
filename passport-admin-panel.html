@@ -42,6 +42,24 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 .hub-class-select{min-height:44px;max-width:240px;min-width:145px;border:1px solid #b7e5ad65;border-radius:11px;background:#123c2d;color:#ecffec;padding:9px 12px;font:inherit;font-size:13px}
 .hub-class-select:focus-visible{outline:3px solid var(--green);outline-offset:2px}
 .hub-con-toolbar .action{min-height:44px}
+.hub-member-tools{display:flex;align-items:center;flex-wrap:wrap;gap:9px;margin:12px 0}
+.hub-member-tools .search{max-width:540px}
+.hub-member-tools .action{min-height:44px}
+.hub-member-dialog{width:min(780px,calc(100vw - 24px));max-height:min(90vh,1100px);overflow:auto}
+.hub-member-dialog-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.hub-member-dialog-head h2{margin:0;overflow-wrap:anywhere}
+.hub-profile-stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin:15px 0}
+.hub-profile-stat{background:#ffffff10;border:1px solid #c8e6ba3c;border-radius:13px;padding:12px;min-width:0}
+.hub-profile-stat b{display:block;font-size:23px;color:var(--green);font-variant-numeric:tabular-nums}
+.hub-profile-stat small{display:block;color:#c5dec9;font-size:11px}
+.hub-profile-awards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.hub-profile-award{background:#c5faa612;border:1px solid #e4ffd23d;border-radius:12px;padding:10px;font-size:13px;display:flex;align-items:center;gap:8px}
+.hub-profile-award.unearned{opacity:.5}
+.hub-profile-history{display:grid;gap:8px;max-height:240px;overflow:auto}
+.hub-profile-entry{padding:9px 11px;background:#e9ffe608;border:1px solid #c2efaf30;border-radius:10px;font-size:12px}
+.hub-profile-section-title{font-size:16px;margin:18px 0 10px}
+@media(max-width:540px){.hub-profile-stats{grid-template-columns:repeat(2,minmax(0,1fr))}.hub-profile-awards{grid-template-columns:1fr}}
+
 @media(max-width:580px){.hub-con-toolbar .search{width:100%;flex-basis:100%}}
 
 .hub-class-row{padding:9px 0;border-bottom:1px solid #ffffff20;font-size:13px}
@@ -53,7 +71,7 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 </style></head>
 <body>
 <main>
-<header class="top"><strong class="logo">🌿 ECO CLUB / ADMIN</strong><span class="tag">ECO CLUB HUB 6.2 · PRIVATE</span></header>
+<header class="top"><strong class="logo">🌿 ECO CLUB / ADMIN</strong><span class="tag">ECO CLUB HUB 6.3 · PRIVATE</span></header>
 <h1>Eco Club | Цифровой кабинет</h1>
 <p class="intro">Единое рабочее пространство руководителя Eco Club: показатели, учащиеся, заявки, вклады, паспорта и сайт.</p>
 
@@ -76,7 +94,17 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 <article class="hub-box"><h3>Что требует внимания</h3><div id="hub-attention"></div></article>
 </div>
 </section>
-<section id="hub-members" class="hub-view" hidden><h2>Участники</h2><p class="subnote">Общие результаты и статус паспортов, управление кодами — в разделе «Паспорта».</p><div id="hub-members-list" class="hub-list"></div></section>
+<section id="hub-members" class="hub-view" hidden>
+<h2>Участники Eco Club</h2>
+<p class="subnote">Откройте профиль, чтобы посмотреть историю подтверждённых вкладов, награды и срок доступа. Личные коды не отображаются.</p>
+<div class="hub-member-tools">
+<input id="hub-member-search" class="search" type="search" placeholder="Поиск по ФИО или классу" aria-label="Поиск участников">
+<select id="hub-member-class" class="hub-class-select" aria-label="Выбор класса"><option value="">Все классы</option></select>
+<button type="button" class="action secondary" id="hub-member-clear">Очистить</button>
+</div>
+<p class="subnote" id="hub-member-count" aria-live="polite"></p>
+<div id="hub-members-list" class="hub-list"></div>
+</section>
 <section id="hub-applications" class="hub-view" hidden>
 <h2>Заявки</h2>
 <p class="subnote">Новые заявки показаны отдельно. Обработанные заявления хранятся в истории. Приём или отклонение записывается в журнал решений.</p>
@@ -150,6 +178,11 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 <div id="audit" class="audit-list"></div>
 </section>
 </section>
+<dialog id="hub-member-dialog" class="hub-member-dialog" aria-labelledby="hub-member-title">
+<div class="hub-member-dialog-head"><h2 id="hub-member-title">Профиль участника</h2><button class="action secondary" id="hub-member-close" type="button">Закрыть</button></div>
+<p id="hub-member-loading" class="feedback" role="status" aria-live="polite"></p>
+<div id="hub-member-details"></div>
+</dialog>
 <dialog id="issued" aria-labelledby="issued-title">
 <h2 id="issued-title">Новый код создан</h2>
 <p>Код необходимо передать участнику или законному представителю лично. После закрытия этого окна <strong>восстановить код будет невозможно</strong>; при утрате придётся выпустить новый.</p>
@@ -371,6 +404,7 @@ function apiCall(method,args,onSuccess){
    });
  if(method==='dashboard')runner.admin60Dashboard();
  if(method==='members')runner.admin54Overview();
+ if(method==='profile')runner.admin63MemberProfile(args[0]);
  if(method==='decide')runner.admin60Decide(...args);
 }
 function refresh(){
@@ -449,18 +483,118 @@ function render(){
   log.append(c);
  });
 }
+function memberFiltered(people,search,className){
+ const needle=String(search||'').trim().toLocaleLowerCase('ru-RU');
+ return people.filter(p=>{
+  if(className&&String(p.className||'')!==className)return false;
+  return [p.name,p.className,p.participantRef].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
+ });
+}
+function memberManageCode(p){
+ if(!p.id)return;
+ switchTo('passports');
+ const search=get('search');
+ search.value=p.name+' '+p.className;
+ search.dispatchEvent(new Event('input',{bubbles:true}));
+ search.focus();
+}
 function renderMembers(){
  const wrap=get('hub-members-list');wrap.replaceChildren();
- if(!people.length){wrap.append(element('p','empty','Здесь пока нет участников.'));return;}
- people.forEach(p=>{
+ const selector=get('hub-member-class');
+ const originalClass=selector.value;
+ const classes=[...new Set(people.map(p=>String(p.className||'').trim()).filter(Boolean))]
+  .sort((a,b)=>a.localeCompare(b,'ru',{numeric:true}));
+ selector.replaceChildren(new Option('Все классы',''));
+ classes.forEach(value=>selector.append(new Option(value,value)));
+ selector.value=classes.includes(originalClass)?originalClass:'';
+ const filtered=memberFiltered(people,get('hub-member-search').value,selector.value);
+ get('hub-member-count').textContent='Показано участников: '+filtered.length+' из '+people.length;
+ if(!filtered.length){wrap.append(element('p','empty','Участников по выбранным фильтрам нет.'));return;}
+ filtered.forEach(p=>{
   const c=card(p.name);
   c.append(line('Класс',p.className),line('Номер паспорта',p.participantRef||'—'),
     line('Вкладов',format(p.contributions)),
     line('Макулатура',format(p.paperKg,1)+' кг'),
     line('Крышки',format(p.capsCount)),
     line('Доступ',p.accessActive?'Код активен':'Код не выдан'));
-  const btn=element('button','action secondary','Управлять паспортом');
-  btn.type='button';btn.addEventListener('click',()=>switchTo('passports'));c.append(btn);wrap.append(c);
+  const actions=element('div','hub-actions');
+  const view=element('button','action','Профиль и достижения');
+  view.type='button';view.disabled=!p.id;
+  view.addEventListener('click',()=>openMemberProfile(p));
+  const manage=element('button','action secondary','Управлять кодом');
+  manage.type='button';manage.disabled=!p.id;
+  manage.addEventListener('click',()=>memberManageCode(p));
+  actions.append(view,manage);c.append(actions);wrap.append(c);
+ });
+}
+function memberMetric(parent,value,label){
+ const e=element('div','hub-profile-stat');
+ e.append(element('b','',value),element('small','',label));parent.append(e);
+}
+function memberText(parent,value){
+ parent.append(element('p','hub-meta',value));
+}
+function showMemberProfile(data){
+ const wrap=get('hub-member-details');wrap.replaceChildren();
+ get('hub-member-loading').textContent='';
+ get('hub-member-title').textContent=data.name;
+ memberText(wrap,'Класс: '+data.className+' · Экопаспорт № '+data.participantRef);
+ const stats=element('div','hub-profile-stats');
+ memberMetric(stats,format(data.confirmedCount),'Подтверждённых вкладов');
+ memberMetric(stats,format(data.paperKg,2)+' кг','Макулатура');
+ memberMetric(stats,format(data.capsCount),'Крышек');
+ wrap.append(stats);
+ const levels=['Новичок','Экоактивист','Экогерой','Эколидер'];
+ const level=Number.isInteger(data.level)&&data.level>=0?levels[data.level]:'Начальный этап';
+ memberText(wrap,'Экологический уровень: '+level);
+ memberText(wrap,data.nextTarget?
+  'До следующего уровня: '+Math.max(0,data.nextTarget-data.confirmedCount)+' вкладов':
+  'Достигнут высший уровень');
+ const accessNames={legacy:'Старый код без срока',valid:'Код активен до '+data.expiryDate,within7:'Истекает через '+data.daysUntilExpiry+' дн.',within30:'Истекает через '+data.daysUntilExpiry+' дн.',expired:'Срок кода истёк',revoked:'Код отозван',none:'Код не выдавался',invalid:'Некорректная дата окончания'};
+ memberText(wrap,'Доступ к паспорту: '+(accessNames[data.credentialStatus]||'Нет данных'));
+ wrap.append(element('h3','hub-profile-section-title','Экологические награды'));
+ const badges=element('div','hub-profile-awards');
+ (data.awards||[]).forEach(a=>{
+  const c=element('div','hub-profile-award'+(a.earned?'':' unearned'));
+  c.append(element('span','',a.icon),element('span','',a.ru+(a.earned?' · Получено':' · Ещё не получено')));
+  badges.append(c);
+ });
+ wrap.append(badges);
+ wrap.append(element('h3','hub-profile-section-title','История подтверждённых вкладов'));
+ const history=element('div','hub-profile-history');
+ if(!data.history?.length)history.append(element('p','subnote','Подтверждённых вкладов пока нет.'));
+ (data.history||[]).forEach(item=>{
+  history.append(element('div','hub-profile-entry',
+    (item.date||'Дата не указана')+' · '+format(item.paperKg,2)+' кг макулатуры · '+format(item.capsCount)+' крышек'));
+ });
+ wrap.append(history);
+ if(data.historyTruncated)memberText(wrap,'Показаны последние 100 подтверждённых записей.');
+ const action=element('div','hub-actions');
+ const manage=element('button','action secondary','Управлять кодом');
+ manage.type='button';manage.addEventListener('click',()=>{
+  get('hub-member-dialog').close();
+  memberManageCode({id:data.participantId,name:data.name,className:data.className});
+ });
+ action.append(manage);wrap.append(action);
+}
+function openMemberProfile(p){
+ if(busy)return;
+ const dlg=get('hub-member-dialog');
+ get('hub-member-details').replaceChildren();
+ get('hub-member-title').textContent=p.name;
+ get('hub-member-loading').textContent='Загружаем профиль и историю вкладов…';
+ dlg.showModal();
+ apiCall('profile',[p.id],result=>{
+  if(!dlg.open)return;
+  if(!result||!result.ok){
+   get('hub-member-loading').textContent='Профиль не удалось загрузить.';
+   return;
+  }
+  if(result.participantId!==p.id){
+   get('hub-member-loading').textContent='Идентификатор участника не совпадает.';
+   return;
+  }
+  showMemberProfile(result);
  });
 }
 function applicationListFiltered(list,mode,search){
@@ -604,6 +738,18 @@ get('hub-app-clear').addEventListener('click',()=>{
  get('hub-app-search').value='';
  renderItems('application');
  get('hub-app-search').focus();
+});
+get('hub-member-search').addEventListener('input',renderMembers);
+get('hub-member-class').addEventListener('change',renderMembers);
+get('hub-member-clear').addEventListener('click',()=>{
+ get('hub-member-search').value='';
+ get('hub-member-class').value='';
+ renderMembers();
+ get('hub-member-search').focus();
+});
+get('hub-member-close').addEventListener('click',()=>get('hub-member-dialog').close());
+get('hub-member-dialog').addEventListener('close',()=>{
+ get('hub-member-details').replaceChildren();
 });
 get('hub-app-search').addEventListener('input',()=>renderItems('application'));
 document.querySelectorAll('[data-con-filter]').forEach(button=>
