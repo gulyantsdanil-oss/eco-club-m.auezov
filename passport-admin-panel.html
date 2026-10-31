@@ -10,7 +10,7 @@ button,input,select{font:inherit}button{cursor:pointer}button:disabled{opacity:.
 main{max-width:1160px;padding:34px 22px 80px;margin:auto}.top{display:flex;gap:15px;justify-content:space-between;align-items:center}.logo{font-weight:900;letter-spacing:.055em;color:#c9f9a8}.tag{font-size:11px;border:1px solid #c7e9aa77;padding:7px 10px;border-radius:30px;color:#d0ffc0}
 h1{font:normal clamp(34px,5vw,57px)/1.1 Georgia,serif;letter-spacing:-.04em;margin:24px 0 12px}.intro{max-width:790px;color:#c0dec6;font-size:14px}.notice{font-size:12px;border:1px solid #b5db9950;background:#b3cf9920;border-radius:13px;padding:12px;margin:17px 0}
 .metrics{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin:24px 0}.metric,.panel,.person,.warning{border:1px solid var(--border);background:linear-gradient(145deg,#19503d,#0f3328);border-radius:17px}.metric{padding:18px;min-width:0}.metric b{display:block;color:var(--green);font-variant-numeric:tabular-nums;font-size:clamp(24px,3vw,34px)}.metric span{color:var(--dim);font-size:12px}
-.toolbar{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar h2{font-size:22px;margin:0}.action{padding:10px 15px;min-height:43px;background:var(--green);border:1px solid var(--green);color:#123923;font-size:13px;font-weight:800;border-radius:11px}.action.secondary{background:transparent;border-color:#a4ddb56b;color:#ebffdf}.action.danger{background:transparent;color:#ffd2c7;border-color:#e8988682}.action:hover:not(:disabled){filter:brightness(1.08)}.subnote{color:var(--dim);font-size:12px;line-height:1.5}
+.toolbar{display:flex;justify-content:space-between;gap:14px;align-items:center;flex-wrap:wrap;margin:18px 0}.toolbar h2{font-size:22px;margin:0}.action{padding:10px 15px;min-height:43px;background:var(--green);border:1px solid var(--green);color:#123923;font-size:13px;font-weight:800;border-radius:11px}.action.secondary{background:transparent;border-color:#a4ddb56b;color:#ebffdf}.action.danger{background:transparent;color:#ffd2c7;border-color:#e8988682}.action:hover:not(:disabled){filter:brightness(1.08)}.subnote{color:var(--dim);font-size:12px;line-height:1.5}.notifications{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-top:17px;padding-top:14px;border-top:1px solid #ffffff26}.notifications>div:first-child{max-width:680px}.notifications p{margin:5px 0 8px}
 .search{min-height:44px;flex:1;min-width:200px;max-width:410px;border:1px solid #d0e4be70;background:#0b3026;color:#f5fff1;border-radius:12px;padding:10px 14px}.search::placeholder{color:#c0d2c6}
 .items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.person{padding:17px;min-width:0}.heading{display:flex;align-items:start;gap:12px;justify-content:space-between}.person h3{font-size:16px;overflow-wrap:anywhere;margin:0 0 5px}.class{font-size:12px;color:var(--dim)}.state{font-size:11px;font-weight:800;white-space:nowrap;border-radius:30px;background:#c8f7a825;color:#dcffbe;padding:6px 10px;border:1px solid #d3f7b565}.state.off{background:#ffffff12;border-color:#ffffff45;color:#c0d9c4}.stats{display:flex;gap:13px;flex-wrap:wrap;color:#c1e1c8;font-size:12px;margin:15px 0}.stats strong{color:#ebffdb}.person-actions{display:flex;gap:8px;flex-wrap:wrap}.warning{padding:16px;color:#e5eddb;margin:20px 0}.warning h2{font-size:16px;margin:0 0 7px}.warning p{font-size:12px;color:#c9dec8;margin:0 0 10px}.audit-list{display:flex;gap:12px;flex-wrap:wrap;color:#d3efdb;font-size:12px}.audit-list span{border:1px solid #a1c9a349;border-radius:25px;padding:6px 10px}
 .empty{font-size:13px;line-height:1.6;background:#ffffff08;border:1px dashed #b4e19b70;padding:20px;border-radius:14px}.feedback{font-size:13px;color:#e6ffd6;margin:8px 0 12px;min-height:20px}.feedback.error{color:var(--red)}
@@ -20,7 +20,7 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 </style></head>
 <body>
 <main>
-<header class="top"><strong class="logo">🌿 ECO CLUB / ADMIN</strong><span class="tag">EcoPassport 5.5 · PRIVATE</span></header>
+<header class="top"><strong class="logo">🌿 ECO CLUB / ADMIN</strong><span class="tag">EcoPassport 5.6 · PRIVATE</span></header>
 <h1>Управление экопаспортами</h1>
 <p class="intro">Закрытая панель руководителя: подтверждённые участники, наличие действующего кода, безопасная выдача и отзыв. Только для владельца таблицы.</p>
 <div class="notice">🔒 Панель размещается отдельно от кабинета учеников. Новый код виден только один раз и <strong>не сохраняется в листе выдачи</strong>. Доступ — только владельцу проекта.</div>
@@ -36,6 +36,23 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 <button class="action" id="migrate" type="button">Создать ID и привязать подтверждённые вклады</button>
 <button class="action secondary" id="sync" type="button" style="display:none">Проверить и привязать новые вклады</button>
 <p class="subnote" id="migration-result"></p>
+</section>
+<section class="warning" id="expiry-section">
+<h2>Сроки действия кодов · EcoPassport 5.6</h2>
+<p>Новые коды действуют 180 дней. Истёкший код блокируется автоматически. Ранее выданные коды без срока остаются действительными до ручной замены или отзыва.</p>
+<div class="audit-list" id="expiry-summary">
+<span>До 7 дней: <strong id="due7">—</strong></span>
+<span>До 30 дней: <strong id="due30">—</strong></span>
+<span>Без срока: <strong id="legacy">—</strong></span>
+<span>Истекли: <strong id="expired">—</strong></span>
+</div>
+<div class="notifications">
+<div><strong>Еженедельные напоминания руководителю</strong>
+<p>Только сводные числа, без имён учеников и кодов. Понедельник, около 08:00 по времени проекта (Asia/Almaty). По умолчанию выключено.</p>
+<small id="notification-status" class="subnote">Статус не проверен.</small></div>
+<div><button id="enable-notifications" class="action secondary" type="button">Включить напоминания</button>
+<button id="disable-notifications" class="action danger" style="display:none" type="button">Отключить</button></div>
+</div>
 </section>
 <div class="toolbar"><h2>Участники</h2><input class="search" id="search" type="search" placeholder="Поиск по ФИО или классу" aria-label="Поиск участников"><button class="action secondary" id="refresh" type="button">↻ Обновить</button></div>
 <p class="feedback" id="message" role="status" aria-live="polite">Загрузка списка…</p>
@@ -75,6 +92,8 @@ function server(fn,args,success){
  if(fn==='revoke')runner.admin54Revoke(args[0],args[1]);
  if(fn==='migrate')runner.admin54Migrate('MIGRATE_ECO55');
  if(fn==='sync')runner.admin54Sync('SYNC_ECO55');
+ if(fn==='notificationStatus')runner.admin56NotificationStatus();
+ if(fn==='setNotifications')runner.admin56SetNotifications(args[0]);
 }
 function paint(){
  const term=$('search').value.trim().toLocaleLowerCase('ru-RU');
@@ -85,6 +104,8 @@ function paint(){
   const card=el('article','person'),head=el('div','heading'),who=el('div');
   who.append(el('h3','',p.name),el('div','class','Класс: '+p.className));
   if(p.participantRef)who.append(el('div','class','ID: '+p.participantRef));
+  const statusMap={legacy:'Код старого формата · без срока',within7:'Истекает через '+p.daysUntilExpiry+' дн.',within30:'Истекает через '+p.daysUntilExpiry+' дн.',valid:'Действует до '+p.expiryDate,expired:'Срок действия истёк',invalid:'Неверная дата окончания',revoked:'Код отозван',none:'Код не выдавался'};
+  who.append(el('div','class',statusMap[p.credentialStatus]||'Код не выдавался'));
   const status=el('span','state'+(p.accessActive?'':' off'),p.accessActive?'Код активен':'Код не выдан');
   head.append(who,status);
   const stats=el('div','stats');
@@ -134,6 +155,10 @@ function load(){
   $('active').textContent=fmt(result.summary.active);
   $('without').textContent=fmt(result.summary.withoutAccess);
   $('confirmed').textContent=fmt(result.audit.confirmed);
+  $('due7').textContent=fmt(result.summary.expiresWithin7Days||0);
+  $('due30').textContent=fmt(result.summary.expiresWithin30Days||0);
+  $('legacy').textContent=fmt(result.summary.legacyCodes||0);
+  $('expired').textContent=fmt(result.summary.expiredCodes||0);
   const audit=$('audit');audit.replaceChildren();
   [['Записей без ID',result.audit.confirmedWithoutRequestId],
    ['Тестовых подтверждённых',result.audit.testConfirmed],
@@ -146,7 +171,17 @@ function load(){
   .forEach(([name,value])=>audit.append(el('span','',name+': '+fmt(value))));
   message(result.isTruncated?'Показаны первые 500 участников.':'Данные загружены.',false);
   paint();
+  checkNotifications();
  });
+}
+function setNotificationUi(isEnabled){
+ $('notification-status').textContent=isEnabled?'Включены. Сводный отчёт приходит только при наличии кодов, требующих внимания.':'Выключены. Письма не отправляются.';
+ $('enable-notifications').style.display=isEnabled?'none':'inline-block';
+ $('disable-notifications').style.display=isEnabled?'inline-block':'none';
+}
+function checkNotifications(){
+ if(busy)return;
+ server('notificationStatus',[],result=>setNotificationUi(!!result?.enabled));
 }
 function clearSecret(){$('one-time-code').value='';$('issued').close();load();}
 $('hide').addEventListener('click',clearSecret);
@@ -177,6 +212,14 @@ $('sync').addEventListener('click',()=>{
 });
 $('search').addEventListener('input',paint);
 $('refresh').addEventListener('click',load);
+$('enable-notifications').addEventListener('click',()=>{
+ if(!confirm('Включить еженедельную сводку по срокам кодов на Gmail владельца? Письмо не содержит ФИО и личных кодов.'))return;
+ server('setNotifications',[true],result=>{setNotificationUi(!!result?.enabled);message('Напоминания включены. Уведомления будут поступать при наличии кодов, требующих внимания.',false);});
+});
+$('disable-notifications').addEventListener('click',()=>{
+ if(!confirm('Отключить еженедельные напоминания?'))return;
+ server('setNotifications',[false],result=>{setNotificationUi(!!result?.enabled);message('Напоминания отключены.',false);});
+});
 load();
 })();
 </script>
