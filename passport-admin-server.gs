@@ -558,3 +558,68 @@ function passportAdmin60Stamp_(kind,row){
  return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,kind+'\u241f'+normalized,Utilities.Charset.UTF_8)
   .map(v=>(v&255).toString(16).padStart(2,'0')).join('');
 }
+
+
+/**
+ * ECO CLUB HUB 6.3 — read-only participant profile.
+ * Only the owner may inspect a student by immutable roster ID.
+ * Source and award thresholds intentionally match the pupil passport.
+ * No codes, hashes or contact data are returned to the browser.
+ */
+function admin63MemberProfile(participantId){
+ requirePassportAdmin_();
+ const id=String(participantId||'').trim();
+ if(!/^[0-9a-f]{32}$/i.test(id))throw new Error('INVALID_PARTICIPANT_ID');
+ const book=passportAdminBook_();
+ const roster=passportAdminSheet_(book,PASSPORT_ADMIN54.roster);
+ const matches=roster.getDataRange().getValues().slice(1).filter(row=>
+  String(row[0]||'').trim().toLowerCase()===id.toLowerCase()&&row[4]!==false);
+ if(matches.length!==1)throw new Error('PARTICIPANT_NOT_FOUND');
+ const person=matches[0];
+ const name=String(person[1]||'').trim(),className=String(person[2]||'').trim();
+ if(!name||!className)throw new Error('PARTICIPANT_DATA_INVALID');
+ const rows=passportAdminSheet_(book,PASSPORT_ADMIN54.contributions).getDataRange().getValues();
+ const history=[],seenRequests=new Set();
+ let paperKg=0,capsCount=0;
+ for(let i=1;i<rows.length;i++){
+  const row=rows[i];
+  if(String(row[12]||'').trim().toLowerCase()!==id.toLowerCase())continue;
+  if(!passportAdminConfirmed_(row[7]))continue;
+  const requestId=String(row[8]||'').trim();
+  if(requestId&&seenRequests.has(requestId))continue;
+  if(requestId)seenRequests.add(requestId);
+  const paper=passportAdminNumber_(row[3]);
+  const caps=passportAdminNumber_(row[4]);
+  if(paper===null||caps===null)continue;
+  paperKg+=paper;capsCount+=caps;
+  const when=row[0]instanceof Date
+   ?Utilities.formatDate(row[0],Session.getScriptTimeZone(),'yyyy-MM-dd')
+   :String(row[0]||'').slice(0,24);
+  history.push({date:when,paperKg:paper,capsCount:caps});
+ }
+ const count=history.length;
+ const milestones=[1,3,10,25];
+ let level=-1;
+ milestones.forEach((target,i)=>{if(count>=target)level=i;});
+ const nextTarget=milestones[level+1]||null;
+ const awards=[
+  {id:'first',icon:'🌱',ru:'Первый вклад',kk:'Алғашқы үлес',earned:count>=1},
+  {id:'three',icon:'✨',ru:'3 вклада',kk:'3 үлес',earned:count>=3},
+  {id:'paper5',icon:'🌿',ru:'Первые 5 кг',kk:'Алғашқы 5 кг',earned:paperKg>=5},
+  {id:'paper10',icon:'🌳',ru:'10 кг добра',kk:'10 кг жақсылық',earned:paperKg>=10},
+  {id:'caps100',icon:'♻️',ru:'100 крышек',kk:'100 қақпақ',earned:capsCount>=100}
+ ];
+ const access=passportAdminSheet_(book,PASSPORT_ADMIN54.access).getDataRange().getValues().slice(1);
+ const codes=access.filter(r=>String(r[7]||'').trim().toLowerCase()===id.toLowerCase());
+ const current=codes.filter(r=>r[3]===true&&passportAdminNotExpired_(r));
+ const credential=passportAdmin56ExpiryForPerson_(codes,id,passportAdminIdentity_(name,className));
+ return {
+  ok:true,participantId:id.toLowerCase(),participantRef:'ECO-'+id.slice(0,8).toUpperCase(),
+  name,className,confirmedCount:count,paperKg:Math.round(paperKg*1000)/1000,
+  capsCount,level,nextTarget,awards,
+  history:history.slice(-100).reverse(),historyTruncated:history.length>100,
+  accessActive:current.length>0,activeCodes:current.length,
+  credentialStatus:credential.status,expiryDate:credential.expiryDate,
+  daysUntilExpiry:credential.daysUntilExpiry
+ };
+}
