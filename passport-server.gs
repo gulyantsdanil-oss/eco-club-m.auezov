@@ -1,28 +1,16 @@
-/**
- * Eco Club / EcoPassport 5.2
- * PRIVATE Google Apps Script web application.
- *
- * 1) Create a separate Apps Script project owned by the spreadsheet owner.
- * 2) Add this file as Code.gs, and passport-portal.html as PassportPortal.html.
- * 3) In Script Properties, set ECO_SOURCE_SPREADSHEET_ID to the PRIVATE Eco Club spreadsheet ID.
- * 4) Run adminInitialize_() once from Apps Script editor.
- * 5) To issue a code, set PASSPORT_ISSUE_NAME and PASSPORT_ISSUE_CLASS in Script Properties,
- *    then run adminIssueCode_(). Collect code from "Паспорт — выдача", deliver privately,
- *    and delete the plaintext after delivery.
- * 6) Deploy as Web App, execute as owner, access "Anyone with the link".
- *    SECURITY: User data is never returned without a long high-entropy possession credential.
- *    Do not expose the private spreadsheet via separate public API actions.
- * 7) Paste ONLY the web-app /exec URL into public eco-passport.html.
- *
- * This code intentionally has NO unauthenticated endpoint to search participants.
- * It does not expose student names, totals or codes via JSONP / GET.
+/** EcoPassport 5.5 — pupil-facing read-only server.
+ * Hosted in EXISTING student Apps Script. Do not insert owner administration code.
+ * Old legacy credentials (no expiry / no stable ID) continue working during migration.
+ * New credentials require both participant ID and non-expired timestamp.
+ * Real personal data never goes to GitHub Pages.
  */
 const ECO_PASSPORT = Object.freeze({
   spreadsheetProperty: 'ECO_SOURCE_SPREADSHEET_ID',
   contributionTab: 'Вклад',
   accessTab: 'Паспорт — доступ',
   deliveryTab: 'Паспорт — выдача',
-  maxHistory: 100
+  maxHistory: 100,
+  participantTab: 'Паспорт — участники'
 });
 
 function doGet() {
@@ -43,14 +31,34 @@ function getMyPassport(code) {
 
   const records = accessSheet.getDataRange().getValues();
   let authorised = null;
+  const now = Date.now();
   for (let i = 1; i < records.length; i++) {
     const row = records[i];
-    if (String(row[2] || '') === fingerprint && row[3] === true) {
-      authorised = {name: String(row[0]||''), className: String(row[1]||'')};
-      break;
+    if (String(row[2] || '').toLowerCase() !== fingerprint || row[3] !== true) continue;
+    // G: expiration. Empty G only applies to pre-5.5 legacy credentials.
+    const rawExpiry = row[6];
+    if (rawExpiry !== '' && rawExpiry != null) {
+      const expiry = rawExpiry instanceof Date ? rawExpiry.getTime() : new Date(rawExpiry).getTime();
+      if (!Number.isFinite(expiry) || now >= expiry) continue;
     }
+    authorised = {
+      name: String(row[0]||''),
+      className: String(row[1]||''),
+      participantId: String(row[7]||'').trim(),
+      legacy: rawExpiry === '' || rawExpiry == null
+    };
+    break;
   }
   if (!authorised) throw new Error('ACCESS_DENIED');
+  if (authorised.participantId) {
+    const roster = book.getSheetByName(ECO_PASSPORT.participantTab);
+    if (!roster) throw new Error('ACCESS_DENIED');
+    const matches = roster.getDataRange().getValues().slice(1)
+      .filter(r => String(r[0]||'').trim() === authorised.participantId && r[4] !== false);
+    if (matches.length !== 1) throw new Error('ACCESS_DENIED');
+    authorised.name = String(matches[0][1]||'').trim();
+    authorised.className = String(matches[0][2]||'').trim();
+  }
 
   const sheet = book.getSheetByName(ECO_PASSPORT.contributionTab);
   if (!sheet) throw new Error('DATA_UNAVAILABLE');
@@ -61,7 +69,9 @@ function getMyPassport(code) {
   let paperKg = 0, capsCount = 0;
   for (let i = 1; i < rows.length; i++) {
     const row = rows[i];
-    if (identityKey_(row[1],row[2]) !== key) continue;
+    if (authorised.participantId) {
+      if (String(row[12]||'').trim() !== authorised.participantId) continue;
+    } else if (identityKey_(row[1],row[2]) !== key) continue;
     if (!isConfirmed_(row[7])) continue;
     const reqId = String(row[8] || '').trim();
     if (reqId && uniqueRequestIds.has(reqId)) continue;
@@ -94,6 +104,8 @@ function getMyPassport(code) {
     capsCount,
     level,
     nextTarget,
+    participantRef: authorised.participantId ? 'ECO-'+authorised.participantId.slice(0,8).toUpperCase() : null,
+    legacyAccess: authorised.legacy,
     awards,
     history:history.slice(-ECO_PASSPORT.maxHistory).reverse()
   };
@@ -124,91 +136,4 @@ function nonNegative_(value) {
 function sha256_(text) {
   const bytes=Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,text,Utilities.Charset.UTF_8);
   return bytes.map(x=>(x&255).toString(16).padStart(2,'0')).join('');
-}
-
-// ------- ADMIN-ONLY FUNCTIONS: functions ending in "_" are not callable by google.script.run -------
-function adminInitialize_() {
-  const book=sourceWorkbook_();
-  if(!book.getSheetByName(ECO_PASSPORT.accessTab)){
-    const sheet=book.insertSheet(ECO_PASSPORT.accessTab);
-    sheet.appendRow(['ФИО','Класс','SHA-256 кода','Активен','Дата выдачи','Дата отзыва']);
-    sheet.setFrozenRows(1);
-  }
-  if(!book.getSheetByName(ECO_PASSPORT.deliveryTab)){
-    const sheet=book.insertSheet(ECO_PASSPORT.deliveryTab);
-    sheet.appendRow(['Время','ФИО','Класс','ОДНОРАЗОВАЯ ВЫДАЧА КОДА — удалить после передачи']);
-    sheet.setFrozenRows(1);
-  }
-}
-
-function adminIssueCode_() {
-  // Execute ONLY from the editor. Set both properties; never put student names in repository source.
-  const props=PropertiesService.getScriptProperties();
-  const name=String(props.getProperty('PASSPORT_ISSUE_NAME')||'').trim();
-  const cl=String(props.getProperty('PASSPORT_ISSUE_CLASS')||'').trim();
-  if(name.length<3||!cl)throw new Error('Set PASSPORT_ISSUE_NAME and PASSPORT_ISSUE_CLASS in Script Properties.');
-  if(/тест/i.test(name))throw new Error('Do not issue credentials for test identities.');
-  const book=sourceWorkbook_();
-  const contributions=book.getSheetByName(ECO_PASSPORT.contributionTab).getDataRange().getValues();
-  if(!contributions.slice(1).some(row=>identityKey_(row[1],row[2])===identityKey_(name,cl))){
-    throw new Error('Participant not found in contribution register; verify exact name and class.');
-  }
-  adminInitialize_();
-  const lock=LockService.getScriptLock();lock.waitLock(30000);
-  try {
-    const tab=book.getSheetByName(ECO_PASSPORT.accessTab);
-    const existing=tab.getDataRange().getValues();
-    for(let i=existing.length-1;i>=1;i--){
-      if(identityKey_(existing[i][0],existing[i][1])===identityKey_(name,cl)){
-        tab.getRange(i+1,4,1,3).setValues([[false,existing[i][4]||'',new Date()]]);
-      }
-    }
-    const code=(Utilities.getUuid()+Utilities.getUuid()).replace(/-/g,'').toLowerCase();
-    tab.appendRow([name,cl,sha256_(code),true,new Date(),'']);
-    book.getSheetByName(ECO_PASSPORT.deliveryTab).appendRow([new Date(),name,cl,code]);
-    props.deleteProperty('PASSPORT_ISSUE_NAME');
-    props.deleteProperty('PASSPORT_ISSUE_CLASS');
-    return 'Issued: transfer the code privately from the issue sheet; then delete that plaintext row.';
-  } finally {lock.releaseLock();}
-}
-
-function adminRevokeCode_() {
-  const props=PropertiesService.getScriptProperties();
-  const name=String(props.getProperty('PASSPORT_REVOKE_NAME')||'').trim();
-  const cl=String(props.getProperty('PASSPORT_REVOKE_CLASS')||'').trim();
-  if(!name||!cl)throw new Error('Set PASSPORT_REVOKE_NAME and PASSPORT_REVOKE_CLASS.');
-  const tab=sourceWorkbook_().getSheetByName(ECO_PASSPORT.accessTab);
-  if(!tab)throw new Error('Access sheet not initialized.');
-  const rows=tab.getDataRange().getValues();let changed=0;
-  for(let i=1;i<rows.length;i++){
-    if(identityKey_(rows[i][0],rows[i][1])===identityKey_(name,cl)){
-      tab.getRange(i+1,4,1,3).setValues([[false,rows[i][4]||'',new Date()]]);
-      changed++;
-    }
-  }
-  props.deleteProperty('PASSPORT_REVOKE_NAME');
-  props.deleteProperty('PASSPORT_REVOKE_CLASS');
-  return 'Revoked '+changed+' credential(s).';
-}
-
-
-// Editor-only, aggregate diagnostics. This function never returns student names.
-function adminAudit_() {
-  const source=sourceWorkbook_().getSheetByName(ECO_PASSPORT.contributionTab);
-  if(!source)throw new Error('Contribution sheet missing.');
-  const rows=source.getDataRange().getValues().slice(1);
-  const stats={total:0,confirmed:0,rejectedOrUnconfirmed:0,testMarkedConfirmed:0,confirmedMissingRequestId:0,duplicateConfirmedRequestIds:0};
-  const ids=new Set();
-  rows.forEach(row=>{
-    if(!row.some(v=>v!==''&&v!==null&&v!==undefined))return;
-    stats.total++;
-    if(!isConfirmed_(row[7])){stats.rejectedOrUnconfirmed++;return;}
-    stats.confirmed++;
-    if(/тест/i.test(String(row[1]||'')))stats.testMarkedConfirmed++;
-    const requestId=String(row[8]||'').trim();
-    if(!requestId)stats.confirmedMissingRequestId++;
-    else if(ids.has(requestId))stats.duplicateConfirmedRequestIds++;
-    else ids.add(requestId);
-  });
-  return stats;
 }
