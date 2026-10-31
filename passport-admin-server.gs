@@ -410,3 +410,151 @@ function passportAdmin56WeeklyDigest(e){
   MailApp.sendEmail({to:owner,subject:'EcoPassport: контроль сроков кодов',body:lines.join('\n')});
   return {sent:true,counts};
 }
+
+
+
+// === ECO CLUB HUB 6.0: OWNER-ONLY unified admin, never for the pupil portal. ===
+const ECO_HUB60=Object.freeze({
+ applications:'Заявки',
+ contributions:'Вклад',
+ events:'Мероприятия',
+ decisions:'Журнал решений',
+ limit:150
+});
+function admin60Dashboard(){
+ requirePassportAdmin_();
+ const book=passportAdminBook_();
+ const apps=passportAdminSheet_(book,ECO_HUB60.applications).getDataRange().getValues();
+ const gifts=passportAdminSheet_(book,ECO_HUB60.contributions).getDataRange().getValues();
+ const events=passportAdminSheet_(book,ECO_HUB60.events).getDataRange().getValues();
+ const actions=passportAdminSheet_(book,ECO_HUB60.decisions).getDataRange().getValues();
+ const people=book.getSheetByName(PASSPORT_ADMIN54.roster);
+ const classes=new Map();
+ let paper=0,caps=0,approved=0,pendingContributions=0,rejected=0,unlinked=0;
+ const contributions=[];
+ for(let i=1;i<gifts.length;i++){
+  const r=gifts[i];if(!r.some(v=>v!==''&&v!=null))continue;
+  const status=String(r[7]||'').trim(),isTest=/тест/i.test(String(r[1]||''));
+  const verified=passportAdminConfirmed_(status);
+  const kg=passportAdminNumber_(r[3]),count=passportAdminNumber_(r[4]);
+  if(verified&&!isTest&&kg!==null&&count!==null){
+   approved++;paper+=kg;caps+=count;
+   if(!String(r[12]||'').trim())unlinked++;
+   const cl=String(r[2]||'').trim();
+   const entry=classes.get(cl)||{className:cl,paperKg:0,capsCount:0,contributions:0,score:0};
+   entry.paperKg+=kg;entry.capsCount+=count;entry.contributions++;entry.score=entry.paperKg*10+entry.capsCount/10;
+   classes.set(cl,entry);
+  }else if(passportAdmin60IsPendingContribution_(status))pendingContributions++;
+  else if(/отклон/i.test(status))rejected++;
+  contributions.push({
+   row:i+1,stamp:passportAdmin60Stamp_('contribution',r),
+   date:passportAdmin60Text_(r[0]),name:passportAdmin60Text_(r[1]),className:passportAdmin60Text_(r[2]),
+   paperKg:kg,capsCount:count,notes:passportAdmin60Text_(r[6]),status,
+   requestIdPresent:!!r[8],linked:!!r[12],test:isTest,
+   canDecide:passportAdmin60IsPendingContribution_(status)&&!isTest
+  });
+ }
+ const applications=[];let pendingApplications=0,acceptedApps=0;
+ for(let i=1;i<apps.length;i++){
+  const r=apps[i];if(!r.some(v=>v!==''&&v!=null))continue;
+  const status=String(r[7]||'').trim();
+  const pending=passportAdmin60IsPendingApplication_(status);
+  if(pending)pendingApplications++;
+  if(/^принят/i.test(status))acceptedApps++;
+  applications.push({
+   row:i+1,stamp:passportAdmin60Stamp_('application',r),
+   date:passportAdmin60Text_(r[0]),name:passportAdmin60Text_(r[1]),className:passportAdmin60Text_(r[2]),
+   direction:passportAdmin60Text_(r[4]),notes:passportAdmin60Text_(r[5]),status,
+   requestIdPresent:!!r[8],canDecide:pending&&!/тест/i.test(String(r[1]||''))
+  });
+ }
+ const eventList=[];
+ for(let i=1;i<events.length;i++){
+  const r=events[i];if(!r.some(v=>v!==''&&v!=null))continue;
+  eventList.push({date:passportAdmin60Text_(r[9]),nameRu:passportAdmin60Text_(r[3]),
+    nameKk:passportAdmin60Text_(r[4]),className:passportAdmin60Text_(r[8]),
+    category:passportAdmin60Text_(r[7]),status:passportAdmin60Text_(r[12])});
+ }
+ const auditTrail=actions.slice(1).filter(r=>r.some(v=>v!==''&&v!=null)).slice(-30).reverse()
+ .map(r=>({date:passportAdmin60Text_(r[0]),action:passportAdmin60Text_(r[2]),
+  status:passportAdmin60Text_(r[3]),className:passportAdmin60Text_(r[7])}));
+ const rosterSize=people?people.getDataRange().getValues().slice(1).filter(r=>r[0]&&r[4]!==false).length:0;
+ return {
+  ok:true,
+  summary:{
+   participants:rosterSize,applications:applications.length,pendingApplications,acceptedApps,
+   approvedContributions:approved,pendingContributions,rejectedContributions:rejected,
+   paperKg:Math.round(paper*1000)/1000,capsCount:caps,unlinked,events:eventList.length
+  },
+  classes:Array.from(classes.values()).sort((a,b)=>b.score-a.score).map(x=>({
+   ...x,paperKg:Math.round(x.paperKg*1000)/1000,score:Math.round(x.score*10)/10
+  })),
+  applications:applications.slice().reverse().slice(0,ECO_HUB60.limit),
+  contributions:contributions.slice().reverse().slice(0,ECO_HUB60.limit),
+  events:eventList.slice().reverse().slice(0,ECO_HUB60.limit),
+  audit:auditTrail,
+  truncated:applications.length>ECO_HUB60.limit||contributions.length>ECO_HUB60.limit
+ };
+}
+/**
+ * Mutates ONLY a pending application or contribution with row stamp check,
+ * re-reads under lock to prevent changing someone else's row. All actions logged.
+ */
+function admin60Decide(kind,rowNumber,expectedStamp,decision,reason){
+ requirePassportAdmin_();
+ if(!['application','contribution'].includes(kind))throw new Error('INVALID_KIND');
+ if(!['approve','reject'].includes(decision))throw new Error('INVALID_DECISION');
+ if(!Number.isSafeInteger(rowNumber)||rowNumber<2||rowNumber>10000)throw new Error('INVALID_ROW');
+ if(!/^[a-f0-9]{64}$/.test(String(expectedStamp||'')))throw new Error('INVALID_STAMP');
+ const why=String(reason||'').trim().slice(0,300);
+ if(decision==='reject'&&why.length<3)throw new Error('REJECTION_REASON_REQUIRED');
+ const lock=LockService.getScriptLock();lock.waitLock(30000);
+ try{
+  const book=passportAdminBook_();
+  const name=kind==='application'?ECO_HUB60.applications:ECO_HUB60.contributions;
+  const sheet=passportAdminSheet_(book,name);
+  const width=kind==='application'?9:13;
+  if(rowNumber>sheet.getLastRow())throw new Error('ROW_NOT_FOUND');
+  const data=sheet.getRange(rowNumber,1,1,width).getValues()[0];
+  if(passportAdmin60Stamp_(kind,data)!==expectedStamp)throw new Error('ROW_CHANGED_REFRESH');
+  if(kind==='application'&&!passportAdmin60IsPendingApplication_(data[7]))
+   throw new Error('ALREADY_REVIEWED');
+  if(kind==='contribution'&&!passportAdmin60IsPendingContribution_(data[7]))
+   throw new Error('ALREADY_REVIEWED');
+  if(/тест/i.test(String(data[1]||'')))throw new Error('TEST_RECORD_REVIEW_REQUIRED');
+  const email=Session.getActiveUser().getEmail(),when=new Date();
+  const status=kind==='application'?(decision==='approve'?'Принят':'Отклонён'):
+   (decision==='approve'?'✅ Подтверждено':'❌ Отклонено');
+  // Strong validation on contribution statuses permits only exact labels.
+  sheet.getRange(rowNumber,8).setValue(status);
+  if(kind==='contribution'){
+   sheet.getRange(rowNumber,10).setValue(when);
+   sheet.getRange(rowNumber,11).setValue(email);
+   sheet.getRange(rowNumber,12).setValue(decision==='reject'?why:'');
+  }
+  const log=passportAdminSheet_(book,ECO_HUB60.decisions);
+  log.appendRow([when,email,kind==='application'?'HUB_APPLICATION_'+decision.toUpperCase():
+   'HUB_CONTRIBUTION_'+decision.toUpperCase(),status,
+   kind==='contribution'?rowNumber:'',String(data[8]||''),
+   String(data[1]||''),String(data[2]||''),kind==='contribution'?data[3]:'',
+   kind==='contribution'?data[4]:'',why]);
+  return {ok:true,kind,row:rowNumber,status,
+   needsSync:kind==='contribution'&&decision==='approve'};
+ }finally{lock.releaseLock();}
+}
+function passportAdmin60IsPendingApplication_(status){
+ return /^(?:новая заявка|новая|ожидает|⏳\s*ожидает)$/i.test(String(status||'').trim());
+}
+function passportAdmin60IsPendingContribution_(status){
+ return /^(?:⏳\s*ожидает|ожидает)$/i.test(String(status||'').trim());
+}
+function passportAdmin60Text_(value){
+ return value instanceof Date?Utilities.formatDate(value,Session.getScriptTimeZone(),'dd.MM.yyyy HH:mm'):
+  String(value??'').slice(0,400);
+}
+function passportAdmin60Stamp_(kind,row){
+ const selected=kind==='application'?row.slice(0,9):row.slice(0,13);
+ const normalized=selected.map(v=>v instanceof Date?v.toISOString():String(v??'')).join('\u241e');
+ return Utilities.computeDigest(Utilities.DigestAlgorithm.SHA_256,kind+'\u241f'+normalized,Utilities.Charset.UTF_8)
+  .map(v=>(v&255).toString(16).padStart(2,'0')).join('');
+}
