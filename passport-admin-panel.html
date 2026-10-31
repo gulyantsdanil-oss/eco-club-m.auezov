@@ -269,4 +269,207 @@ $('disable-notifications').addEventListener('click',()=>{
 load();
 })();
 </script>
+<script>
+/* ECO CLUB HUB 6.0 interactions */
+
+(function(){
+'use strict';
+const get=id=>document.getElementById(id);
+const tabs=['overview','members','applications','contributions','events','passports','quality','site'];
+let current='overview',hub=null,people=[],busy=false;
+const format=(n,d=0)=>Number.isFinite(Number(n))?new Intl.NumberFormat('ru-RU',{maximumFractionDigits:d}).format(Number(n)):'—';
+function element(tag,cls,content){
+ const e=document.createElement(tag);
+ if(cls)e.className=cls;
+ if(content!==undefined)e.textContent=String(content);
+ return e;
+}
+function feedback(text,error=false){
+ const el=get('hub-message');el.textContent=text;el.className='feedback'+(error?' error':'');
+}
+function card(title){
+ const e=element('article','hub-card');e.append(element('h3','',title));return e;
+}
+function line(label,value){
+ const e=element('p');const b=element('strong','',label+': ');
+ e.append(b,document.createTextNode(String(value===undefined||value===null||value===''?'—':value)));
+ return e;
+}
+function kpi(parent,value,label){
+ const e=element('div','hub-kpi');
+ e.append(element('b','',value),element('small','',label));parent.append(e);
+}
+function switchTo(target){
+ if(!tabs.includes(target))return;
+ current=target;
+ tabs.forEach(name=>{get('hub-'+name).hidden=name!==target;});
+ document.querySelectorAll('#hub-nav button[data-target]').forEach(btn=>
+  btn.setAttribute('aria-selected',String(btn.dataset.target===target)));
+ if(target==='passports'&&!get('total').textContent.match(/^\d/)){
+  // Original passport controller lives inside its own enclosed script.
+  get('refresh').click();
+ }
+ if(target==='site'){
+  // Embedded preview is read-only. External link is always available.
+ }
+ window.scrollTo({top:0,behavior:'instant'});
+}
+function apiCall(method,args,onSuccess){
+ if(busy)return;
+ busy=true;
+ const runner=google.script.run
+   .withFailureHandler(err=>{
+    busy=false;
+    feedback('Ошибка: '+(err&&err.message?err.message:'Проверьте данные или права доступа.'),true);
+   })
+   .withSuccessHandler(res=>{
+    busy=false;
+    onSuccess(res);
+   });
+ if(method==='dashboard')runner.admin60Dashboard();
+ if(method==='members')runner.admin54Overview();
+ if(method==='decide')runner.admin60Decide(...args);
+}
+function refresh(){
+ if(busy)return;
+ feedback('Загрузка данных Eco Club…');
+ apiCall('dashboard',[],response=>{
+  if(!response||!response.ok){feedback('Показатели не загрузились.',true);return;}
+  hub=response;
+  render();
+  // Populate member cards directly from existing owner-only backend.
+  apiCall('members',[],response2=>{
+   if(response2&&response2.ok)people=Array.isArray(response2.participants)?response2.participants:[];
+   renderMembers();
+   feedback('Данные обновлены. Панель доступна только руководителю.');
+  });
+ });
+}
+function render(){
+ if(!hub)return;
+ const s=hub.summary;
+ const kp=get('hub-kpis');kp.replaceChildren();
+ [
+  [format(s.participants),'Участников с ID'],
+  [format(s.paperKg,1)+' кг','Макулатура'],
+  [format(s.capsCount),'Крышек'],
+  [format(s.approvedContributions),'Подтверждённых вкладов'],
+  [format(s.pendingApplications),'Новых заявок'],
+  [format(s.pendingContributions),'Вкладов ожидают проверки'],
+  [format(s.events),'Мероприятий'],
+  [format(s.unlinked),'Вкладов без ID участника']
+ ].forEach(item=>kpi(kp,item[0],item[1]));
+ const ranks=get('hub-classes');ranks.replaceChildren();
+ if(!hub.classes.length)ranks.append(element('p','subnote','Пока нет подтверждённых результатов.'));
+ const top=Math.max(1,...hub.classes.map(x=>Number(x.score)||0));
+ hub.classes.forEach((c,i)=>{
+  const r=element('div','hub-class-row');
+  const title=element('div','');
+  title.append(element('strong','',(i+1)+'. '+c.className),document.createTextNode(' · '+format(c.score,1)+' баллов'));
+  const track=element('div','hub-class-track'),fill=element('i');
+  fill.style.width=Math.max(0,Math.min(100,100*(Number(c.score)||0)/top))+'%';
+  track.append(fill);
+  r.append(title,track,element('small','',format(c.paperKg,1)+' кг · '+format(c.capsCount)+' крышек'));
+  ranks.append(r);
+ });
+ const attention=get('hub-attention');attention.replaceChildren();
+ let count=0;
+ [[s.pendingApplications,'Новые заявки','applications'],
+ [s.pendingContributions,'Вклады на проверке','contributions'],
+ [s.unlinked,'Подтверждённые вклады без ID','passports']].forEach(([v,title,tab])=>{
+   if(v<1)return;
+   count++;
+   const p=element('div','hub-card');p.append(line(title,v));
+   const b=element('button','action secondary','Открыть раздел');
+   b.type='button';b.addEventListener('click',()=>switchTo(tab));p.append(b);attention.append(p);
+ });
+ if(!count)attention.append(element('p','subnote','Новых задач, ожидающих решения, нет.'));
+ renderItems('application');
+ renderItems('contribution');
+ const events=get('hub-event-list');events.replaceChildren();
+ if(!hub.events.length)events.append(element('p','empty','Зарегистрированных мероприятий пока нет.'));
+ hub.events.forEach(x=>{
+  const c=card(x.nameRu||x.nameKk||'Без названия');
+  c.append(line('Дата',x.date),line('Класс',x.className),line('Категория',x.category),line('Статус',x.status));
+  events.append(c);
+ });
+ const control=get('hub-quality-kpis');control.replaceChildren();
+ [[s.pendingApplications,'Новые заявки'],
+ [s.pendingContributions,'Непроверенные вклады'],
+ [s.unlinked,'Подтверждённые без ID'],
+ [s.rejectedContributions,'Отклонённые вклады']].forEach(([v,t])=>kpi(control,format(v),t));
+ const log=get('hub-audit-list');log.replaceChildren();
+ if(!hub.audit.length)log.append(element('p','empty','Журнал решений пока пуст.'));
+ hub.audit.forEach(a=>{
+  const c=card(a.action||'Решение');
+  c.append(line('Дата',a.date),line('Статус',a.status),line('Класс',a.className));
+  log.append(c);
+ });
+}
+function renderMembers(){
+ const wrap=get('hub-members-list');wrap.replaceChildren();
+ if(!people.length){wrap.append(element('p','empty','Здесь пока нет участников.'));return;}
+ people.forEach(p=>{
+  const c=card(p.name);
+  c.append(line('Класс',p.className),line('Номер паспорта',p.participantRef||'—'),
+    line('Вкладов',format(p.contributions)),
+    line('Макулатура',format(p.paperKg,1)+' кг'),
+    line('Крышки',format(p.capsCount)),
+    line('Доступ',p.accessActive?'Код активен':'Код не выдан'));
+  const btn=element('button','action secondary','Управлять паспортом');
+  btn.type='button';btn.addEventListener('click',()=>switchTo('passports'));c.append(btn);wrap.append(c);
+ });
+}
+function renderItems(type){
+ if(!hub)return;
+ const app=type==='application';
+ const list=app?hub.applications:hub.contributions;
+ const search=get(app?'hub-app-search':'hub-con-search').value.trim().toLocaleLowerCase('ru-RU');
+ const wrap=get(app?'hub-app-list':'hub-con-list');wrap.replaceChildren();
+ const filtered=list.filter(x=>([x.name,x.className,x.status,x.notes,x.direction].join(' ')).toLocaleLowerCase('ru-RU').includes(search));
+ if(!filtered.length){wrap.append(element('p','empty','Записей по этому запросу нет.'));return;}
+ filtered.forEach(x=>{
+  const c=card(x.name||'Без имени');
+  c.append(line('Дата',x.date),line('Класс',x.className));
+  if(app)c.append(line('Направление',x.direction),line('Мотивация',x.notes));
+  else c.append(line('Макулатура',format(x.paperKg,2)+' кг'),
+   line('Крышки',format(x.capsCount)+' шт.'),
+   line('ID',x.linked?'Привязан':'Не привязан'));
+  c.append(element('span','hub-status',x.status||'Нет статуса'));
+  if(x.canDecide){
+   const row=element('div','hub-actions');
+   const accept=element('button','action','Подтвердить');
+   accept.type='button';accept.addEventListener('click',()=>decide(type,x,'approve'));
+   const reject=element('button','action danger','Отклонить');
+   reject.type='button';reject.addEventListener('click',()=>decide(type,x,'reject'));
+   row.append(accept,reject);c.append(row);
+  }
+  wrap.append(c);
+ });
+}
+function decide(kind,record,action){
+ if(busy)return;
+ const what=kind==='application'?'заявку':'вклад';
+ if(!confirm((action==='approve'?'Подтвердить ':'Отклонить ')+what+' — '+record.name+' ('+record.className+')?'))return;
+ let reason='';
+ if(action==='reject'){
+  const answer=prompt('Причина отклонения (не менее 3 символов):','');
+  if(answer===null)return;
+  reason=answer.trim();
+  if(reason.length<3){feedback('Укажите причину отклонения длиной не менее 3 символов.',true);return;}
+ }
+ feedback('Сохраняем решение…');
+ apiCall('decide',[kind,record.row,record.stamp,action,reason],r=>{
+  if(!r||!r.ok){feedback('Решение не сохранено.',true);return;}
+  feedback('Решение сохранено. '+(r.needsSync?'Для отображения нового подтверждённого вклада в паспорте синхронизируйте ID в разделе «Паспорта».':''));
+  refresh();
+ });
+}
+document.querySelectorAll('#hub-nav button[data-target]').forEach(btn=>
+ btn.addEventListener('click',()=>switchTo(btn.dataset.target)));
+get('hub-app-search').addEventListener('input',()=>renderItems('application'));
+get('hub-con-search').addEventListener('input',()=>renderItems('contribution'));
+refresh();
+})();
+</script>
 </body></html>
