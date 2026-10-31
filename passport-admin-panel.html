@@ -37,6 +37,13 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 .hub-app-searchbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:12px}
 .hub-app-searchbar .search{max-width:560px;min-width:200px}
 .hub-app-searchbar .action{min-height:44px}
+.hub-con-toolbar{display:flex;flex-wrap:wrap;align-items:center;gap:9px;margin-bottom:12px}
+.hub-con-toolbar .search{max-width:560px;flex:1;min-width:200px}
+.hub-class-select{min-height:44px;max-width:240px;min-width:145px;border:1px solid #b7e5ad65;border-radius:11px;background:#123c2d;color:#ecffec;padding:9px 12px;font:inherit;font-size:13px}
+.hub-class-select:focus-visible{outline:3px solid var(--green);outline-offset:2px}
+.hub-con-toolbar .action{min-height:44px}
+@media(max-width:580px){.hub-con-toolbar .search{width:100%;flex-basis:100%}}
+
 .hub-class-row{padding:9px 0;border-bottom:1px solid #ffffff20;font-size:13px}
 .hub-class-track{height:7px;border-radius:20px;background:#ffffff30;margin-top:7px;overflow:hidden}
 .hub-class-track i{display:block;height:100%;background:var(--green)}
@@ -82,7 +89,23 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 <p id="hub-app-context" class="subnote" aria-live="polite"></p>
 <div id="hub-app-list" class="hub-list"></div>
 </section>
-<section id="hub-contributions" class="hub-view" hidden><h2>Экологические вклады</h2><p class="subnote">Решения доступны только для вкладов со статусом «Ожидает». После подтверждения синхронизируйте ID в разделе «Паспорта».</p><input class="search" id="hub-con-search" placeholder="Поиск ученика, класса или статуса" type="search"><div id="hub-con-list" class="hub-list"></div></section>
+<section id="hub-contributions" class="hub-view" hidden>
+<h2>Экологические вклады</h2>
+<p class="subnote">На проверке — новые записи; подтверждённые и отклонённые доступны в истории. После подтверждения нового вклада привяжите его к ID в разделе «Паспорта».</p>
+<div class="hub-filterbar" id="hub-con-filters" aria-label="Фильтр экологических вкладов">
+<button type="button" data-con-filter="pending" aria-pressed="true">На проверке <span id="hub-con-pending-count"></span></button>
+<button type="button" data-con-filter="confirmed" aria-pressed="false">Подтверждённые <span id="hub-con-confirmed-count"></span></button>
+<button type="button" data-con-filter="rejected" aria-pressed="false">Отклонённые <span id="hub-con-rejected-count"></span></button>
+<button type="button" data-con-filter="all" aria-pressed="false">Все вклады <span id="hub-con-all-count"></span></button>
+</div>
+<div class="hub-con-toolbar">
+<input class="search" id="hub-con-search" type="search" placeholder="Поиск по имени, классу или статусу" aria-label="Поиск экологических вкладов">
+<select id="hub-con-class" class="hub-class-select" aria-label="Фильтр по классу"><option value="">Все классы</option></select>
+<button id="hub-con-clear" class="action secondary" type="button">Очистить</button>
+</div>
+<p id="hub-con-context" class="subnote" aria-live="polite"></p>
+<div id="hub-con-list" class="hub-list"></div>
+</section>
 <section id="hub-events" class="hub-view" hidden><h2>Мероприятия</h2><p class="subnote">Реестр мероприятий из Google Sheets.</p><div id="hub-event-list" class="hub-list"></div></section>
 <section id="hub-quality" class="hub-view" hidden><h2>Контроль качества данных</h2><div id="hub-quality-kpis" class="hub-kpis"></div><h3>Последние решения</h3><div id="hub-audit-list" class="hub-list"></div></section>
 <section id="hub-site" class="hub-view" hidden><h2>Публичный сайт</h2><p class="subnote">Предпросмотр опубликованного Eco Club в этом же кабинете. Изменения дизайна сайта по-прежнему выполняются через GitHub.</p><div class="hub-site-tools" role="group" aria-label="Просмотр разделов публичного сайта"><button type="button" class="action" data-preview="home">Главная</button><button type="button" class="action secondary" data-preview="world">ECO WORLD</button><button type="button" class="action secondary" data-preview="passport">Паспорт · демо</button></div>
@@ -296,7 +319,7 @@ load();
 'use strict';
 const get=id=>document.getElementById(id);
 const tabs=['overview','members','applications','contributions','events','passports','quality','site'];
-let current='overview',hub=null,people=[],busy=false,appFilter='pending';
+let current='overview',hub=null,people=[],busy=false,appFilter='pending',conFilter='pending';
 const format=(n,d=0)=>Number.isFinite(Number(n))?new Intl.NumberFormat('ru-RU',{maximumFractionDigits:d}).format(Number(n)):'—';
 function element(tag,cls,content){
  const e=document.createElement(tag);
@@ -461,6 +484,50 @@ function updateApplicationControls(){
  const label={pending:'Ожидают решения',history:'История рассмотренных заявок',all:'Все заявки'};
  get('hub-app-context').textContent=label[appFilter]+': '+applicationListFiltered(all,appFilter,get('hub-app-search').value).length;
 }
+function contributionCategory(x){
+ const status=String(x.status||'').normalize('NFKC').toLocaleLowerCase('ru-RU')
+  .replace(/[^a-zа-яәғқңөұүһіё]/g,'');
+ if(['подтверждено','подтвердждено','confirmed','approved','расталды','бекітілді'].includes(status))return 'confirmed';
+ if(status.includes('отклон'))return 'rejected';
+ if(!!x.canDecide||status==='ожидает')return 'pending';
+ return 'other';
+}
+function contributionListFiltered(list,mode,search,className){
+ const needle=String(search||'').trim().toLocaleLowerCase('ru-RU');
+ return list.filter(x=>{
+  if(mode!=='all'&&contributionCategory(x)!==mode)return false;
+  if(className&&String(x.className||'')!==className)return false;
+  return [x.name,x.className,x.status,x.notes].join(' ').toLocaleLowerCase('ru-RU').includes(needle);
+ }).slice().sort((a,b)=>{
+  const order={pending:0,confirmed:1,rejected:2,other:3};
+  const priority=order[contributionCategory(a)]-order[contributionCategory(b)];
+  return mode==='all'&&priority?priority:(Number(b.row)||0)-(Number(a.row)||0);
+ });
+}
+function updateContributionControls(){
+ if(!hub)return;
+ const all=hub.contributions;
+ const counter={pending:0,confirmed:0,rejected:0,other:0};
+ all.forEach(x=>counter[contributionCategory(x)]++);
+ get('hub-con-pending-count').textContent=String(counter.pending);
+ get('hub-con-confirmed-count').textContent=String(counter.confirmed);
+ get('hub-con-rejected-count').textContent=String(counter.rejected);
+ get('hub-con-all-count').textContent=String(all.length);
+ document.querySelectorAll('[data-con-filter]').forEach(button=>
+  button.setAttribute('aria-pressed',String(button.dataset.conFilter===conFilter)));
+ const select=get('hub-con-class');
+ const currentClass=select.value;
+ const classes=[...new Set(all.map(x=>String(x.className||'').trim()).filter(Boolean))]
+  .sort((a,b)=>a.localeCompare(b,'ru',{numeric:true}));
+ select.replaceChildren();
+ select.append(new Option('Все классы',''));
+ classes.forEach(className=>select.append(new Option(className,className)));
+ select.value=classes.includes(currentClass)?currentClass:'';
+ const terms={pending:'Ожидают проверки',confirmed:'Подтверждённые записи',rejected:'Отклонённые записи',all:'Все экологические вклады'};
+ const items=contributionListFiltered(all,conFilter,get('hub-con-search').value,select.value);
+ get('hub-con-context').textContent=terms[conFilter]+': '+items.length+
+  (counter.other?' · С нестандартным статусом: '+counter.other:'');
+}
 function renderItems(type){
  if(!hub)return;
  const app=type==='application';
@@ -468,19 +535,25 @@ function renderItems(type){
  const search=get(app?'hub-app-search':'hub-con-search').value.trim().toLocaleLowerCase('ru-RU');
  const wrap=get(app?'hub-app-list':'hub-con-list');wrap.replaceChildren();
  const filtered=app?applicationListFiltered(list,appFilter,search):
-  list.filter(x=>([x.name,x.className,x.status,x.notes,x.direction].join(' ')).toLocaleLowerCase('ru-RU').includes(search));
- if(app)updateApplicationControls();
+  contributionListFiltered(list,conFilter,search,get('hub-con-class').value);
+ if(app)updateApplicationControls();else updateContributionControls();
  if(!filtered.length){
-  const empty=app&&appFilter==='pending'&&!search?'Все новые заявки рассмотрены. Для просмотра обработанных откройте «История».':'Записей по этому запросу нет.';
+  const empty=app&&appFilter==='pending'&&!search?'Все новые заявки рассмотрены. Для просмотра обработанных откройте «История».':
+    !app&&conFilter==='pending'&&!search?'Новых вкладов на проверке нет. Откройте «Подтверждённые» или «Все вклады» для просмотра истории.':
+    'Записей по выбранным фильтрам нет.';
   wrap.append(element('p','empty',empty));return;
  }
  filtered.forEach(x=>{
   const c=card(x.name||'Без имени');
   c.append(line('Дата',x.date),line('Класс',x.className));
   if(app)c.append(line('Направление',x.direction),line('Мотивация',x.notes));
-  else c.append(line('Макулатура',format(x.paperKg,2)+' кг'),
-   line('Крышки',format(x.capsCount)+' шт.'),
-   line('ID',x.linked?'Привязан':'Не привязан'));
+  else{
+   c.append(line('Макулатура',format(x.paperKg,2)+' кг'),
+     line('Крышки',format(x.capsCount)+' шт.'),
+     line('ID участника',x.linked?'Привязан':'Не привязан'));
+   if(x.notes)c.append(line('Примечание',x.notes));
+   if(x.test)c.append(line('Контроль','Тестовая запись — действия заблокированы'));
+  }
   c.append(element('span','hub-status',x.status||'Нет статуса'));
   if(x.canDecide){
    const row=element('div','hub-actions');
@@ -533,6 +606,19 @@ get('hub-app-clear').addEventListener('click',()=>{
  get('hub-app-search').focus();
 });
 get('hub-app-search').addEventListener('input',()=>renderItems('application'));
+document.querySelectorAll('[data-con-filter]').forEach(button=>
+ button.addEventListener('click',()=>{
+  conFilter=button.dataset.conFilter;
+  get('hub-con-search').value='';
+  renderItems('contribution');
+ }));
+get('hub-con-class').addEventListener('change',()=>renderItems('contribution'));
+get('hub-con-clear').addEventListener('click',()=>{
+ get('hub-con-search').value='';
+ get('hub-con-class').value='';
+ renderItems('contribution');
+ get('hub-con-search').focus();
+});
 get('hub-con-search').addEventListener('input',()=>renderItems('contribution'));
 refresh();
 })();
