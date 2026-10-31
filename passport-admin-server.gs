@@ -1,5 +1,5 @@
 /**
- * EcoPassport 5.6 — OWNER-ONLY administration.
+ * Eco Club Hub 6.0 / EcoPassport 5.6 — OWNER-ONLY administration.
  * Standalone Apps Script project, NEVER put this in the pupils' project.
  * Deploy: execute as USER ACCESSING THE APP; only owner may access.
  * Script properties: ECO_SOURCE_SPREADSHEET_ID and ECO_ADMIN_EMAIL.
@@ -18,7 +18,7 @@ const PASSPORT_ADMIN54=Object.freeze({
 function doGet(){
  requirePassportAdmin_();
  return HtmlService.createHtmlOutputFromFile('AdminPanel')
-  .setTitle('Eco Club — Управление паспортами')
+  .setTitle('Eco Club — Цифровой кабинет')
   .addMetaTag('viewport','width=device-width, initial-scale=1');
 }
 function admin54Overview(){
