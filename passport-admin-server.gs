@@ -345,7 +345,7 @@ function passportAdmin56ExpiryForPerson_(issued,id,key,now) {
 function admin56NotificationStatus(){
   requirePassportAdmin_();
   const enabled=PropertiesService.getScriptProperties().getProperty('ECO56_REMINDERS_ENABLED')==='1';
-  const actual=ScriptApp.getProjectTriggers().some(t=>t.getHandlerFunction()==='passportAdmin56WeeklyDigest_');
+  const actual=ScriptApp.getProjectTriggers().some(t=>t.getHandlerFunction()==='passportAdmin56WeeklyDigest');
   return {enabled:enabled&&actual,timezone:Session.getScriptTimeZone(),
     schedule:'Понедельник, около 08:00 (временная зона проекта)'};
 }
@@ -355,14 +355,14 @@ function admin56SetNotifications(enabled){
   if(typeof enabled!=='boolean')throw new Error('INVALID_VALUE');
   const props=PropertiesService.getScriptProperties();
   const triggers=ScriptApp.getProjectTriggers().filter(t=>
-    t.getHandlerFunction()==='passportAdmin56WeeklyDigest_');
+    t.getHandlerFunction()==='passportAdmin56WeeklyDigest');
   if(enabled){
-    if(triggers.length===0)ScriptApp.newTrigger('passportAdmin56WeeklyDigest_')
+    if(triggers.length===0)ScriptApp.newTrigger('passportAdmin56WeeklyDigest')
       .timeBased().onWeekDay(ScriptApp.WeekDay.MONDAY).atHour(8)
       .everyWeeks(1).inTimezone('Asia/Almaty').create();
     // Remove duplicate triggers if any; do not affect other workflows.
     const matching=ScriptApp.getProjectTriggers().filter(t=>
-      t.getHandlerFunction()==='passportAdmin56WeeklyDigest_');
+      t.getHandlerFunction()==='passportAdmin56WeeklyDigest');
     matching.slice(1).forEach(t=>ScriptApp.deleteTrigger(t));
   }else{
     triggers.forEach(t=>ScriptApp.deleteTrigger(t));
@@ -372,11 +372,18 @@ function admin56SetNotifications(enabled){
   return admin56NotificationStatus();
 }
 /**
- * Private installable trigger — never remotely callable via google.script.run.
+ * Installable trigger entry point: externally callable name, but rejects
+ * any request without a matching installed trigger UID in the event.
  * Triggers may have no active-user email; trust only effective account,
  * project-owned property and the flag for owner-initiated scheduling.
  */
-function passportAdmin56WeeklyDigest_(){
+function passportAdmin56WeeklyDigest(e){
+  // A publicly named handler is required for installable triggers on some
+  // Apps Script runtimes. Never accept a direct google.script.run invocation.
+  const uid=String(e&&e.triggerUid||'');
+  if(!uid||!ScriptApp.getProjectTriggers().some(t=>
+    t.getHandlerFunction()==='passportAdmin56WeeklyDigest'&&String(t.getUniqueId())===uid))
+    throw new Error('TRIGGER_EVENT_REQUIRED');
   const props=PropertiesService.getScriptProperties();
   const owner=String(props.getProperty('ECO_ADMIN_EMAIL')||'').trim().toLowerCase();
   const effective=String(Session.getEffectiveUser().getEmail()||'').trim().toLowerCase();
