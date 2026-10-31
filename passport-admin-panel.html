@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>EcoPassport | Кабинет руководителя</title>
+<title>Eco Club | Цифровой кабинет</title>
 <style>
 :root{color-scheme:dark;--bg:#071e18;--panel:#103c2e;--panel2:#164a38;--border:#9ad6a655;--green:#caffaa;--text:#eafaed;--dim:#b9d8c3;--red:#ffb6a8;font-family:system-ui,-apple-system,"Segoe UI",Arial,sans-serif}
 *{box-sizing:border-box}body{margin:0;color:var(--text);background:radial-gradient(ellipse at top right,#18533c 0%,#071e18 70%);line-height:1.45}
@@ -17,12 +17,57 @@ h1{font:normal clamp(34px,5vw,57px)/1.1 Georgia,serif;letter-spacing:-.04em;marg
 dialog{width:min(560px,calc(100vw - 30px));background:#123a2c;color:#eaffea;border:1px solid #b3ebb29b;border-radius:20px;padding:23px;box-shadow:0 25px 100px #000b}dialog::backdrop{background:#03150ebd;backdrop-filter:blur(4px)}dialog h2{font-size:24px;margin:0 0 10px}dialog p{font-size:13px;line-height:1.6;color:#d0e9d2}.code{width:100%;min-height:90px;border-radius:12px;padding:12px;word-break:break-all;resize:vertical;background:#eaf9e9;color:#123523;font-size:15px;border:0}.dialog-actions{display:flex;justify-content:flex-end;gap:9px;flex-wrap:wrap;margin-top:15px}.private-warning{font-weight:700;color:#ffddad}
 footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;text-align:center}
 @media(max-width:720px){main{padding:20px 12px 60px}.metrics{grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.metric{padding:12px}.items{grid-template-columns:1fr}.heading{flex-wrap:wrap}.toolbar{align-items:stretch}.search{max-width:none}.person{padding:13px}}
+.hub-nav{display:flex;position:sticky;top:0;z-index:8;background:#081f18ef;backdrop-filter:blur(10px);gap:7px;overflow-x:auto;padding:11px 0;border-bottom:1px solid #ffffff2b}
+.hub-nav button{min-height:44px;flex:none;border-radius:11px;border:1px solid #b2dfa558;color:#daecdd;background:#225039a1;padding:9px 13px;font-size:13px;font-weight:750}
+.hub-nav button[aria-selected=true]{background:var(--green);color:#153823}
+.hub-view[hidden]{display:none!important}.hub-view h2{margin:24px 0 12px}
+.hub-kpis{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin:18px 0}
+.hub-kpi,.hub-box,.hub-card{border:1px solid #ade3a858;border-radius:16px;background:linear-gradient(135deg,#1b513b,#10372a);padding:15px;min-width:0}
+.hub-kpi b{display:block;color:var(--green);font-size:clamp(23px,3vw,35px)}
+.hub-kpi small{color:var(--dim);font-size:12px}
+.hub-columns,.hub-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:14px 0}
+.hub-card h3{margin:0 0 8px;font-size:15px;overflow-wrap:anywhere}
+.hub-card p{font-size:12px;margin:5px 0;color:#c8e4ce;overflow-wrap:anywhere}
+.hub-card .hub-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.hub-card .hub-status{display:inline-block;font-size:11px;color:#e2ffcf;border:1px solid #a7dbb066;border-radius:20px;padding:5px 9px;margin-top:7px}
+.hub-class-row{padding:9px 0;border-bottom:1px solid #ffffff20;font-size:13px}
+.hub-class-track{height:7px;border-radius:20px;background:#ffffff30;margin-top:7px;overflow:hidden}
+.hub-class-track i{display:block;height:100%;background:var(--green)}
+#hub-iframe{width:100%;height:min(80vh,850px);border:1px solid #aad6ae7c;border-radius:13px;background:white}
+@media(max-width:760px){.hub-kpis{grid-template-columns:repeat(2,minmax(0,1fr))}.hub-columns,.hub-list{grid-template-columns:1fr}}
 </style></head>
 <body>
 <main>
-<header class="top"><strong class="logo">🌿 ECO CLUB / ADMIN</strong><span class="tag">EcoPassport 5.6 · PRIVATE</span></header>
-<h1>Управление экопаспортами</h1>
-<p class="intro">Закрытая панель руководителя: подтверждённые участники, наличие действующего кода, безопасная выдача и отзыв. Только для владельца таблицы.</p>
+<header class="top"><strong class="logo">🌿 ECO CLUB / ADMIN</strong><span class="tag">ECO CLUB HUB 6.0 · PRIVATE</span></header>
+<h1>Eco Club | Цифровой кабинет</h1>
+<p class="intro">Единое рабочее пространство руководителя Eco Club: показатели, учащиеся, заявки, вклады, паспорта и сайт.</p>
+
+<nav class="hub-nav" id="hub-nav" aria-label="Разделы Eco Club">
+<button type="button" data-target="overview" aria-selected="true">⌂ Обзор</button>
+<button type="button" data-target="members">♧ Участники</button>
+<button type="button" data-target="applications">✉ Заявки</button>
+<button type="button" data-target="contributions">♻ Вклады</button>
+<button type="button" data-target="events">▦ Мероприятия</button>
+<button type="button" data-target="passports">▣ Паспорта</button>
+<button type="button" data-target="quality">◇ Контроль</button>
+<button type="button" data-target="site">↗ Сайт</button>
+</nav>
+<p id="hub-message" class="feedback" role="status">Загрузка данных клуба…</p>
+<section id="hub-overview" class="hub-view">
+<h2>Обзор Eco Club</h2>
+<div id="hub-kpis" class="hub-kpis"></div>
+<div class="hub-columns">
+<article class="hub-box"><h3>Рейтинг классов</h3><div id="hub-classes"></div></article>
+<article class="hub-box"><h3>Что требует внимания</h3><div id="hub-attention"></div></article>
+</div>
+</section>
+<section id="hub-members" class="hub-view" hidden><h2>Участники</h2><p class="subnote">Общие результаты и статус паспортов, управление кодами — в разделе «Паспорта».</p><div id="hub-members-list" class="hub-list"></div></section>
+<section id="hub-applications" class="hub-view" hidden><h2>Заявки</h2><p class="subnote">Принимайте и отклоняйте новые заявки; решения записываются в журнал.</p><input class="search" id="hub-app-search" placeholder="Поиск ученика или класса" type="search"><div id="hub-app-list" class="hub-list"></div></section>
+<section id="hub-contributions" class="hub-view" hidden><h2>Экологические вклады</h2><p class="subnote">Решения доступны только для вкладов со статусом «Ожидает». После подтверждения синхронизируйте ID в разделе «Паспорта».</p><input class="search" id="hub-con-search" placeholder="Поиск ученика, класса или статуса" type="search"><div id="hub-con-list" class="hub-list"></div></section>
+<section id="hub-events" class="hub-view" hidden><h2>Мероприятия</h2><p class="subnote">Реестр мероприятий из Google Sheets.</p><div id="hub-event-list" class="hub-list"></div></section>
+<section id="hub-quality" class="hub-view" hidden><h2>Контроль качества данных</h2><div id="hub-quality-kpis" class="hub-kpis"></div><h3>Последние решения</h3><div id="hub-audit-list" class="hub-list"></div></section>
+<section id="hub-site" class="hub-view" hidden><h2>Публичный сайт</h2><p class="subnote">Предпросмотр опубликованного Eco Club в этом же кабинете. Изменения дизайна сайта по-прежнему выполняются через GitHub.</p><iframe id="hub-iframe" title="Предпросмотр Eco Club" loading="lazy" referrerpolicy="no-referrer" src="https://gulyantsdanil-oss.github.io/eco-club-m.auezov/"></iframe><p><a href="https://gulyantsdanil-oss.github.io/eco-club-m.auezov/" target="_blank" rel="noopener" style="color:var(--green)">Открыть сайт отдельно, если предпросмотр недоступен</a></p></section>
+<section id="hub-passports" class="hub-view" hidden>
 <div class="notice">🔒 Панель размещается отдельно от кабинета учеников. Новый код виден только один раз и <strong>не сохраняется в листе выдачи</strong>. Доступ — только владельцу проекта.</div>
 <div class="metrics">
 <div class="metric"><b id="total">—</b><span>Участников с подтверждёнными вкладами</span></div>
@@ -60,6 +105,7 @@ footer{border-top:1px solid #ffffff21;color:#93b7a0;font-size:12px;padding:25px;
 <section class="warning">
 <h2>Проверка данных реестра</h2><p>Отсутствие ID запроса не доказывает дублирование. Перед выдачей кода проверьте спорные записи. Система не удаляет и не исправляет вклады автоматически.</p>
 <div id="audit" class="audit-list"></div>
+</section>
 </section>
 <dialog id="issued" aria-labelledby="issued-title">
 <h2 id="issued-title">Новый код создан</h2>
